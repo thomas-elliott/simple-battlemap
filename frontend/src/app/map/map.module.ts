@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CanvasComponent } from './canvas/canvas.component';
-
-
+import { MapComponent } from './map.component';
+import { GridCanvasComponent } from './grid-canvas/grid-canvas.component';
+import { MapCanvasComponent } from './map-canvas/map-canvas.component';
+import { TokenCanvasComponent } from './token-canvas/token-canvas.component';
 
 @NgModule({
-  declarations: [CanvasComponent],
+  declarations: [MapComponent, GridCanvasComponent, MapCanvasComponent, TokenCanvasComponent],
   exports: [
-    CanvasComponent
+    MapComponent
   ],
   imports: [
     CommonModule
