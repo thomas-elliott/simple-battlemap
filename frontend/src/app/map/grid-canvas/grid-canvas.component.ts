@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-grid-canvas',
@@ -12,11 +12,10 @@ export class GridCanvasComponent implements OnInit {
   public gridContext: CanvasRenderingContext2D;
 
   // Grid settings
-  lineColour = "black";
-  lineWidth = 1;
-
-  gridWidth = 22;
-  gridHeight = 30;
+  @Input() lineColour: string;
+  @Input() lineWidth: number;
+  @Input() gridWidth: number;
+  @Input() gridHeight: number;
 
   constructor() { }
 

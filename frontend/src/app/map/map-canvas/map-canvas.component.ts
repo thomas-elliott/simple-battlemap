@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-map-canvas',
@@ -10,6 +10,7 @@ export class MapCanvasComponent implements OnInit {
   mapCanvas: ElementRef;
 
   public mapContext: CanvasRenderingContext2D;
+  @Input() mapImageSource: string;
 
   constructor() { }
 
@@ -18,7 +19,7 @@ export class MapCanvasComponent implements OnInit {
   private ngAfterViewInit(): void {
     this.mapContext = (<HTMLCanvasElement>this.mapCanvas.nativeElement).getContext('2d');
 
-    this.drawMap("assets/River Crossing 22x30.png");
+    this.drawMap(this.mapImageSource);
   }
 
   private drawMap(src: string) {
