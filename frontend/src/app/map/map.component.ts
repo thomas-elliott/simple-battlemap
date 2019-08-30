@@ -9,6 +9,21 @@ export class MapComponent implements OnInit {
   @ViewChild('canvasDiv', {static: false})
   canvasDiv: ElementRef;
 
+  // Map settings
+  mapImageSource = "assets/River Crossing 22x30.png";
+  backgroundWidth = 1540;
+  backgroundHeight = 2100;
+
+  // Grid settings
+  lineColour = "black";
+  lineWidth = 1;
+
+  gridWidth = 22;
+  gridHeight = 30;
+
+  tokenWidth = this.backgroundWidth / this.gridWidth;
+  tokenHeight = this.backgroundHeight / this.gridHeight;
+
   constructor() { }
 
   ngOnInit() { }
@@ -17,6 +32,16 @@ export class MapComponent implements OnInit {
     this.updateScreenSize();
   }
 
+  public updateBackground(imageSource: string, width: number, height: number):void {
+    this.mapImageSource = imageSource;
+    this.backgroundWidth = width;
+    this.backgroundHeight = height;
+  }
+
+  public updateGrid(width: number, height: number): void {
+    this.gridWidth = width;
+    this.gridHeight = height;
+  }
 
   @HostListener('window:resize', ['$event'])
   private onWindowResize(): void {
