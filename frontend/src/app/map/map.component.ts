@@ -1,4 +1,5 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {WebsocketService} from "../service/websocket.service";
 
 @Component({
   selector: 'app-map',
@@ -10,7 +11,7 @@ export class MapComponent implements OnInit {
   canvasDiv: ElementRef;
 
   // Map settings
-  mapImageSource = "assets/River Crossing 22x30.png";
+  mapImageSource = "assets/dev/River Crossing 22x30.png";
   backgroundWidth = 1540;
   backgroundHeight = 2100;
 
@@ -24,9 +25,15 @@ export class MapComponent implements OnInit {
   tokenWidth = this.backgroundWidth / this.gridWidth;
   tokenHeight = this.backgroundHeight / this.gridHeight;
 
-  constructor() { }
+  constructor(private wsService: WebsocketService) {
+  }
 
   ngOnInit() { }
+
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event) {
+    this.wsService.onSendMessage();
+  }
 
   private ngAfterViewInit(): void {
     this.updateScreenSize();
