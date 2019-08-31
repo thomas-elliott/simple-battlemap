@@ -40,24 +40,24 @@ export class TokenCanvasComponent implements OnInit {
     // Canvas size from background
     this.setCanvasSize(this.backgroundWidth, this.backgroundHeight);
     // Token size from canvas size / grid
-    this.addToken("assets/dev/1.png", 70, 70, this.tokenWidth, this.tokenHeight);
-    this.moveToken(1, 150, 150);
+    this.addToken("TestToken", "assets/dev/1.png", 70, 70, this.tokenWidth, this.tokenHeight);
+    this.moveToken("TestToken", 150, 150);
 //    this.removeToken(1);
   }
 
   // Add Token
-  public addToken(image: string, x: number, y: number, width: number, height: number) {
-    this.tokenService.addToken(image, x, y, width, height);
+  public addToken(name: string, image: string, x: number, y: number, width: number, height: number) {
+    this.tokenService.addToken(name, image, x, y, width, height);
   }
 
   // Remove Token
-  public removeToken(id: number) {
-    this.tokenService.removeToken(id);
+  public removeToken(name: string) {
+    this.tokenService.removeToken(name);
   }
 
   // Move Token
-  public moveToken(id: number, x: number, y: number) {
-    this.tokenService.moveToken(id, x, y);
+  public moveToken(name: string, x: number, y: number) {
+    this.tokenService.moveToken(name, x, y);
   }
 
   private setCanvasSize(width: number, height: number) {

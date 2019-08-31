@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Token} from "../model/token.model";
 import {Subject} from "rxjs";
+import {WebsocketService} from "./websocket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,14 @@ export class TokenService {
 
   tokens = new Array<Token>();
 
-  constructor() { }
+  constructor(private wsService: WebsocketService) { }
 
   notifyTokenChanged() {
     return this.tokenChanged.next(this.tokens);
   }
 
   // Add Token
-  public addToken(image: string, x: number, y: number, width: number, height: number) {
-    const name = "TestToken";
+  public addToken(name: string, image: string, x: number, y: number, width: number, height: number) {
     const token = new Token(name, image, width, height);
     token.x = x;
     token.y = y;
@@ -27,19 +27,19 @@ export class TokenService {
   }
 
   // Remove Token
-  public removeToken(id: number) {
-    const index = this.tokens.findIndex(i => i.id === id);
+  public removeToken(name: string) {
+    const index = this.tokens.findIndex(i => i.name === name);
     if (index > -1) {
       this.tokens.splice(index, 1);
     } else {
-      console.warn("Couldn't find index of " + id);
+      console.warn("Couldn't find index of " + name);
     }
     this.notifyTokenChanged();
   }
 
   // Move Token
-  public moveToken(id: number, x: number, y: number) {
-    let token = this.tokens.find(i => i.id === id);
+  public moveToken(name: string, x: number, y: number) {
+    let token = this.tokens.find(i => i.name === name);
     token.x = x;
     token.y = y;
     this.notifyTokenChanged();
