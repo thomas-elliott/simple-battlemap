@@ -3,7 +3,6 @@ package com.github.thomaselliott.simplebattlemap.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,13 +16,9 @@ public class MessageController {
         return "Got from user";
     }
 
-    @RequestMapping("/manualTrigger")
-    public void getManualTrigger() {
-        sendToClients();
-    }
-
     @SendTo("/topic/tokens")
     public String sendToClients() {
+        log.info("Sending data to topic");
         return "Send data to client";
     }
 }

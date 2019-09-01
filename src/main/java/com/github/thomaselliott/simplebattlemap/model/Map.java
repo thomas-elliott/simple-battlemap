@@ -14,7 +14,10 @@ public class Map {
     private HashMap<Integer, Token> tokens;
     private String backgroundImagePath;
 
-    public Map() {}
+    public Map() {
+        tokens = new HashMap<>();
+        grid = new Grid();
+    }
 
     public Map(String backgroundImagePath, int gridWidth, int gridHeight) {
         this.backgroundImagePath = backgroundImagePath;
@@ -43,8 +46,10 @@ public class Map {
         tokens.put(token.getId(), token);
     }
 
-    public void removeToken(Token token) {
-        tokens.remove(token.getId());
+    public void removeToken(Integer id) {
+        if (id != null) {
+            tokens.remove(id);
+        }
     }
 
     public void moveToken(int id, int x, int y) {

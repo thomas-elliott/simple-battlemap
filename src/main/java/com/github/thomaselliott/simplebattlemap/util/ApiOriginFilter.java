@@ -27,6 +27,8 @@ public class ApiOriginFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         httpResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+        httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type, REMOTE_USER, x-authenticated-scope");
 
         String requestMethod = httpRequest.getMethod();
         String requestPath = httpRequest.getRequestURI();
