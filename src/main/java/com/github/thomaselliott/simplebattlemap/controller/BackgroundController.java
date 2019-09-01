@@ -2,6 +2,7 @@ package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BackgroundController {
     private MapService mapService;
 
+    @Autowired
     public BackgroundController(MapService mapService) {
         this.mapService = mapService;
     }

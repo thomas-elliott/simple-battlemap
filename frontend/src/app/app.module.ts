@@ -12,8 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { NavModule } from "./nav/nav.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
-import {myRxStompConfig} from "../rx-stomp.config";
+import { InjectableRxStompConfig, RxStompService, rxStompServiceFactory } from "@stomp/ng2-stompjs";
+import { myRxStompConfig} from "../rx-stomp.config";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {myRxStompConfig} from "../rx-stomp.config";
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     MapModule,
     LayoutModule,

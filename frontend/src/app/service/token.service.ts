@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Token} from "../model/token.model";
 import {Subject} from "rxjs";
 import {WebsocketService} from "./websocket.service";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,11 @@ export class TokenService {
 
   tokens = new Array<Token>();
 
-  constructor(private wsService: WebsocketService) { }
+  serverPath = 'http://localhost:8080/';
+  tokenPath = 'token/';
+
+  constructor(private wsService: WebsocketService,
+              private httpClient: HttpClient) { }
 
   notifyTokenChanged() {
     return this.tokenChanged.next(this.tokens);
@@ -23,7 +28,7 @@ export class TokenService {
     token.x = x;
     token.y = y;
     token.id = this.tokens.push(token);
-    this.notifyTokenChanged();
+    this.sendAddTokenToServer(token);
   }
 
   // Remove Token
@@ -34,7 +39,7 @@ export class TokenService {
     } else {
       console.warn("Couldn't find index of " + name);
     }
-    this.notifyTokenChanged();
+    this.sendRemoveTokenToServer(this.tokens[index]);
   }
 
   // Move Token
@@ -42,6 +47,37 @@ export class TokenService {
     let token = this.tokens.find(i => i.name === name);
     token.x = x;
     token.y = y;
-    this.notifyTokenChanged();
+    this.sendMoveTokenToServer(token);
+  }
+
+  private sendAddTokenToServer(token: Token) {
+    this.httpClient.post(this.serverPath + this.tokenPath + 'add',
+      {token},
+      {})
+      .subscribe((response) => { console.log("Finish"); },
+        (error: HttpErrorResponse) => {
+        console.error("Error: " + error);
+      });
+  }
+
+  private sendMoveTokenToServer(token: Token) {
+    console.log("Sending token:");
+    console.log(token);
+    this.httpClient.put(this.serverPath + this.tokenPath + 'move',
+      {token},
+      {})
+      .subscribe( (response) => { console.log("Finish"); },
+        (error: HttpErrorResponse) => {
+        console.error("Error: " + error);
+      });
+  }
+
+  private sendRemoveTokenToServer(token: Token) {
+    this.httpClient.delete(this.serverPath + this.tokenPath + 'remove/' + token.id,
+      {})
+      .subscribe((response) => { console.log("Finish"); },
+        (error: HttpErrorResponse) => {
+        console.error("Error: " + error);
+      });
   }
 }

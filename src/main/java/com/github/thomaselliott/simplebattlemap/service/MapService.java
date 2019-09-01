@@ -3,9 +3,11 @@ package com.github.thomaselliott.simplebattlemap.service;
 import com.github.thomaselliott.simplebattlemap.model.Map;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MapService {
     private Map map;
+    private SimpMessagingTemplate messagingTemplate;
 
-    public MapService() {
+    public MapService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
         createMap();
     }
 
     public void createMap() {
-        this.map = new Map();
+        this.map = new Map("", 30, 22);
     }
 
     public String getBackgroundImage() {
@@ -28,7 +32,18 @@ public class MapService {
     }
 
     public List<Token> getTokens() {
-        return new ArrayList<>(map.getTokens().values());
+        HashMap<Integer, Token> tokens = map.getTokens();
+        ArrayList<Token> tokenList = new ArrayList<>();
+
+        for (Token token : tokens.values()) {
+            tokenList.add(token);
+        }
+
+        return tokenList;
+    }
+
+    public void sendUpdates() {
+        messagingTemplate.convertAndSend("/topic/tokens", "Send manually");
     }
 
     public void addToken(Token token) {
@@ -44,6 +59,9 @@ public class MapService {
 
     public void moveToken(int id, int x, int y) {
         map.moveToken(id, x, y);
+
+        messagingTemplate.convertAndSend("/topic/tokens", "Send after move");
+        log.info("Size of tokens: {}", map.getTokens().size());
     }
 
     public void updateToken(Token token) {
@@ -55,7 +73,7 @@ public class MapService {
         map.updateToken(token);
     }
 
-    public void removeToken(Token token) {
-        map.removeToken(token);
+    public void removeToken(Integer id) {
+        map.removeToken(id);
     }
 }

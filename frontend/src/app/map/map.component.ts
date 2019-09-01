@@ -1,5 +1,6 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {WebsocketService} from "../service/websocket.service";
+import {TokenService} from "../service/token.service";
 
 @Component({
   selector: 'app-map',
@@ -25,14 +26,16 @@ export class MapComponent implements OnInit {
   tokenWidth = this.backgroundWidth / this.gridWidth;
   tokenHeight = this.backgroundHeight / this.gridHeight;
 
-  constructor(private wsService: WebsocketService) {
+  constructor(private tokenService: TokenService) {
   }
 
   ngOnInit() { }
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event) {
-    this.wsService.onSendMessage();
+    this.tokenService.moveToken("TestToken",
+      Math.random() * 200 + 100,
+      Math.random() * 200 + 100);
   }
 
   private ngAfterViewInit(): void {
