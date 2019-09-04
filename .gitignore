@@ -29,5 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
+frontend/node_modules/
 
 src/main/resources/application.properties
