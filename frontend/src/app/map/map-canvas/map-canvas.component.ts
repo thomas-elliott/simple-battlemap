@@ -23,10 +23,10 @@ export class MapCanvasComponent implements OnInit {
   }
 
   private drawMap(src: string) {
-    var background = new Image();
+    let background = new Image();
     background.src = src;
 
-    var ctx = this.mapContext;
+    let ctx = this.mapContext;
     background.onload = () => {
       this.mapContext.canvas.width = background.width;
       this.mapContext.canvas.height = background.height;
