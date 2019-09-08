@@ -24,30 +24,30 @@
   </mat-card-header>
   <mat-card-content>
     <mat-grid-list cols="6" rowHeight="fit">
-      <asset-icon size="{{iconSize}}" filename="1"></asset-icon>
-      <asset-icon size="{{iconSize}}" filename="2"></asset-icon>
-      <asset-icon selected=true size="{{iconSize}}" filename="3"></asset-icon>
-      <asset-icon size="{{iconSize}}" filename="4"></asset-icon>
-      <asset-icon size="{{iconSize}}" filename="5"></asset-icon>
-      <asset-icon size="{{iconSize}}" filename="3"></asset-icon>
-      <asset-icon size="{{iconSize}}" filename="2"></asset-icon>
+      <asset-icon
+            *ngFor="let number of [1,2,3,4,5,3,2,1,4]"
+            size="{{iconSize}}"
+            filename="{{number}}"></asset-icon>
     </mat-grid-list>
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-raised-button
-            matTooltip="Upload a new token">
+            matTooltip="Upload a new token"
+            (click)="clickUpload()">
       <mat-icon>image</mat-icon>
       <span>Upload</span>
     </button>
     <button mat-raised-button
             color="warn"
-            matTooltip="Delete selected token">
+            matTooltip="Delete selected token"
+            (click)="clickDelete()">
       <mat-icon>delete-outline</mat-icon>
       <span>Delete</span>
     </button>
     <button mat-raised-button
             color="primary"
-            matTooltip="Pick token">
+            matTooltip="Pick token"
+            (click)="clickPick()">
       <mat-icon>done</mat-icon>
       <span>Pick</span>
     </button>
