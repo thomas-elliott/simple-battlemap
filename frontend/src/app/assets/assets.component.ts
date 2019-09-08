@@ -24,4 +24,16 @@ export class AssetsComponent implements OnInit {
       this.iconSize = this.iconSize + 32;
     }
   }
+
+  clickDelete() {
+
+  }
+
+  clickUpload() {
+
+  }
+
+  clickPick() {
+
+  }
 }
