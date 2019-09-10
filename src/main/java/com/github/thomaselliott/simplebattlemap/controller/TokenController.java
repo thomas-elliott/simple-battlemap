@@ -50,7 +50,7 @@ public class TokenController {
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
-    public void removeToken(@PathVariable Integer id) {
+    public void removeToken(@PathVariable Long id) {
         mapService.removeToken(id);
     }
 }

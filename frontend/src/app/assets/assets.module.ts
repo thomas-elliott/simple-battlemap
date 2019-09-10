@@ -7,12 +7,18 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatIconModule} from "@angular/material/icon";
 import { IconsComponent } from './icons/icons.component';
+import { UploadWindowComponent } from './upload-window/upload-window.component';
+import { TokenWindowComponent } from './token-window/token-window.component';
+import { BackgroundWindowComponent } from './background-window/background-window.component';
 
 
 @NgModule({
   declarations: [
     AssetsComponent,
-    IconsComponent],
+    IconsComponent,
+    UploadWindowComponent,
+    TokenWindowComponent,
+    BackgroundWindowComponent],
   exports: [
     AssetsComponent
   ],

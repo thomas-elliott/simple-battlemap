@@ -27,12 +27,12 @@ export class TokenCanvasComponent implements OnInit {
   constructor(private tokenService: TokenService) { }
 
   ngOnInit() {
-    this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
+/*    this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
       (response) => {
         this.tokens = response;
         this.drawTokens();
       }
-    );
+    );*/
   }
 
   private ngAfterViewInit(): void {

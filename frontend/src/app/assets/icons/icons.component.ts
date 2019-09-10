@@ -6,7 +6,7 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./icons.component.scss']
 })
 export class IconsComponent implements OnInit {
-  @Input() filename: string;
+  @Input() id: number;
   @Input() size: number;
   @Input() selected: boolean;
 
@@ -14,5 +14,4 @@ export class IconsComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

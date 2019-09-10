@@ -10,5 +10,4 @@ public class SimpleBattlemapApplication {
     public static void main(String[] args) {
         SpringApplication.run(SimpleBattlemapApplication.class, args);
     }
-
 }

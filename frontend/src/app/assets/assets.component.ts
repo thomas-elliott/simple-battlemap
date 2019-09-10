@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class AssetsComponent implements OnInit {
   iconSize: number = 128;
 
+  showPage: string = "token";
+
   constructor() { }
 
   ngOnInit() {
@@ -30,7 +32,11 @@ export class AssetsComponent implements OnInit {
   }
 
   clickUpload() {
-
+    if (this.showPage === "upload") {
+      this.showPage = "token";
+    } else {
+      this.showPage = "upload"
+    }
   }
 
   clickPick() {

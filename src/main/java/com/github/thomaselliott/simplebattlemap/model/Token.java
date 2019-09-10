@@ -2,18 +2,35 @@ package com.github.thomaselliott.simplebattlemap.model;
 
 import java.util.Objects;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
-@Getter
-@Setter
-@NoArgsConstructor
+import lombok.Data;
+
+@Data
+@Entity
 public class Token {
-    private Integer id;
+    @Id
+    @GeneratedValue
+    @Column(name = "token_id")
+    private Long id;
     private String name;
-    private Long playerId;
-    private String tokenImage;
+    @ManyToOne
+    @JoinColumn(name = "player",
+            referencedColumnName = "player_id",
+            foreignKey = @ForeignKey(name = "fk_player"))
+    private Player player;
+    @OneToOne
+    @JoinColumn(name = "asset",
+            referencedColumnName = "asset_id",
+            foreignKey = @ForeignKey(name = "fk_asset"))
+    private Asset imageAsset;
     private int x;
     private int y;
 
