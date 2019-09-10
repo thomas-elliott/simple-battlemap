@@ -23,12 +23,9 @@
     </div>
   </mat-card-header>
   <mat-card-content>
-    <mat-grid-list cols="6" rowHeight="fit">
-      <asset-icon
-            *ngFor="let number of [1,2,3,4,5,3,2,1,4]"
-            size="{{iconSize}}"
-            filename="{{number}}"></asset-icon>
-    </mat-grid-list>
+    <app-background-window *ngIf="showPage === 'background'"></app-background-window>
+    <app-token-window *ngIf="showPage === 'token'" [iconSize]="iconSize"></app-token-window>
+    <app-upload-window *ngIf="showPage === 'upload'"></app-upload-window>
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-raised-button

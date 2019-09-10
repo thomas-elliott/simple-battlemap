@@ -1,19 +1,19 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 
 import lombok.Data;
 
 @Data
 @Entity
-public class Thumbnail {
+public class Player {
     @Id
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue
+    @Column(name = "player_id")
     private Long id;
-    @Lob
-    private byte[] data;
+    private String name;
+    private boolean dm;
 }

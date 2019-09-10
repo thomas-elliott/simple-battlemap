@@ -2,15 +2,13 @@ package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.Asset;
 import com.github.thomaselliott.simplebattlemap.model.AssetType;
-import com.github.thomaselliott.simplebattlemap.model.Image;
-import com.github.thomaselliott.simplebattlemap.model.Thumbnail;
+import com.github.thomaselliott.simplebattlemap.model.ImageFile;
 import com.github.thomaselliott.simplebattlemap.service.AssetService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,8 +42,8 @@ public class AssetController {
         AssetType assetType = AssetType.fromString(type);
         if (imageFile == null || thumbnailFile == null) return ResponseEntity.badRequest().body(null);
 
-        Image image = this.assetService.saveImage(imageFile);
-        Thumbnail thumbnail = this.assetService.saveThumbnail(thumbnailFile);
+        ImageFile image = this.assetService.saveImage(imageFile);
+        ImageFile thumbnail = this.assetService.saveImage(thumbnailFile);
 
         if (image == null || thumbnail == null) {
             return ResponseEntity.badRequest().body(null);

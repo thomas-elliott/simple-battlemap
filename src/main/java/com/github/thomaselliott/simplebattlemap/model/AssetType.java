@@ -1,5 +1,7 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.springframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -7,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum AssetType {
     TOKEN ("token"),
     BACKGROUND ("background");
@@ -14,7 +17,7 @@ public enum AssetType {
     private String description;
 
     public static AssetType fromString(String description) {
-        if (StringUtils.isEmpty(description)) throw new IllegalArgumentException("Empty asset type");
+        if (StringUtils.isEmpty(description)) return null;
 
         for (AssetType type : AssetType.values()) {
             if (type.description.equalsIgnoreCase(description)) {
@@ -22,6 +25,7 @@ public enum AssetType {
             }
         }
 
-        throw new IllegalArgumentException("Invalid asset type");
+        return null;
     }
+
 }

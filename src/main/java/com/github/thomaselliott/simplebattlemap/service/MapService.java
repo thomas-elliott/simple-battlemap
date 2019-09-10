@@ -1,43 +1,60 @@
 package com.github.thomaselliott.simplebattlemap.service;
 
-import com.github.thomaselliott.simplebattlemap.model.Map;
+import com.github.thomaselliott.simplebattlemap.model.Asset;
+import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.Token;
+import com.github.thomaselliott.simplebattlemap.repository.MapRepository;
+import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class MapService {
-    private Map map;
+    private BattleMap battleMap;
+    private MapRepository mapRepository;
+    private TokenRepository tokenRepository;
     private SimpMessagingTemplate messagingTemplate;
 
-    public MapService(SimpMessagingTemplate messagingTemplate) {
+    public MapService(SimpMessagingTemplate messagingTemplate,
+                      MapRepository mapRepository,
+                      TokenRepository tokenRepository) {
         this.messagingTemplate = messagingTemplate;
-        createMap();
+        this.tokenRepository = tokenRepository;
+        this.mapRepository = mapRepository;
     }
 
-    public void createMap() {
-        this.map = new Map("", 30, 22);
+    public boolean loadMap(Long id) {
+        Optional<BattleMap> map = mapRepository.findById(id);
+        if (map.isPresent()) {
+            battleMap = null;
+            battleMap = map.get();
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public String getBackgroundImage() {
-        return map.getBackgroundImagePath();
+    public void saveMap() {
+        mapRepository.save(battleMap);
+    }
+
+    public Asset getBackgroundImage() {
+        return battleMap.getBackgroundImage();
     }
 
     public List<Token> getTokens() {
-        HashMap<Integer, Token> tokens = map.getTokens();
-        ArrayList<Token> tokenList = new ArrayList<>();
+        Map<Long, Token> tokens = battleMap.getTokens();
 
-        for (Token token : tokens.values()) {
-            tokenList.add(token);
-        }
+        ArrayList<Token> tokenList = new ArrayList<>(tokens.values());
 
         return tokenList;
     }
@@ -47,33 +64,31 @@ public class MapService {
     }
 
     public void addToken(Token token) {
-        if (token.getId() != null && map.containsToken(token)) {
+        if (token.getId() != null && battleMap.containsToken(token)) {
             log.info("Duplicate token: ({}) {}", token.getId(), token.getName());
             return;
         }
 
-        token.setId(map.getNextId());
-
-        map.addToken(token);
+        battleMap.addToken(token);
     }
 
-    public void moveToken(int id, int x, int y) {
-        map.moveToken(id, x, y);
+    public void moveToken(Long id, int x, int y) {
+        battleMap.moveToken(id, x, y);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after move");
-        log.info("Size of tokens: {}", map.getTokens().size());
+        log.info("Size of tokens: {}", battleMap.getTokens().size());
     }
 
     public void updateToken(Token token) {
-        if (!map.containsToken(token)) {
+        if (!battleMap.containsToken(token)) {
             log.info("Could not find token to remove: ({}) {}", token.getId(), token.getName());
             return;
         }
 
-        map.updateToken(token);
+        battleMap.updateToken(token);
     }
 
-    public void removeToken(Integer id) {
-        map.removeToken(id);
+    public void removeToken(Long id) {
+        battleMap.removeToken(id);
     }
 }
