@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {WindowService} from "../../service/window.service";
 
 @Component({
   selector: 'app-palette',
@@ -7,6 +8,9 @@ import {Component} from '@angular/core';
 })
 export class PaletteComponent {
 
-  constructor() {}
+  constructor(private windowService: WindowService) {}
 
+  showAssets(assetType: string) {
+    this.windowService.changeAssetWindow(assetType);
+  }
 }

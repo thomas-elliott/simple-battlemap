@@ -16,7 +16,6 @@ export class AssetService {
   constructor(private httpClient: HttpClient) {}
 
   notifyTokenAssetChanged() {
-    console.log("notify asset changed");
     return this.tokenAssetsChanged.next(this.tokenAssets.slice());
   }
 

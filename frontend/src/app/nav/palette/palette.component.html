@@ -11,12 +11,14 @@
   </button>
   <button mat-flat-button
           matTooltip="Show tokens"
-          matTooltipPosition="right">
+          matTooltipPosition="right"
+          (click)="showAssets('token')">
     <mat-icon>group</mat-icon>
   </button>
   <button mat-flat-button
           matTooltip="Show backgrounds"
-          matTooltipPosition="right">
+          matTooltipPosition="right"
+          (click)="showAssets('background')">
     <mat-icon>image</mat-icon>
   </button>
 </mat-card>
