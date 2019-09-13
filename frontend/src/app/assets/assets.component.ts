@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Subscription} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {WindowService} from "../service/window.service";
 import {renderConstantPool} from "@angular/compiler-cli/ngcc/src/rendering/renderer";
+import {MatDialog} from "@angular/material/dialog";
+import {DeleteDialogComponent} from "./delete-dialog/delete-dialog.component";
 
 @Component({
   selector: 'app-assets',
@@ -11,12 +13,16 @@ import {renderConstantPool} from "@angular/compiler-cli/ngcc/src/rendering/rende
 export class AssetsComponent implements OnInit {
   iconSize: number = 128;
 
+  deleteSubject: Subject<void> = new Subject<void>();
+  pickSubject: Subject<void> = new Subject<void>();
   assetWindowSubscription: Subscription;
 
   showPage: string;
 
-  constructor(private windowService: WindowService) { }
+  constructor(private windowService: WindowService,
+              public deleteDialog: MatDialog) { }
 
+  // TODO: Need to learn how to do proper state and switching the windows in Angular
   ngOnInit() {
     this.assetWindowSubscription = this.windowService.assetWindowChanged.subscribe(
       (response) => {
@@ -42,7 +48,16 @@ export class AssetsComponent implements OnInit {
   }
 
   clickDelete() {
+    const dialogRef = this.deleteDialog.open(DeleteDialogComponent,
+      {
+        width: '50%',
+        disableClose: false
+      });
 
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      console.log("Closed: " + result);
+      this.deleteSubject.next();
+    });
   }
 
   clickUpload() {
@@ -54,7 +69,7 @@ export class AssetsComponent implements OnInit {
   }
 
   clickPick() {
-
+    this.pickSubject.next();
   }
 
   closeWindow() {

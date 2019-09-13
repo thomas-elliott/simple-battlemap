@@ -27,12 +27,12 @@ export class TokenCanvasComponent implements OnInit {
   constructor(private tokenService: TokenService) { }
 
   ngOnInit() {
-/*    this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
+    this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
       (response) => {
         this.tokens = response;
         this.drawTokens();
       }
-    );*/
+    );
   }
 
   private ngAfterViewInit(): void {
@@ -40,8 +40,8 @@ export class TokenCanvasComponent implements OnInit {
     // Canvas size from background
     this.setCanvasSize(this.backgroundWidth, this.backgroundHeight);
     // Token size from canvas size / grid
-    this.addToken("TestToken", "assets/dev/1.png", 70, 70, this.tokenWidth, this.tokenHeight);
-    this.moveToken("TestToken", 150, 150);
+//    this.addToken("TestToken", "assets/dev/1.png", 70, 70, this.tokenWidth, this.tokenHeight);
+//    this.moveToken("TestToken", 150, 150);
 //    this.removeToken(1);
   }
 
