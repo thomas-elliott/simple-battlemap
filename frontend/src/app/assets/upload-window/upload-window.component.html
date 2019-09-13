@@ -1,3 +1,13 @@
-<input type="file" #imageFile (change)="imageFileChanged($event)">
-<input type="file" #thumbnail (change)="thumbnailFileChanged($event)">
-<button (click)="upload()">Upload</button>
+<div *ngIf="imageFile != null">
+  {{imageFile.name}} - {{imageFile.size}} - {{imageFile.type}}
+</div>
+
+<div *ngIf="thumbnailFile != null">
+  {{thumbnailFile.name}} - {{thumbnailFile.size}} - {{thumbnailFile.type}}
+</div>
+
+<input type="file" (change)="imageFileChanged($event)">
+<button (click)="upload()"
+        [disabled]="uploadDisabled()">
+  Upload
+</button>

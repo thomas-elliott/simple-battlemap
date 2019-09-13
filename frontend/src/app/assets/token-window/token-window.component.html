@@ -2,5 +2,7 @@
   <asset-icon
     *ngFor="let token of tokens"
     size="{{iconSize}}"
-    id="{{token.id}}"></asset-icon>
+    id="{{token.id}}"
+    selected="{{token.selected}}"
+    (click)="toggleSelect(token);"></asset-icon>
 </mat-grid-list>
