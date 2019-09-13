@@ -24,4 +24,8 @@ export class TokenWindowComponent implements OnInit {
     );
     this.assetService.getTokenAssetsFromServer();
   }
+
+  toggleSelect(asset: Asset) {
+    asset.selected = !asset.selected;
+  }
 }
