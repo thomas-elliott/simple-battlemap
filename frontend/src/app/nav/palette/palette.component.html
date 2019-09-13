@@ -1,13 +1,21 @@
 <mat-card id="palette-card">
   <button mat-flat-button
           matTooltip="Selection mode: select tokens"
-          matTooltipPosition="right">
+          matTooltipPosition="right"
+          (click)="selectToken(null)">
     <mat-icon>select_all</mat-icon>
   </button>
   <button mat-flat-button
           matTooltip="Add token"
           matTooltipPosition="right">
     <mat-icon>add</mat-icon>
+  </button>
+  <button *ngFor="let token of selectedTokenAssets"
+          mat-flat-button>
+    <img  src="http://localhost:8080/image/{{token.id}}/thumbnail.png"
+          width="32"
+          height="32"
+          (click)="selectToken(token)"/>
   </button>
   <button mat-flat-button
           matTooltip="Show tokens"

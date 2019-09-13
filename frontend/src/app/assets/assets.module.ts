@@ -6,10 +6,12 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatIconModule} from "@angular/material/icon";
-import { IconsComponent } from './icons/icons.component';
-import { UploadWindowComponent } from './upload-window/upload-window.component';
-import { TokenWindowComponent } from './token-window/token-window.component';
-import { BackgroundWindowComponent } from './background-window/background-window.component';
+import {IconsComponent} from './icons/icons.component';
+import {UploadWindowComponent} from './upload-window/upload-window.component';
+import {TokenWindowComponent} from './token-window/token-window.component';
+import {BackgroundWindowComponent} from './background-window/background-window.component';
+import {DeleteDialogComponent} from './delete-dialog/delete-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import { BackgroundWindowComponent } from './background-window/background-window
     IconsComponent,
     UploadWindowComponent,
     TokenWindowComponent,
-    BackgroundWindowComponent],
+    BackgroundWindowComponent,
+    DeleteDialogComponent],
   exports: [
     AssetsComponent
   ],
@@ -28,7 +31,11 @@ import { BackgroundWindowComponent } from './background-window/background-window
     MatGridListModule,
     MatButtonModule,
     MatTooltipModule,
+    MatDialogModule,
     MatIconModule
+  ],
+  entryComponents: [
+    DeleteDialogComponent
   ]
 })
 export class AssetsModule {

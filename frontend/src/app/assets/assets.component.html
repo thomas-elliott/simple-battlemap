@@ -24,20 +24,25 @@
     </div>
   </mat-card-header>
   <mat-card-content>
-    <app-background-window *ngIf="showPage === 'background'"></app-background-window>
-    <app-token-window *ngIf="showPage === 'token'" [iconSize]="iconSize"></app-token-window>
-    <app-upload-window *ngIf="showPage === 'upload'"></app-upload-window>
+    <app-background-window *ngIf="showPage === 'background'">
+    </app-background-window>
+    <app-token-window *ngIf="showPage === 'token'"
+                      [pickEvent]="pickSubject.asObservable()"
+                      [iconSize]="iconSize">
+    </app-token-window>
+    <app-upload-window *ngIf="showPage === 'upload'">
+    </app-upload-window>
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-raised-button
-            matTooltip="Upload a new token"
+            matTooltip="Upload new assets"
             (click)="clickUpload()">
       <mat-icon>image</mat-icon>
       <span>{{showPage === 'upload' ? 'Cancel' : 'Upload'}}</span>
     </button>
     <button mat-raised-button
             color="warn"
-            matTooltip="Delete selected token"
+            matTooltip="Delete selected assets"
             (click)="clickDelete()">
       <mat-icon>delete-outline</mat-icon>
       <span>Delete</span>

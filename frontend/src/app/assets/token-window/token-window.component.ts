@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AssetService} from "../../service/asset.service";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {Asset} from "../../model/asset.model";
 
 @Component({
@@ -10,16 +10,21 @@ import {Asset} from "../../model/asset.model";
 })
 export class TokenWindowComponent implements OnInit {
   @Input() iconSize;
+  @Input() pickEvent: Observable<void>;
   assetSubscription: Subscription;
+  pickSubscription: Subscription;
 
-  tokens: Asset[];
+  tokenAssets: Asset[];
 
   constructor(private assetService: AssetService) {}
 
   ngOnInit(): void {
+    this.pickSubscription = this.pickEvent.subscribe(() => {
+      this.updateSelection();
+    });
     this.assetSubscription = this.assetService.tokenAssetsChanged.subscribe(
       (response: Asset[]) => {
-        this.tokens = response;
+        this.tokenAssets = response;
       }
     );
     this.assetService.getTokenAssetsFromServer();
@@ -27,5 +32,10 @@ export class TokenWindowComponent implements OnInit {
 
   toggleSelect(asset: Asset) {
     asset.selected = !asset.selected;
+  }
+
+  updateSelection() {
+    this.assetService.selectTokenAssets(
+      this.tokenAssets.filter((asset: Asset) => asset.selected));
   }
 }

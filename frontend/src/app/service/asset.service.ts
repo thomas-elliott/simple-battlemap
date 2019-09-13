@@ -8,6 +8,10 @@ import {Asset} from "../model/asset.model";
   providedIn: 'root'
 })
 export class AssetService {
+  selectedTokenAssetsChanged = new Subject<Asset[]>();
+  selectedTokenAssets: Asset[];
+  selectedTokenChanged = new Subject<Asset>();
+  selectedToken: Asset;
   tokenAssetsChanged = new Subject<Asset[]>();
   tokenAssets: Asset[];
 
@@ -17,6 +21,24 @@ export class AssetService {
 
   notifyTokenAssetChanged() {
     return this.tokenAssetsChanged.next(this.tokenAssets.slice());
+  }
+
+  notifySelectedTokenChanged() {
+    return this.selectedTokenChanged.next(this.selectedToken);
+  }
+
+  notifySelectedTokenAssetsChanged() {
+    return this.selectedTokenAssetsChanged.next(this.selectedTokenAssets.slice());
+  }
+
+  public selectTokenAssets(assets: Asset[]) {
+    this.selectedTokenAssets = assets;
+    this.notifySelectedTokenAssetsChanged();
+  }
+
+  public selectToken(asset: Asset) {
+    this.selectedToken = asset;
+    this.notifySelectedTokenChanged();
   }
 
   public getTokenAssetsFromServer(): void {

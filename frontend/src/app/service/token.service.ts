@@ -11,13 +11,14 @@ import {TokensResponse} from "../model/tokensResponse.model";
 export class TokenService {
   tokenChanged = new Subject<Token[]>();
 
-  tokens: Token[] = new Array<Token>();
+  tokens: Token[];
 
   serverPath = 'http://localhost:8080/';
   tokenPath = 'token/';
 
   constructor(private wsService: WebsocketService,
               private httpClient: HttpClient) {
+    this.tokens = [];
     this.getTokensFromServer();
   }
 
@@ -35,7 +36,7 @@ export class TokenService {
     token.x = x;
     token.y = y;
     token.id = this.tokens.push(token);
-    // this.sendAddTokenToServer(token);
+    this.sendAddTokenToServer(token);
   }
 
   // Remove Token
@@ -51,10 +52,10 @@ export class TokenService {
 
   // Move Token
   public moveToken(name: string, x: number, y: number) {
-    //let token = this.tokens.find(i => i.name === name);
-    //token.x = x;
-    //token.y = y;
-    //this.sendMoveTokenToServer(token);
+    let token = this.tokens.find(i => i.name === name);
+    token.x = x;
+    token.y = y;
+    this.sendMoveTokenToServer(token);
   }
 
   private getTokensFromServer() {
@@ -63,6 +64,9 @@ export class TokenService {
         (response: TokensResponse) => {
           console.log('Token response from server');
           this.tokens = response._embedded.assets;
+          if (!this.tokens) {
+            this.tokens = [];
+          }
           this.notifyTokenChanged();
         },
         (error: HttpErrorResponse) => {
