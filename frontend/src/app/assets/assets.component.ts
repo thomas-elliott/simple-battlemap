@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {Subscription} from "rxjs";
+import {WindowService} from "../service/window.service";
+import {renderConstantPool} from "@angular/compiler-cli/ngcc/src/rendering/renderer";
 
 @Component({
   selector: 'app-assets',
@@ -8,11 +11,22 @@ import { Component, OnInit } from '@angular/core';
 export class AssetsComponent implements OnInit {
   iconSize: number = 128;
 
-  showPage: string = "token";
+  assetWindowSubscription: Subscription;
 
-  constructor() { }
+  showPage: string;
+
+  constructor(private windowService: WindowService) { }
 
   ngOnInit() {
+    this.assetWindowSubscription = this.windowService.assetWindowChanged.subscribe(
+      (response) => {
+        this.showPage = response;
+      }
+    );
+
+    if (!this.showPage) {
+      this.showPage = this.windowService.assetWindow;
+    }
   }
 
   zoomOut() {
@@ -41,5 +55,9 @@ export class AssetsComponent implements OnInit {
 
   clickPick() {
 
+  }
+
+  closeWindow() {
+    this.windowService.changeAssetWindow('');
   }
 }
