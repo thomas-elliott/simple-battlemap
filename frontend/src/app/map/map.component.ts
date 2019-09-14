@@ -45,7 +45,6 @@ export class MapComponent implements OnInit {
   @HostListener('mousedown', ['$event'])
   onMouseDown(event) {
     if (this.selectedTokenAsset) {
-      console.log('selected');
       this.tokenService.addToken(
         'Test token',
         'http://localhost:8080/image/' + this.selectedTokenAsset.id + '/thumbnail.png',
