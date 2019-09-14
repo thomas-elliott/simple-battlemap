@@ -31,7 +31,9 @@ public class BattleMap {
             foreignKey = @ForeignKey(name = "fk_background_image"))
     private Asset backgroundImage;
 
-    public BattleMap() {}
+    public BattleMap() {
+        tokens = new HashMap<>();
+    }
 
     public BattleMap(Asset backgroundImage, int gridWidth, int gridHeight) {
         tokens = new HashMap<>();

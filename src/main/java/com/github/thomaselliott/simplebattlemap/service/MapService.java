@@ -30,6 +30,9 @@ public class MapService {
         this.messagingTemplate = messagingTemplate;
         this.tokenRepository = tokenRepository;
         this.mapRepository = mapRepository;
+
+        // TODO: Temporary
+        battleMap = new BattleMap();
     }
 
     public boolean loadMap(Long id) {

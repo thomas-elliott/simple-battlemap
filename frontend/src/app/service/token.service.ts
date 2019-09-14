@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Token} from "../model/token.model";
 import {Subject} from "rxjs";
 import {WebsocketService} from "./websocket.service";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {TokensResponse} from "../model/tokensResponse.model";
 
 @Injectable({
