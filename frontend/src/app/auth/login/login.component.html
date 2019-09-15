@@ -1,0 +1,49 @@
+<mat-card class="modal">
+<!--  <mat-card-header class="mat-card-title">
+    <div>
+      Login
+    </div>
+  </mat-card-header>-->
+  <mat-card-content align="center">
+    <mat-error *ngIf="showError">
+      <strong>Login was not successful. Please try again or check your username/password.</strong>
+    </mat-error>
+    <div>
+    <mat-form-field>
+      <input [(ngModel)]="username"
+             matInput
+             placeholder="Username"
+             type="text"
+             required>
+    </mat-form-field>
+    </div>
+    <div>
+    <mat-form-field>
+      <input [(ngModel)]="password"
+             matInput
+             placeholder="Password"
+             type="password"
+             required>
+    </mat-form-field>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button
+            color="warn"
+            (click)="closeWindow()">
+      Cancel
+    </button>
+    <button mat-raised-button
+            color="secondary"
+            [disabled]="loginDisabled()"
+            (click)="register()">
+      Register
+    </button>
+    <button mat-raised-button
+            color="primary"
+            [disabled]="loginDisabled()"
+            (click)="login()">
+      Login
+    </button>
+  </mat-card-actions>
+</mat-card>

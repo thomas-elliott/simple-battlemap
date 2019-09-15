@@ -39,7 +39,7 @@ public class ApiOriginFilter implements Filter {
         String logString = String.format("Request=%s %s|Response=%d|Duration=%dms", requestMethod, requestPath, responseCode, System.currentTimeMillis() - startTime);
 
         if (requestPath.contains("actuator")) {
-            log.debug(logString);
+            log.info(logString);
         } else {
             log.info(logString);
         }

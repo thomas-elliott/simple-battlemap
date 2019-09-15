@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {WindowService} from "../../service/window.service";
 import {AssetService} from "../../service/asset.service";
 import {Subscription} from "rxjs";
+import {WindowState} from "../../model/windowState.model";
 import {Asset} from "../../model/asset.model";
 
 @Component({
@@ -24,11 +25,19 @@ export class PaletteComponent implements OnInit {
     );
   }
 
-  showAssets(assetType: string) {
-    this.windowService.changeAssetWindow(assetType);
+  showNone(): void {
+    this.windowService.changeAssetWindow(WindowState.None);
   }
 
-  selectToken(asset: Asset) {
+  showToken(): void {
+    this.windowService.changeAssetWindow(WindowState.AssetToken);
+  }
+
+  showBackground(): void {
+    this.windowService.changeAssetWindow(WindowState.AssetBackground);
+  }
+
+  selectToken(asset: Asset): void {
     this.assetService.selectToken(asset);
   }
 }

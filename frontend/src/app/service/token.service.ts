@@ -70,7 +70,8 @@ export class TokenService {
           this.notifyTokenChanged();
         },
         (error: HttpErrorResponse) => {
-          console.error("Error: " + error);
+          console.error("Error:");
+          console.log(error);
         }
       );
   }
@@ -81,7 +82,8 @@ export class TokenService {
       {})
       .subscribe((response) => { console.log("Finish"); },
         (error: HttpErrorResponse) => {
-        console.error("Error: " + error);
+          console.error("Error:");
+          console.log(error);
       });
   }
 
@@ -93,7 +95,8 @@ export class TokenService {
 
         },
         (error: HttpErrorResponse) => {
-        console.error("Error: " + error);
+          console.error("Error:");
+          console.log(error);
       });
   }
 
@@ -101,10 +104,11 @@ export class TokenService {
     this.httpClient.delete(this.serverPath + this.tokenPath + 'remove/' + token.id,
       {})
       .subscribe((response) => {
-
+          console.log("Response from remove response", response);
         },
         (error: HttpErrorResponse) => {
-        console.error("Error: " + error);
+        console.error("Error:");
+        console.log(error);
       });
   }
 }

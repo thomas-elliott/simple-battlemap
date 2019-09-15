@@ -2,7 +2,7 @@
   <button mat-flat-button
           matTooltip="Selection mode: select tokens"
           matTooltipPosition="right"
-          (click)="selectToken(null)">
+          (click)="showNone()">
     <mat-icon>select_all</mat-icon>
   </button>
   <button mat-flat-button
@@ -20,13 +20,13 @@
   <button mat-flat-button
           matTooltip="Show tokens"
           matTooltipPosition="right"
-          (click)="showAssets('token')">
+          (click)="showToken()">
     <mat-icon>group</mat-icon>
   </button>
   <button mat-flat-button
           matTooltip="Show backgrounds"
           matTooltipPosition="right"
-          (click)="showAssets('background')">
+          (click)="showBackground()">
     <mat-icon>image</mat-icon>
   </button>
 </mat-card>

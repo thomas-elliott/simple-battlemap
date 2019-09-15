@@ -50,7 +50,8 @@ export class AssetService {
           this.notifyTokenAssetChanged();
         },
         (error: HttpErrorResponse) => {
-          console.error("Error: " + error);
+          console.error("Error:");
+          console.log(error);
         }
       );
   }
