@@ -16,6 +16,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {myRxStompConfig} from "../rx-stomp.config";
 import {HttpClientModule} from "@angular/common/http";
+import {AuthModule} from "./auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {HttpClientModule} from "@angular/common/http";
     MatIconModule,
     MatListModule,
     NavModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AuthModule
   ],
   providers: [
     {

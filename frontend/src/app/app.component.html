@@ -1,5 +1,6 @@
 <app-palette></app-palette>
 <app-toolbar></app-toolbar>
-<app-assets *ngIf="showPage">
-</app-assets>
+<window-login *ngIf="showLogin()"></window-login>
+<window-assets *ngIf="showAssetWindow()">
+</window-assets>
 <app-map></app-map>

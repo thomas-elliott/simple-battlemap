@@ -1,0 +1,21 @@
+.modal {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  max-width: 40%;
+  z-index: 200;
+}
+
+.flex {
+  flex: 1;
+}
+
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+mat-card-header, mat-error {
+  padding-bottom: 10px;
+}

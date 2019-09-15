@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Subject, Subscription} from "rxjs";
 import {WindowService} from "../service/window.service";
-import {renderConstantPool} from "@angular/compiler-cli/ngcc/src/rendering/renderer";
 import {MatDialog} from "@angular/material/dialog";
 import {DeleteDialogComponent} from "./delete-dialog/delete-dialog.component";
+import {WindowState} from "../model/windowState.model";
 
 @Component({
-  selector: 'app-assets',
+  selector: 'window-assets',
   templateUrl: './assets.component.html',
   styleUrls: ['./assets.component.scss']
 })
@@ -17,7 +17,7 @@ export class AssetsComponent implements OnInit {
   pickSubject: Subject<void> = new Subject<void>();
   assetWindowSubscription: Subscription;
 
-  showPage: string;
+  showPage: WindowState;
 
   constructor(private windowService: WindowService,
               public deleteDialog: MatDialog) { }
@@ -33,6 +33,22 @@ export class AssetsComponent implements OnInit {
     if (!this.showPage) {
       this.showPage = this.windowService.assetWindow;
     }
+  }
+
+  showToken(): boolean {
+    return this.showPage == WindowState.AssetToken;
+  }
+
+  showBackground(): boolean {
+    return this.showPage == WindowState.AssetBackground;
+  }
+
+  showUpload(): boolean {
+    return this.showPage == WindowState.AssetUpload;
+  }
+
+  closeWindow() {
+    this.windowService.changeAssetWindow(WindowState.None);
   }
 
   zoomOut() {
@@ -61,18 +77,14 @@ export class AssetsComponent implements OnInit {
   }
 
   clickUpload() {
-    if (this.showPage === "upload") {
-      this.showPage = "token";
-    } else {
-      this.showPage = "upload"
+    if (this.showPage === WindowState.AssetUpload) {
+      this.showPage = WindowState.AssetToken;
+    } else if (this.showPage === WindowState.AssetToken) {
+      this.showPage = WindowState.AssetUpload;
     }
   }
 
   clickPick() {
     this.pickSubject.next();
-  }
-
-  closeWindow() {
-    this.windowService.changeAssetWindow('');
   }
 }

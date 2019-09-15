@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {Subject, Subscription} from "rxjs";
+import {WindowState} from "../model/windowState.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WindowService {
-  assetWindowChanged = new Subject<string>();
+  assetWindowChanged = new Subject<WindowState>();
 
-  assetWindow: string;
+  assetWindow: WindowState;
 
   constructor() { }
 
@@ -15,7 +16,7 @@ export class WindowService {
     return this.assetWindowChanged.next(this.assetWindow);
   }
 
-  changeAssetWindow(window: string) {
+  changeAssetWindow(window: WindowState) {
     this.assetWindow = window;
     this.notifyAssetWindowChanged();
   }
