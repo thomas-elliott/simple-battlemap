@@ -7,8 +7,12 @@
   <button mat-flat-button>
     <mat-icon>settings_applications</mat-icon>
     Settings</button>
-  <button mat-flat-button>Load map</button>
-  <button mat-raised-button>Save</button>
+  <button mat-flat-button
+          (click)="loadMap()"
+          [disabled]="!authenticated">Load map</button>
+  <button mat-raised-button
+          (click)="saveMap()"
+          [disabled]="!authenticated">Save</button>
   <button mat-raised-button
           (click)="showLogin()"
           [disabled]="authenticated">Login</button>

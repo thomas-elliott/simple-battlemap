@@ -3,6 +3,7 @@ import {TokenService} from "../service/token.service";
 import {AssetService} from "../service/asset.service";
 import {Subscription} from "rxjs";
 import {Asset} from "../model/asset.model";
+import {Token} from "../model/token.model";
 
 @Component({
   selector: 'app-map',
@@ -46,11 +47,9 @@ export class MapComponent implements OnInit {
   onMouseDown(event) {
     if (this.selectedTokenAsset) {
       this.tokenService.addToken(
-        'Test token',
-        'http://localhost:8080/image/' + this.selectedTokenAsset.id + '/thumbnail.png',
-        event.pageX, event.pageY,
-        this.backgroundWidth / this.gridWidth,
-        this.backgroundHeight / this.gridHeight
+        new Token('Test token',
+        this.selectedTokenAsset.id, 0,
+        event.pageX, event.pageY)
       );
     }
 

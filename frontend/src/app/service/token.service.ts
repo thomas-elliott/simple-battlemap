@@ -27,15 +27,7 @@ export class TokenService {
   }
 
   // Add Token
-  public addToken(name: string, image: string, x: number, y: number, width: number, height: number) {
-    const token = new Token();
-    token.name = name;
-    token.imageAsset = image;
-    token.width = width;
-    token.height = height;
-    token.x = x;
-    token.y = y;
-    token.id = this.tokens.push(token);
+  public addToken(token: Token) {
     this.sendAddTokenToServer(token);
   }
 
