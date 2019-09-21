@@ -11,11 +11,5 @@ public class CustomRepositoryRestConfigurer extends RepositoryRestConfigurerAdap
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(Asset.class);
-        config.getCorsRegistry()
-                .addMapping("/**")
-                .allowedOrigins("*")
-                .allowedHeaders("Content-Type, REMOTE_USER, x-authenticated-scope")
-                .allowedMethods("GET, POST, DELETE, PUT", "OPTIONS")
-                .allowCredentials(true);
     }
 }
