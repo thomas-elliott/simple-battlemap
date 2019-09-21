@@ -15,8 +15,9 @@ import {AssetsModule} from "./assets/assets.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {myRxStompConfig} from "../rx-stomp.config";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthModule} from "./auth/auth.module";
+import {AuthInterceptor} from "./util/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {AuthModule} from "./auth/auth.module";
     AuthModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: InjectableRxStompConfig,
       useValue: myRxStompConfig

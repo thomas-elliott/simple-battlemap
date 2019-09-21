@@ -16,10 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Authentication authentication) throws IOException, ServletException {
-        httpResponse.setStatus(HttpStatus.ACCEPTED.value());
-        httpResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.setStatus(HttpStatus.OK.value());
+        httpResponse.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
         httpResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type, REMOTE_USER, x-authenticated-scope");
+        httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type");
+        httpResponse.getWriter().write("{\"authenticated\": \"ok\"}");
+        httpResponse.getWriter().flush();
+        httpResponse.getWriter().close();
         log.info("Http auth success");
     }
 }
