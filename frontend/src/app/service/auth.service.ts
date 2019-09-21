@@ -7,6 +7,7 @@ import {
   HttpResponse
 } from "@angular/common/http";
 import {Subject} from "rxjs";
+import {User} from "../model/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,19 @@ export class AuthService {
 
   notifyAuthenticationChanged() {
     return this.authenticationChanged.next(this.authorised);
+  }
+
+  checkAuthentication() {
+    this.httpClient.get(`${this.serverPath}user`).subscribe(
+      (response: User) => {
+        if (this.authorised !== response.authenticated) {
+          this.authorised = response.authenticated;
+          this.notifyAuthenticationChanged();
+        }
+      }, (error: HttpErrorResponse) => {
+        console.error('Error', error);
+    }
+    );
   }
 
   sendLogin(username: string, password: string) {

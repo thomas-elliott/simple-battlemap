@@ -1,9 +1,12 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.Token;
+import com.github.thomaselliott.simplebattlemap.model.TokenRequest;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +34,21 @@ public class TokenController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void addToken(@RequestBody Token token) {
-        if (token != null) {
+    public ResponseEntity addToken(@RequestBody TokenRequest tokenRequest) {
+        if (tokenRequest != null && tokenRequest.getToken() != null) {
+            Token token = tokenRequest.getToken();
+            if (StringUtils.isEmpty(token.getName()) ||
+                token.getImageAsset() == null ||
+                (token.getX() == 0 && token.getY() == 0)) {
+                log.info("Incomplete token info");
+                return ResponseEntity.badRequest().body(null);
+            }
+
             mapService.addToken(token);
+            return ResponseEntity.ok(null);
         } else {
             log.warn("Tried to add null token");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

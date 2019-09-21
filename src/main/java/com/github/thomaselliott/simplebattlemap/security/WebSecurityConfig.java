@@ -42,7 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-                    if (authException != null) {
+                    if (request.getMethod().equals("OPTIONS")) {
+                        // Always return 200 on OPTIONS TODO: Probably not the best way to do it
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    } else if (authException != null) {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().print(authException.getLocalizedMessage());
                     }

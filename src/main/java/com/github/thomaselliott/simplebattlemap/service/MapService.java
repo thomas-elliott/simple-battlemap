@@ -47,6 +47,7 @@ public class MapService {
     }
 
     public void saveMap() {
+        tokenRepository.saveAll(battleMap.getTokens().values());
         mapRepository.save(battleMap);
     }
 
@@ -73,6 +74,7 @@ public class MapService {
         }
 
         battleMap.addToken(token);
+        tokenRepository.save(token);
     }
 
     public void moveToken(Long id, int x, int y) {

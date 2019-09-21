@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BackgroundService } from './background.service';
+import { MapService } from './map.service';
 
-describe('BackgroundService', () => {
+describe('MapService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: BackgroundService = TestBed.get(BackgroundService);
+    const service: MapService = TestBed.get(MapService);
     expect(service).toBeTruthy();
   });
 });
