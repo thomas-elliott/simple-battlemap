@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {TokenService} from "../service/token.service";
 import {AssetService} from "../service/asset.service";
 import {Subscription} from "rxjs";
@@ -16,6 +16,9 @@ export class MapComponent implements OnInit {
   selectedTokenAsset: Asset;
   selectedTokenId: number;
   isDragging: boolean;
+
+  @Input()
+  isDm: boolean;
 
   @ViewChild('canvasDiv', {static: false})
   canvasDiv: ElementRef;
@@ -70,7 +73,7 @@ export class MapComponent implements OnInit {
     console.log (`Selected token ${selectedTokenId}`);
     if (selectedTokenId !== null) {
       if (this.selectedTokenId === selectedTokenId) {
-        // Start dragging
+        // Start dragging TODO: change mouse pointer
         this.isDragging = true;
         console.log('Start dragging');
       } else {
@@ -78,16 +81,19 @@ export class MapComponent implements OnInit {
         this.tokenCanvas.setSelectedToken(selectedTokenId);
       }
     } else {
-      this.selectedTokenId = null;
-      this.tokenCanvas.setSelectedToken(null);
+      if (this.selectedTokenId != null) {
+        this.selectedTokenId = null;
+        this.tokenCanvas.setSelectedToken(null);
+      }
     }
   }
 
   @HostListener('mouseup', ['$event'])
   onMouseUp(event) {
-    if (!this.isDragging) {
-      return;
-    }
+    // For now don't let players move tokens
+    if (!this.isDm) return;
+    if (!this.isDragging) return;
+
     if (this.selectedTokenId == null) {
       this.isDragging = false;
       return;
