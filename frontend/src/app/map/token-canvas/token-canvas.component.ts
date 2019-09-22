@@ -1,7 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Token} from "../../model/token.model";
 import {TokenService} from "../../service/token.service";
 import {Subscription} from "rxjs";
+import {WebsocketService} from "../../service/websocket.service";
 
 @Component({
   selector: 'app-token-canvas',
@@ -13,6 +13,7 @@ export class TokenCanvasComponent implements OnInit {
   tokenCanvas: ElementRef;
 
   tokenSubscription: Subscription;
+  tokenWsSubscription: Subscription;
 
   @Input() backgroundWidth: number;
   @Input() backgroundHeight: number;
@@ -25,7 +26,8 @@ export class TokenCanvasComponent implements OnInit {
 
   public tokenContext: CanvasRenderingContext2D;
 
-  constructor(private tokenService: TokenService) { }
+  constructor(private tokenService: TokenService,
+              private wsService: WebsocketService) { }
 
   ngOnInit() {
     this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
@@ -34,6 +36,13 @@ export class TokenCanvasComponent implements OnInit {
         this.drawTokens();
       }
     );
+
+    this.tokenWsSubscription = this.wsService.tokenSubject.subscribe(
+      () => {
+        // Incoming WS message, update tokens
+        this.tokenService.getTokensFromServer();
+      }
+    )
   }
 
   private ngAfterViewInit(): void {
@@ -57,8 +66,8 @@ export class TokenCanvasComponent implements OnInit {
   }*/
 
   // Move Token
-  public moveToken(name: string, x: number, y: number) {
-    this.tokenService.moveToken(name, x, y);
+  public moveToken(tokenId: number, x: number, y: number) {
+    this.tokenService.moveToken(tokenId, x, y);
   }
 
   public setSelectedToken(selectedTokenId: number): void {
@@ -93,7 +102,8 @@ export class TokenCanvasComponent implements OnInit {
       let background = new Image();
 
       let ctx = this.tokenContext;
-      this.tokenContext.clearRect(token.x - 5, token.y - 5, this.tokenWidth + 10, this.tokenHeight + 10);
+      //ctx.clearRect(token.x - 5, token.y - 5, this.tokenWidth + 10, this.tokenHeight + 10);
+      ctx.clearRect(0,0, this.backgroundWidth, this.backgroundHeight);
       if (this.selectedTokenId === token.id) {
         ctx.beginPath();
         ctx.rect(token.x, token.y, this.tokenWidth, this.tokenHeight);

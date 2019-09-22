@@ -43,8 +43,8 @@ export class TokenService {
   }
 
   // Move Token
-  public moveToken(name: string, x: number, y: number) {
-    let token = this.tokens.find(i => i.name === name);
+  public moveToken(tokenId: number, x: number, y: number) {
+    let token = this.tokens.find(i => i.id === tokenId);
     token.x = x;
     token.y = y;
     this.sendMoveTokenToServer(token);
@@ -84,8 +84,7 @@ export class TokenService {
     this.httpClient.put(this.serverPath + this.tokenPath + 'move',
       {token},
       {})
-      .subscribe( (response) => {
-
+      .subscribe( () => {
         },
         (error: HttpErrorResponse) => {
           console.error("Error:");

@@ -78,7 +78,21 @@ public class MapService {
     }
 
     public void moveToken(Long id, int x, int y) {
+        Optional<Token> oToken = tokenRepository.findById(id);
+        if (oToken.isEmpty()) {
+            log.error("Can't find token");
+            return;
+        }
+
+        Token token = oToken.get();
+        if (!battleMap.containsToken(token)) {
+            battleMap.addToken(token);
+        }
+
         battleMap.moveToken(id, x, y);
+        token.setX(x);
+        token.setY(y);
+        tokenRepository.save(token);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after move");
         log.info("Size of tokens: {}", battleMap.getTokens().size());
