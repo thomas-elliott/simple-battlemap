@@ -8,12 +8,13 @@ import {
 } from "@angular/common/http";
 import {Subject} from "rxjs";
 import {User} from "../model/user.model";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  serverPath = 'http://localhost:8080/';
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
   authenticationChanged = new Subject<boolean>();
 
   authorised = false;

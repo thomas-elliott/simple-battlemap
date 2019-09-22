@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {TokenService} from "../../service/token.service";
 import {Subscription} from "rxjs";
 import {WebsocketService} from "../../service/websocket.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-token-canvas',
@@ -23,6 +24,8 @@ export class TokenCanvasComponent implements OnInit {
 
   tokens = [];
   selectedTokenId: number;
+
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   public tokenContext: CanvasRenderingContext2D;
 
@@ -118,7 +121,7 @@ export class TokenCanvasComponent implements OnInit {
         ctx.drawImage(background, token.x, token.y, this.tokenWidth, this.tokenHeight);
       };
 
-      background.src = `http://localhost:8080/image/${token.assetId}/thumbnail.png`;
+      background.src = `${this.serverPath}image/${token.assetId}/thumbnail.png`;
     }
   }
 }

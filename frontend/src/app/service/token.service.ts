@@ -4,6 +4,7 @@ import {Subject} from "rxjs";
 import {WebsocketService} from "./websocket.service";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {TokensResponse} from "../model/tokensResponse.model";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class TokenService {
 
   tokens: Token[];
 
-  serverPath = 'http://localhost:8080/';
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
   tokenPath = 'token/';
 
   constructor(private wsService: WebsocketService,

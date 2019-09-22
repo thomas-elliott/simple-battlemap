@@ -17,7 +17,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Authentication authentication) throws IOException, ServletException {
         httpResponse.setStatus(HttpStatus.OK.value());
-        httpResponse.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        //httpResponse.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
         httpResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type");

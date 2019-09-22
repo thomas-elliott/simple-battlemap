@@ -17,7 +17,7 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpRequest, HttpServletResponse httpResponse, AuthenticationException e) throws IOException, ServletException {
         httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-        httpResponse.addHeader("Access-Control-Allow-Origin", "localhost:4200");
+        //httpResponse.addHeader("Access-Control-Allow-Origin", "localhost:4200");
         httpResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type");
         log.info("Http auth failure");

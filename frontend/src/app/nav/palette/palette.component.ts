@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {WindowState} from "../../model/windowState.model";
 import {Asset} from "../../model/asset.model";
 import {TokenService} from "../../service/token.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-palette',
@@ -14,6 +15,7 @@ import {TokenService} from "../../service/token.service";
 export class PaletteComponent implements OnInit {
   assetSubscription: Subscription;
   selectedTokenAssets: Asset[];
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   constructor(private windowService: WindowService,
               private assetService: AssetService,

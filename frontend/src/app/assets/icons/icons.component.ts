@@ -1,4 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'asset-icon',
@@ -10,6 +11,8 @@ export class IconsComponent implements OnChanges {
   @Input() size: number;
   @Input() selected: boolean;
   isSelected: boolean;
+
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   constructor() { }
 

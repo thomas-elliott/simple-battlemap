@@ -27,7 +27,7 @@ public class ApiOriginFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         if (!httpResponse.containsHeader("Access-Control-Allow-Origin")) {
-            httpResponse.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+            //httpResponse.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         }
         if (!httpResponse.containsHeader("Access-Control-Allow-Credentials")) {
             httpResponse.addHeader("Access-Control-Allow-Credentials", "true");
