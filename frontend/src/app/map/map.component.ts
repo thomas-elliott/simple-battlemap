@@ -14,6 +14,8 @@ import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
 export class MapComponent implements OnInit {
   tokenSelectedSubscription: Subscription;
   selectedTokenAsset: Asset;
+  selectedTokenId: number;
+  isDragging: boolean;
 
   @ViewChild('canvasDiv', {static: false})
   canvasDiv: ElementRef;
@@ -54,25 +56,53 @@ export class MapComponent implements OnInit {
     const mouseX = event.pageX - rect.left;
     const mouseY = event.pageY - rect.top;
     console.log (`Click down on ${mouseX}, ${mouseY}`);
+    this.isDragging = false;
 
     if (this.selectedTokenAsset) {
       this.tokenService.addToken(
         new Token('Test token',
-        this.selectedTokenAsset.id, 0,
-        mouseX, mouseY)
+          this.selectedTokenAsset.id, 0,
+          mouseX, mouseY)
       );
     }
 
     const selectedTokenId = this.tokenCanvas.getTokenAtPoint(mouseX, mouseY);
     console.log (`Selected token ${selectedTokenId}`);
     if (selectedTokenId !== null) {
-      this.tokenCanvas.setSelectedToken(selectedTokenId);
+      if (this.selectedTokenId === selectedTokenId) {
+        // Start dragging
+        this.isDragging = true;
+        console.log('Start dragging');
+      } else {
+        this.selectedTokenId = selectedTokenId;
+        this.tokenCanvas.setSelectedToken(selectedTokenId);
+      }
     } else {
+      this.selectedTokenId = null;
       this.tokenCanvas.setSelectedToken(null);
     }
-
-
   }
+
+  @HostListener('mouseup', ['$event'])
+  onMouseUp(event) {
+    if (!this.isDragging) {
+      return;
+    }
+    if (this.selectedTokenId == null) {
+      this.isDragging = false;
+      return;
+    }
+
+    const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
+
+    const mouseX = event.pageX - rect.left;
+    const mouseY = event.pageY - rect.top;
+    console.log(`Finished dragging at ${mouseX},${mouseY}`);
+
+    // Move selected token to X, Y
+    this.tokenCanvas.moveToken(this.selectedTokenId, mouseX, mouseY);
+  }
+
 
   private ngAfterViewInit(): void {
     this.updateScreenSize();
