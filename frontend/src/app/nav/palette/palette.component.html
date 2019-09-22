@@ -13,7 +13,7 @@
   </button>
   <button *ngFor="let token of selectedTokenAssets"
           mat-flat-button>
-    <img  src="http://localhost:8080/image/{{token.id}}/thumbnail.png"
+    <img  src="{{serverPath}}/image/{{token.id}}/thumbnail.png"
           width="32"
           height="32"
           (click)="selectToken(token)"/>

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import Compressor from 'compressorjs';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadService {
-  serverPath = 'http://localhost:8080/';
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   constructor(private httpClient: HttpClient) {}
 

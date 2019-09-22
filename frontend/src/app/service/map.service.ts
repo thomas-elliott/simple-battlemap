@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  serverPath = 'http://localhost:8080/';
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   constructor(private httpClient: HttpClient) {}
 

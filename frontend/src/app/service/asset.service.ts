@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Subject} from "rxjs";
 import {AssetsResponse} from "../model/assetsResponse.model";
 import {Asset} from "../model/asset.model";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AssetService {
   tokenAssetsChanged = new Subject<Asset[]>();
   tokenAssets: Asset[];
 
-  serverPath = 'http://localhost:8080/';
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
   constructor(private httpClient: HttpClient) {}
 
