@@ -97,14 +97,16 @@ export class TokenCanvasComponent implements OnInit {
   private drawTokens() {
     // TODO: Debounce updating the canvas
     console.log(`Drawing ${this.tokens.length} tokens`);
+    this.tokenContext.clearRect(0,0, this.backgroundWidth, this.backgroundHeight);
 
     for (let token of this.tokens) {
       let background = new Image();
 
       let ctx = this.tokenContext;
       //ctx.clearRect(token.x - 5, token.y - 5, this.tokenWidth + 10, this.tokenHeight + 10);
-      ctx.clearRect(0,0, this.backgroundWidth, this.backgroundHeight);
+
       if (this.selectedTokenId === token.id) {
+        console.log(`Drawing selection box ${token.id}`);
         ctx.beginPath();
         ctx.rect(token.x, token.y, this.tokenWidth, this.tokenHeight);
         ctx.strokeStyle = "rgb(110,153,174)";

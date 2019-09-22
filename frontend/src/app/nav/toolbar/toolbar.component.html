@@ -4,15 +4,18 @@
   <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
 
-  <button mat-flat-button>
-    <mat-icon>settings_applications</mat-icon>
-    Settings</button>
-  <button mat-flat-button
-          (click)="loadMap()"
-          [disabled]="!authenticated">Load map</button>
-  <button mat-raised-button
-          (click)="saveMap()"
-          [disabled]="!authenticated">Save</button>
+  <span *ngIf="role === 'DM'">
+    <button mat-flat-button>
+      <mat-icon>settings_applications</mat-icon>
+      Settings</button>
+    <button mat-flat-button
+            (click)="loadMap()"
+            [disabled]="!authenticated">Load map</button>
+    <button mat-raised-button
+            (click)="saveMap()"
+            [disabled]="!authenticated">Save</button>
+  </span>
+  <span>&nbsp;&nbsp;Role: {{role}}&nbsp;&nbsp;</span>
   <button mat-raised-button
           (click)="showLogin()"
           [disabled]="authenticated">Login</button>

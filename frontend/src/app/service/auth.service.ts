@@ -17,6 +17,7 @@ export class AuthService {
   authenticationChanged = new Subject<boolean>();
 
   authorised = false;
+  role: User;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -24,9 +25,28 @@ export class AuthService {
     return this.authenticationChanged.next(this.authorised);
   }
 
+  private hasAuthority(authority: string): boolean {
+    if (!this.role) return false;
+    for (let auth of this.role.authorities) {
+      if (auth.authority === authority) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public isPlayer(): boolean {
+    return this.hasAuthority('ROLE_PLAYER');
+  }
+
+  public isDm(): boolean {
+    return this.hasAuthority('ROLE_DM');
+  }
+
   checkAuthentication() {
     this.httpClient.get(`${this.serverPath}user`).subscribe(
       (response: User) => {
+        this.role = response;
         if (this.authorised !== response.authenticated) {
           this.authorised = response.authenticated;
           this.notifyAuthenticationChanged();
