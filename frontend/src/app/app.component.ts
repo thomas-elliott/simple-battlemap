@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {WindowService} from "./service/window.service";
 import {WindowState} from "./model/windowState.model";
@@ -9,7 +9,7 @@ import {AuthService} from "./service/auth.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'Simple Battlemap';
 
   assetWindowSubscription: Subscription;
@@ -19,13 +19,17 @@ export class AppComponent {
   constructor(private windowService: WindowService,
               private authService: AuthService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.assetWindowSubscription = this.windowService.assetWindowChanged.subscribe(
       (response) => {
         this.showPage = response;
       }
     );
     this.windowService.changeAssetWindow(WindowState.Login);
+  }
+
+  ngOnDestroy(): void {
+    this.assetWindowSubscription.unsubscribe();
   }
 
   isDm(): boolean {

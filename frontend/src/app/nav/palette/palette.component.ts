@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WindowService} from "../../service/window.service";
 import {AssetService} from "../../service/asset.service";
 import {Subscription} from "rxjs";
@@ -12,7 +12,7 @@ import {environment} from "../../../environments/environment";
   templateUrl: './palette.component.html',
   styleUrls: ['./palette.component.scss']
 })
-export class PaletteComponent implements OnInit {
+export class PaletteComponent implements OnInit, OnDestroy {
   assetSubscription: Subscription;
   selectedTokenAssets: Asset[];
   serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
@@ -27,6 +27,10 @@ export class PaletteComponent implements OnInit {
         this.selectedTokenAssets = response;
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.assetSubscription.unsubscribe();
   }
 
   showNone(): void {
@@ -45,7 +49,11 @@ export class PaletteComponent implements OnInit {
     this.assetService.selectToken(asset);
   }
 
-  addToken():void {
+  refreshTokens():void {
     this.tokenService.getTokensFromServer();
+  }
+
+  deleteToken() {
+    this.tokenService.removeToken();
   }
 }

@@ -75,6 +75,7 @@ public class MapService {
 
         battleMap.addToken(token);
         tokenRepository.save(token);
+        messagingTemplate.convertAndSend("/topic/tokens", "Send after add");
     }
 
     public void moveToken(Long id, int x, int y) {
@@ -109,5 +110,15 @@ public class MapService {
 
     public void removeToken(Long id) {
         battleMap.removeToken(id);
+
+        Optional<Token> oToken = tokenRepository.findById(id);
+        if (oToken.isEmpty()) {
+            log.error("Can't find token");
+            return;
+        }
+
+        Token token = oToken.get();
+        tokenRepository.delete(token);
+        messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
     }
 }

@@ -50,8 +50,8 @@ export class AuthService {
         this.role = response;
         if (this.authorised !== response.authenticated) {
           this.authorised = response.authenticated;
-          this.notifyAuthenticationChanged();
         }
+        this.notifyAuthenticationChanged();
       }, (error: HttpErrorResponse) => {
         console.error('Error', error);
     }
@@ -74,7 +74,7 @@ export class AuthService {
         .then(
           (response: HttpResponse<any>) => {
             this.authorised = true;
-            this.notifyAuthenticationChanged();
+            this.checkAuthentication();
             resolve('Authenticated');
           },
           (error: HttpErrorResponse) => {

@@ -6,10 +6,10 @@
     <mat-icon>select_all</mat-icon>
   </button>
   <button mat-flat-button
-          matTooltip="Add token"
+          matTooltip="Refresh tokens"
           matTooltipPosition="right"
-          (click)="addToken()">
-    <mat-icon>add</mat-icon>
+          (click)="refreshTokens()">
+    <mat-icon>refresh</mat-icon>
   </button>
   <button *ngFor="let token of selectedTokenAssets"
           mat-flat-button>
@@ -17,6 +17,12 @@
           width="32"
           height="32"
           (click)="selectToken(token)"/>
+  </button>
+  <button mat-flat-button
+          matTooltip="Remove token"
+          matTooltipPosition="right"
+          (click)="deleteToken()">
+    <mat-icon>delete</mat-icon>
   </button>
   <button mat-flat-button
           matTooltip="Show tokens"

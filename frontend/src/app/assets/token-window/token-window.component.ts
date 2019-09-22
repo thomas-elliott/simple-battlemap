@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AssetService} from "../../service/asset.service";
 import {Observable, Subscription} from "rxjs";
 import {Asset} from "../../model/asset.model";
@@ -8,7 +8,7 @@ import {Asset} from "../../model/asset.model";
   templateUrl: './token-window.component.html',
   styleUrls: ['./token-window.component.scss']
 })
-export class TokenWindowComponent implements OnInit {
+export class TokenWindowComponent implements OnInit, OnDestroy {
   @Input() iconSize;
   @Input() pickEvent: Observable<void>;
   assetSubscription: Subscription;
@@ -28,6 +28,11 @@ export class TokenWindowComponent implements OnInit {
       }
     );
     this.assetService.getTokenAssetsFromServer();
+  }
+
+  ngOnDestroy(): void {
+    this.pickSubscription.unsubscribe();
+    this.assetSubscription.unsubscribe();
   }
 
   toggleSelect(asset: Asset) {
