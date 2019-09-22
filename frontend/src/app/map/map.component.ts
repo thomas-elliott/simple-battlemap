@@ -1,18 +1,28 @@
-import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {TokenService} from "../service/token.service";
 import {AssetService} from "../service/asset.service";
 import {Subscription} from "rxjs";
 import {Asset} from "../model/asset.model";
 import {Token} from "../model/token.model";
 import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
+import {AuthService} from "../service/auth.service";
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
   tokenSelectedSubscription: Subscription;
+  authSubscription: Subscription;
   selectedTokenAsset: Asset;
   selectedTokenId: number;
   isDragging: boolean;
@@ -42,14 +52,25 @@ export class MapComponent implements OnInit {
   tokenHeight = this.backgroundHeight / this.gridHeight;
 
   constructor(private assetService: AssetService,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+              private authService: AuthService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.tokenSelectedSubscription = this.assetService.selectedTokenChanged.subscribe(
       (response: Asset) => {
         this.selectedTokenAsset = response;
     });
+    this.authSubscription = this.authService.authenticationChanged.subscribe(
+      () => {
+        // Refresh everything if the auth level changed
+        this.tokenService.getTokensFromServer();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.tokenSelectedSubscription.unsubscribe();
+    this.authSubscription.unsubscribe();
   }
 
   @HostListener('mousedown', ['$event'])

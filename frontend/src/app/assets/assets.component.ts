@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from "rxjs";
 import {WindowService} from "../service/window.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -10,7 +10,7 @@ import {WindowState} from "../model/windowState.model";
   templateUrl: './assets.component.html',
   styleUrls: ['./assets.component.scss']
 })
-export class AssetsComponent implements OnInit {
+export class AssetsComponent implements OnInit, OnDestroy {
   iconSize: number = 128;
 
   deleteSubject: Subject<void> = new Subject<void>();
@@ -33,6 +33,10 @@ export class AssetsComponent implements OnInit {
     if (!this.showPage) {
       this.showPage = this.windowService.assetWindow;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.assetWindowSubscription.unsubscribe();
   }
 
   showToken(): boolean {

@@ -11,6 +11,7 @@ import {environment} from "../../environments/environment";
 })
 export class TokenService {
   tokenChanged = new Subject<Token[]>();
+  selectedTokenId: number;
 
   tokens: Token[];
 
@@ -33,14 +34,12 @@ export class TokenService {
   }
 
   // Remove Token
-  public removeToken(name: string) {
-    const index = this.tokens.findIndex(i => i.name === name);
-    if (index > -1) {
-      this.tokens.splice(index, 1);
-    } else {
-      console.warn("Couldn't find index of " + name);
+  public removeToken() {
+    if (this.selectedTokenId == null) return;
+    const index = this.tokens.findIndex(i => i.id === this.selectedTokenId);
+    if (index !== null) {
+      this.sendRemoveTokenToServer(this.tokens[index]);
     }
-    this.sendRemoveTokenToServer(this.tokens[index]);
   }
 
   // Move Token

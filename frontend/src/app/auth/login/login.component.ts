@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     this.authService.sendLogin(this.username, this.password).then(
       (resolve) => {
         this.windowService.changeAssetWindow(WindowState.None);
-
       },
       (reject) => {
         this.showError = true;

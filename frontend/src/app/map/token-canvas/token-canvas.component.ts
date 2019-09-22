@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {TokenService} from "../../service/token.service";
 import {Subscription} from "rxjs";
 import {WebsocketService} from "../../service/websocket.service";
@@ -9,7 +9,7 @@ import {environment} from "../../../environments/environment";
   templateUrl: './token-canvas.component.html',
   styleUrls: ['./token-canvas.component.scss']
 })
-export class TokenCanvasComponent implements OnInit {
+export class TokenCanvasComponent implements OnInit, OnDestroy {
   @ViewChild('tokenCanvas', {static: false})
   tokenCanvas: ElementRef;
 
@@ -23,7 +23,6 @@ export class TokenCanvasComponent implements OnInit {
   @Input() tokenHeight: number;
 
   tokens = [];
-  selectedTokenId: number;
 
   serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
 
@@ -32,7 +31,7 @@ export class TokenCanvasComponent implements OnInit {
   constructor(private tokenService: TokenService,
               private wsService: WebsocketService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
       (response) => {
         this.tokens = response;
@@ -46,6 +45,11 @@ export class TokenCanvasComponent implements OnInit {
         this.tokenService.getTokensFromServer();
       }
     )
+  }
+
+  ngOnDestroy(): void {
+    this.tokenSubscription.unsubscribe();
+    this.tokenWsSubscription.unsubscribe();
   }
 
   private ngAfterViewInit(): void {
@@ -74,7 +78,7 @@ export class TokenCanvasComponent implements OnInit {
   }
 
   public setSelectedToken(selectedTokenId: number): void {
-    this.selectedTokenId = selectedTokenId;
+    this.tokenService.selectedTokenId = selectedTokenId;
     this.drawTokens();
   }
 
@@ -108,7 +112,7 @@ export class TokenCanvasComponent implements OnInit {
       let ctx = this.tokenContext;
       //ctx.clearRect(token.x - 5, token.y - 5, this.tokenWidth + 10, this.tokenHeight + 10);
 
-      if (this.selectedTokenId === token.id) {
+      if (this.tokenService.selectedTokenId === token.id) {
         console.log(`Drawing selection box ${token.id}`);
         ctx.beginPath();
         ctx.rect(token.x, token.y, this.tokenWidth, this.tokenHeight);

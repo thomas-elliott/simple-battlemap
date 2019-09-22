@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WindowService} from "../../service/window.service";
 import {WindowState} from "../../model/windowState.model";
 import {AuthService} from "../../service/auth.service";
@@ -11,7 +11,7 @@ import {User} from "../../model/user.model";
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
   authenticationSubscription: Subscription;
   authenticated: boolean;
   role: string;
@@ -33,6 +33,10 @@ export class ToolbarComponent implements OnInit {
 
     // Check auth at beginning
     this.authService.checkAuthentication();
+  }
+
+  ngOnDestroy(): void {
+    this.authenticationSubscription.unsubscribe();
   }
 
   checkRole() {
