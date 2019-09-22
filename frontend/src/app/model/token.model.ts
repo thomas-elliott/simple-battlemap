@@ -2,6 +2,7 @@ export class Token {
   id: number;
   name: string;
   imageAsset: number;
+  assetId: number;
   player: number;
   x: number;
   y: number;

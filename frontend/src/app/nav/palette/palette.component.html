@@ -7,7 +7,8 @@
   </button>
   <button mat-flat-button
           matTooltip="Add token"
-          matTooltipPosition="right">
+          matTooltipPosition="right"
+          (click)="addToken()">
     <mat-icon>add</mat-icon>
   </button>
   <button *ngFor="let token of selectedTokenAssets"

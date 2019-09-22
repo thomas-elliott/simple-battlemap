@@ -4,6 +4,7 @@ import {AssetService} from "../../service/asset.service";
 import {Subscription} from "rxjs";
 import {WindowState} from "../../model/windowState.model";
 import {Asset} from "../../model/asset.model";
+import {TokenService} from "../../service/token.service";
 
 @Component({
   selector: 'app-palette',
@@ -15,7 +16,8 @@ export class PaletteComponent implements OnInit {
   selectedTokenAssets: Asset[];
 
   constructor(private windowService: WindowService,
-              private assetService: AssetService) {}
+              private assetService: AssetService,
+              private tokenService: TokenService) {}
 
   ngOnInit(): void {
     this.assetSubscription = this.assetService.selectedTokenAssetsChanged.subscribe(
@@ -39,5 +41,9 @@ export class PaletteComponent implements OnInit {
 
   selectToken(asset: Asset): void {
     this.assetService.selectToken(asset);
+  }
+
+  addToken():void {
+    this.tokenService.getTokensFromServer();
   }
 }

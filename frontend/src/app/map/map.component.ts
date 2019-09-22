@@ -4,6 +4,7 @@ import {AssetService} from "../service/asset.service";
 import {Subscription} from "rxjs";
 import {Asset} from "../model/asset.model";
 import {Token} from "../model/token.model";
+import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
 
 @Component({
   selector: 'app-map',
@@ -16,6 +17,9 @@ export class MapComponent implements OnInit {
 
   @ViewChild('canvasDiv', {static: false})
   canvasDiv: ElementRef;
+
+  @ViewChild('tokenCanvas', {static: false})
+  tokenCanvas: TokenCanvasComponent;
 
   // Map settings
   mapImageSource = "assets/dev/River Crossing 22x30.png";
@@ -45,17 +49,29 @@ export class MapComponent implements OnInit {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event) {
+    const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
+
+    const mouseX = event.pageX - rect.left;
+    const mouseY = event.pageY - rect.top;
+    console.log (`Click down on ${mouseX}, ${mouseY}`);
+
     if (this.selectedTokenAsset) {
       this.tokenService.addToken(
         new Token('Test token',
         this.selectedTokenAsset.id, 0,
-        event.pageX, event.pageY)
+        mouseX, mouseY)
       );
     }
 
-/*    this.tokenService.moveToken("TestToken",
-      Math.random() * 200 + 100,
-      Math.random() * 200 + 100);*/
+    const selectedTokenId = this.tokenCanvas.getTokenAtPoint(mouseX, mouseY);
+    console.log (`Selected token ${selectedTokenId}`);
+    if (selectedTokenId !== null) {
+      this.tokenCanvas.setSelectedToken(selectedTokenId);
+    } else {
+      this.tokenCanvas.setSelectedToken(null);
+    }
+
+
   }
 
   private ngAfterViewInit(): void {

@@ -3,7 +3,7 @@ import {Token} from "./token.model";
 
 export class TokensResponse {
   _embedded: {
-    assets: Token[];
+    tokens: Token[];
   };
   page: PagingArray;
 }
