@@ -1,8 +1,10 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.thomaselliott.simplebattlemap.json.TokenDeserialiser;
 
 import java.util.Objects;
@@ -27,14 +29,16 @@ public class Token {
     @Column(name = "token_id")
     private Long id;
     private String name;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @ManyToOne
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     @JoinColumn(name = "player",
             referencedColumnName = "player_id",
             foreignKey = @ForeignKey(name = "fk_player"))
     private Player player;
     @OneToOne
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     @JoinColumn(name = "asset",
             referencedColumnName = "asset_id",
             foreignKey = @ForeignKey(name = "fk_asset"))
@@ -45,6 +49,11 @@ public class Token {
     public Token() {}
     public Token(Long id) {
         this.id = id;
+    }
+
+    public Long getAssetId() {
+        if (imageAsset == null) return null;
+        return imageAsset.getId();
     }
 
     @Override
