@@ -8,12 +8,15 @@
     <button mat-flat-button>
       <mat-icon>settings_applications</mat-icon>
       Settings</button>
-    <button mat-flat-button
+        <button mat-flat-button
+            (click)="saveMap()"
+            [disabled]="!authenticated">New map</button>
+        <button mat-flat-button
             (click)="loadMap()"
             [disabled]="!authenticated">Load map</button>
-    <button mat-raised-button
+<!--    <button mat-raised-button
             (click)="saveMap()"
-            [disabled]="!authenticated">Save</button>
+            [disabled]="!authenticated">Save</button>-->
   </span>
   <span>&nbsp;&nbsp;Role: {{role}}&nbsp;&nbsp;</span>
   <button mat-raised-button

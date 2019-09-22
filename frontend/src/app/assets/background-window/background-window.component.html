@@ -1,1 +1,8 @@
-<p>background-window works!</p>
+<mat-grid-list cols="6" rowHeight="fit">
+  <asset-icon
+    *ngFor="let background of backgroundAssets"
+    size="{{iconSize}}"
+    id="{{background.id}}"
+    selected="{{background.selected}}"
+    (click)="toggleSelect(background);"></asset-icon>
+</mat-grid-list>

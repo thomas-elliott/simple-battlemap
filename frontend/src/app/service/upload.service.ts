@@ -14,7 +14,7 @@ export class UploadService {
   uploadImages(name: string, type: string, image: File, thumbnail: File) {
     let uploadData = new FormData();
     uploadData.append('name', name);
-    uploadData.append('type', type);
+    uploadData.append('type', type.toUpperCase());
     uploadData.append('imageFile', image, image.name);
     uploadData.append('thumbnailFile', thumbnail, image.name);
     this.httpClient.post(this.serverPath + 'asset', uploadData)

@@ -24,13 +24,16 @@
     </div>
   </mat-card-header>
   <mat-card-content>
-    <app-background-window *ngIf="showBackground()">
+    <app-background-window *ngIf="showBackground()"
+                      [pickEvent]="pickSubject.asObservable()"
+                      [iconSize]="iconSize">
     </app-background-window>
     <app-token-window *ngIf="showToken()"
                       [pickEvent]="pickSubject.asObservable()"
                       [iconSize]="iconSize">
     </app-token-window>
-    <app-upload-window *ngIf="showUpload()">
+    <app-upload-window *ngIf="showUpload()"
+                      [uploadState]="uploadState">
     </app-upload-window>
   </mat-card-content>
   <mat-card-actions align="end">

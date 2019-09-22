@@ -54,12 +54,10 @@ export class TokenService {
     this.httpClient.get(this.serverPath + 'data/tokens')
       .subscribe(
         (response: TokensResponse) => {
-          console.log('Token response from server');
           this.tokens = response._embedded.tokens;
           if (!this.tokens) {
             this.tokens = [];
           }
-          console.log(this.tokens);
           this.notifyTokenChanged();
         },
         (error: HttpErrorResponse) => {

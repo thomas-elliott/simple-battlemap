@@ -18,6 +18,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   assetWindowSubscription: Subscription;
 
   showPage: WindowState;
+  uploadState: string;
 
   constructor(private windowService: WindowService,
               public deleteDialog: MatDialog) { }
@@ -82,8 +83,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   clickUpload() {
     if (this.showPage === WindowState.AssetUpload) {
-      this.showPage = WindowState.AssetToken;
+      if (this.uploadState === 'asset') {
+        this.showPage = WindowState.AssetToken;
+      } else if (this.uploadState === 'background') {
+        this.showPage = WindowState.AssetBackground;
+      }
     } else if (this.showPage === WindowState.AssetToken) {
+      this.uploadState = 'asset';
+      this.showPage = WindowState.AssetUpload;
+    } else if (this.showPage == WindowState.AssetBackground) {
+      this.uploadState = 'background';
       this.showPage = WindowState.AssetUpload;
     }
   }
