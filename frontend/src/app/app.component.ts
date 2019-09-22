@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.showPage = response;
       }
     );
-    this.windowService.changeAssetWindow(WindowState.Login);
+    this.windowService.changeAssetWindow(WindowState.AssetBackground);
   }
 
   ngOnDestroy(): void {

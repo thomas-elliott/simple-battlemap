@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {UploadService} from "../../service/upload.service";
 
 @Component({
@@ -7,6 +7,8 @@ import {UploadService} from "../../service/upload.service";
   styleUrls: ['./upload-window.component.scss']
 })
 export class UploadWindowComponent implements OnInit {
+  @Input() uploadState: string;
+
   imageFile: File;
   thumbnailFile: File;
 
@@ -24,10 +26,12 @@ export class UploadWindowComponent implements OnInit {
   }
 
   upload(): void {
-    this.uploadService.uploadImages(this.imageFile.name,
-      "token",
-      this.imageFile,
-      this.thumbnailFile);
+    if (this.uploadState === 'token' || 'background') {
+      this.uploadService.uploadImages(this.imageFile.name,
+        this.uploadState,
+        this.imageFile,
+        this.thumbnailFile);
+    }
   }
 
   uploadDisabled(): boolean {

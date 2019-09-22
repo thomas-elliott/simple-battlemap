@@ -13,6 +13,12 @@ export class AssetService {
   selectedTokenAssets: Asset[];
   selectedTokenChanged = new Subject<Asset>();
   selectedToken: Asset;
+  selectedBackgroundAssetsChanged = new Subject<Asset[]>();
+  selectedBackgroundAssets: Asset[];
+  selectedBackgroundChanged = new Subject<Asset>();
+  selectedBackground: Asset;
+  backgroundAssetsChanged = new Subject<Asset[]>();
+  backgroundAssets: Asset[];
   tokenAssetsChanged = new Subject<Asset[]>();
   tokenAssets: Asset[];
 
@@ -24,6 +30,10 @@ export class AssetService {
     return this.tokenAssetsChanged.next(this.tokenAssets.slice());
   }
 
+  notifyBackgroundAssetsChanged() {
+    return this.backgroundAssetsChanged.next(this.backgroundAssets.slice());
+  }
+
   notifySelectedTokenChanged() {
     return this.selectedTokenChanged.next(this.selectedToken);
   }
@@ -32,14 +42,32 @@ export class AssetService {
     return this.selectedTokenAssetsChanged.next(this.selectedTokenAssets.slice());
   }
 
-  public selectTokenAssets(assets: Asset[]) {
+  notifySelectedBackgroundChanged() {
+    return this.selectedBackgroundChanged.next(this.selectedBackground);
+  }
+
+  notifySelectedBackgroundAssetsChanged() {
+    return this.selectedBackgroundAssetsChanged.next(this.selectedBackgroundAssets.slice());
+  }
+
+  public selectTokenAssets(assets: Asset[]): void {
     this.selectedTokenAssets = assets;
     this.notifySelectedTokenAssetsChanged();
   }
 
-  public selectToken(asset: Asset) {
+  public selectBackgroundAssets(assets: Asset[]): void {
+    this.selectedBackgroundAssets = assets;
+    this.notifySelectedBackgroundAssetsChanged();
+  }
+
+  public selectToken(asset: Asset): void {
     this.selectedToken = asset;
     this.notifySelectedTokenChanged();
+  }
+
+  public selectBackground(asset: Asset): void {
+    this.selectedBackground = asset;
+    this.notifySelectedBackgroundChanged();
   }
 
   public getTokenAssetsFromServer(): void {
@@ -49,6 +77,20 @@ export class AssetService {
         (response: AssetsResponse) => {
           this.tokenAssets = response._embedded.assets;
           this.notifyTokenAssetChanged();
+        },
+        (error: HttpErrorResponse) => {
+          console.error("Error:");
+          console.log(error);
+        }
+      );
+  }
+
+  public getBackgroundAssetsFromServer(): void {
+    this.httpClient.get(this.serverPath + 'data/assets/search/findAllByType?type=BACKGROUND')
+      .subscribe(
+        (response: AssetsResponse) => {
+          this.backgroundAssets = response._embedded.assets;
+          this.notifyBackgroundAssetsChanged();
         },
         (error: HttpErrorResponse) => {
           console.error("Error:");
