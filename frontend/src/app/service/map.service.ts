@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {MapInfo} from "../model/mapInfo.model";
 import {Subject} from "rxjs";
 import {BattleMap} from "../model/map.model";
+import {Asset} from "../model/asset.model";
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +24,29 @@ export class MapService {
   }
 
   public notifyMapChanged() {
+    console.log(`Map changed. Map is:`);
+    console.log(this.map);
     this.mapChanged.next(this.map);
   }
 
   public mapIdChanged(id: number) {
     console.log(`Map ID changed: ${id}. Retrieving from server.`);
     this.getMapFromServer(id);
+  }
+
+  public changeBackgroundImage(asset: Asset) {
+    if (asset == null) return;
+    console.log(`changing background image to ${asset.id}`);
+    this.httpClient.put(`${this.serverPath}/map/image/${asset.id}`,
+      {}).subscribe(
+      () => {
+        console.log('Change image response');
+        this.notifyMapChanged();
+      },
+      () => {
+        console.error('Change image error');
+      }
+    )
   }
 
   public getMapIdFromServer() {

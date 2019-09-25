@@ -5,6 +5,7 @@ import com.github.thomaselliott.simplebattlemap.service.MapService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,12 @@ public class MapController {
         mapInfoResponse.setMapId(mapService.getMapId());
 
         return mapInfoResponse;
+    }
+
+    @RequestMapping(value = "/image/{id}", method = RequestMethod.PUT)
+    public void putUpdateImage(@PathVariable(name = "id") Long imageId) {
+        boolean successful = mapService.changeImageAsset(imageId);
+        log.info("Changing image id for map. Success={}", successful);
     }
 
     @RequestMapping(value = "/load/{id}", method = RequestMethod.POST)

@@ -13,10 +13,10 @@ export class AssetService {
   selectedTokenAssets: Asset[];
   selectedTokenChanged = new Subject<Asset>();
   selectedToken: Asset;
-  selectedBackgroundAssetsChanged = new Subject<Asset[]>();
-  selectedBackgroundAssets: Asset[];
+/*  selectedBackgroundAssetChanged = new Subject<Asset>();
+  selectedBackgroundAsset: Asset;
   selectedBackgroundChanged = new Subject<Asset>();
-  selectedBackground: Asset;
+  selectedBackground: Asset;*/
   backgroundAssetsChanged = new Subject<Asset[]>();
   backgroundAssets: Asset[];
   tokenAssetsChanged = new Subject<Asset[]>();
@@ -42,33 +42,34 @@ export class AssetService {
     return this.selectedTokenAssetsChanged.next(this.selectedTokenAssets.slice());
   }
 
-  notifySelectedBackgroundChanged() {
+/*  notifySelectedBackgroundChanged() {
     return this.selectedBackgroundChanged.next(this.selectedBackground);
-  }
+  }*/
 
-  notifySelectedBackgroundAssetsChanged() {
-    return this.selectedBackgroundAssetsChanged.next(this.selectedBackgroundAssets.slice());
-  }
+/*  notifySelectedBackgroundAssetsChanged() {
+    return this.selectedBackgroundAssetChanged.next(this.selectedBackgroundAsset);
+  }*/
 
   public selectTokenAssets(assets: Asset[]): void {
     this.selectedTokenAssets = assets;
     this.notifySelectedTokenAssetsChanged();
   }
 
-  public selectBackgroundAssets(assets: Asset[]): void {
-    this.selectedBackgroundAssets = assets;
+/*  public selectBackgroundAsset(asset: Asset): void {
+    if (asset === null) return;
+    this.selectedBackgroundAsset = asset;
     this.notifySelectedBackgroundAssetsChanged();
-  }
+  }*/
 
   public selectToken(asset: Asset): void {
     this.selectedToken = asset;
     this.notifySelectedTokenChanged();
   }
 
-  public selectBackground(asset: Asset): void {
+/*  public selectBackground(asset: Asset): void {
     this.selectedBackground = asset;
     this.notifySelectedBackgroundChanged();
-  }
+  }*/
 
   public getTokenAssetsFromServer(): void {
     // http://localhost:8080/data/assets/search/findAllByType?type=TOKEN
