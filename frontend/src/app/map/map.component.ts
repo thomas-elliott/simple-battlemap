@@ -16,6 +16,7 @@ import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
 import {AuthService} from "../service/auth.service";
 import {MapService} from "../service/map.service";
 import {BattleMap} from "../model/map.model";
+import {WebsocketService} from "../service/websocket.service";
 
 @Component({
   selector: 'app-map',
@@ -24,8 +25,9 @@ import {BattleMap} from "../model/map.model";
 })
 export class MapComponent implements OnInit, OnDestroy {
   tokenSelectedSubscription: Subscription;
-  mapInfoSubscription: Subscription;
+  mapSubscription: Subscription;
   authSubscription: Subscription;
+  mapWsSubscription: Subscription;
 
   selectedTokenAsset: Asset;
   selectedTokenId: number;
@@ -60,13 +62,20 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(private assetService: AssetService,
               private tokenService: TokenService,
               private mapService: MapService,
+              private wsService: WebsocketService,
               private authService: AuthService) {
   }
 
   ngOnInit(): void {
     console.log('Map on init');
 
-    this.mapInfoSubscription = this.mapService.mapChanged.subscribe(
+    this.mapWsSubscription = this.wsService.mapSubject.subscribe(
+      () => {
+        console.log('Map changed');
+        this.mapService.getMapIdFromServer();
+    });
+
+    this.mapSubscription = this.mapService.mapChanged.subscribe(
       (response: BattleMap) => {
         if (response !== null) {
           this.emptyMap = false;
@@ -75,7 +84,6 @@ export class MapComponent implements OnInit, OnDestroy {
           this.emptyMap = true;
         }
     });
-    this.mapService.getMapIdFromServer();
 
     this.tokenSelectedSubscription = this.assetService.selectedTokenChanged.subscribe(
       (response: Asset) => {

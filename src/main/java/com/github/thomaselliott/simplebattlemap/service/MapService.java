@@ -3,6 +3,7 @@ package com.github.thomaselliott.simplebattlemap.service;
 import com.github.thomaselliott.simplebattlemap.model.Asset;
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.Token;
+import com.github.thomaselliott.simplebattlemap.repository.AssetRepository;
 import com.github.thomaselliott.simplebattlemap.repository.MapRepository;
 import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
 
@@ -19,14 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class MapService {
+    private AssetRepository assetRepository;
     private BattleMap battleMap;
     private MapRepository mapRepository;
     private TokenRepository tokenRepository;
     private SimpMessagingTemplate messagingTemplate;
 
-    public MapService(SimpMessagingTemplate messagingTemplate,
+    public MapService(AssetRepository assetRepository,
+                      SimpMessagingTemplate messagingTemplate,
                       MapRepository mapRepository,
                       TokenRepository tokenRepository) {
+        this.assetRepository = assetRepository;
         this.messagingTemplate = messagingTemplate;
         this.tokenRepository = tokenRepository;
         this.mapRepository = mapRepository;
@@ -127,5 +131,20 @@ public class MapService {
         Token token = oToken.get();
         tokenRepository.delete(token);
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
+    }
+
+    public boolean changeImageAsset(Long imageId) {
+        if (battleMap == null) return false;
+
+        Optional<Asset> oAsset = assetRepository.findById(imageId);
+
+        if (oAsset.isPresent()) {
+            battleMap.setBackgroundImage(oAsset.get());
+            mapRepository.save(battleMap);
+            messagingTemplate.convertAndSend("/topic/maps", "Image asset updated");
+            return true;
+        } else {
+            return false;
+        }
     }
 }

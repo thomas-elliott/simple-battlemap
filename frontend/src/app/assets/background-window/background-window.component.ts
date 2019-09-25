@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {Asset} from "../../model/asset.model";
 import {AssetService} from "../../service/asset.service";
+import {MapService} from "../../service/map.service";
 
 @Component({
   selector: 'app-background-window',
@@ -16,11 +17,12 @@ export class BackgroundWindowComponent implements OnInit, OnDestroy {
 
   backgroundAssets: Asset[];
 
-  constructor(private assetService: AssetService) {}
+  constructor(private assetService: AssetService,
+              private mapService: MapService) {}
 
   ngOnInit(): void {
     this.pickSubscription = this.pickEvent.subscribe(() => {
-      //this.updateSelection();
+      this.updateSelection();
     });
     this.assetSubscription = this.assetService.backgroundAssetsChanged.subscribe(
       (response: Asset[]) => {
@@ -36,11 +38,14 @@ export class BackgroundWindowComponent implements OnInit, OnDestroy {
   }
 
   toggleSelect(background: Asset) {
+    this.backgroundAssets.forEach((asset: Asset) => {
+        if (asset.selected) asset.selected = false;
+    });
     background.selected = !background.selected;
   }
 
   updateSelection() {
-    this.assetService.selectBackgroundAssets(
-      this.backgroundAssets.filter((asset: Asset) => asset.selected));
+    this.mapService.changeBackgroundImage(
+      this.backgroundAssets.find((asset: Asset) => asset.selected));
   }
 }
