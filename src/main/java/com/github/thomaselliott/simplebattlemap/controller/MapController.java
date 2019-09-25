@@ -1,5 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,16 @@ public class MapController {
     @Autowired
     public MapController(MapService mapService) {
         this.mapService = mapService;
+    }
+
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public MapInfoResponse getMapInfo() {
+        log.info("Request for map info");
+
+        MapInfoResponse mapInfoResponse = new MapInfoResponse();
+        mapInfoResponse.setMapId(mapService.getMapId());
+
+        return mapInfoResponse;
     }
 
     @RequestMapping(value = "/load/{id}", method = RequestMethod.POST)

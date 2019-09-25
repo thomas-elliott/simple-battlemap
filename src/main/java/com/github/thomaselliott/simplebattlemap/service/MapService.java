@@ -35,11 +35,18 @@ public class MapService {
         battleMap = new BattleMap();
     }
 
+    public Long getMapId() {
+        if (battleMap == null) return null;
+        return battleMap.getId();
+    }
+
     public boolean loadMap(Long id) {
         Optional<BattleMap> map = mapRepository.findById(id);
         if (map.isPresent()) {
             battleMap = null;
             battleMap = map.get();
+
+            messagingTemplate.convertAndSend("/topic/maps", "Map loaded");
             return true;
         } else {
             return false;
