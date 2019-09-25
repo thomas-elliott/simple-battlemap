@@ -14,6 +14,8 @@ import {Asset} from "../model/asset.model";
 import {Token} from "../model/token.model";
 import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
 import {AuthService} from "../service/auth.service";
+import {MapService} from "../service/map.service";
+import {BattleMap} from "../model/map.model";
 
 @Component({
   selector: 'app-map',
@@ -22,10 +24,14 @@ import {AuthService} from "../service/auth.service";
 })
 export class MapComponent implements OnInit, OnDestroy {
   tokenSelectedSubscription: Subscription;
+  mapInfoSubscription: Subscription;
   authSubscription: Subscription;
+
   selectedTokenAsset: Asset;
   selectedTokenId: number;
   isDragging: boolean;
+
+  emptyMap = true;
 
   @Input()
   isDm: boolean;
@@ -37,7 +43,7 @@ export class MapComponent implements OnInit, OnDestroy {
   tokenCanvas: TokenCanvasComponent;
 
   // Map settings
-  mapImageSource = "assets/dev/River Crossing 22x30.png";
+  mapImageId: number;
   backgroundWidth = 1540;
   backgroundHeight = 2100;
 
@@ -45,18 +51,32 @@ export class MapComponent implements OnInit, OnDestroy {
   lineColour = "black";
   lineWidth = 1;
 
-  gridWidth = 22;
-  gridHeight = 30;
+  gridWidth: number;
+  gridHeight: number;
 
   tokenWidth = this.backgroundWidth / this.gridWidth;
   tokenHeight = this.backgroundHeight / this.gridHeight;
 
   constructor(private assetService: AssetService,
               private tokenService: TokenService,
+              private mapService: MapService,
               private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    console.log('Map on init');
+
+    this.mapInfoSubscription = this.mapService.mapChanged.subscribe(
+      (response: BattleMap) => {
+        if (response !== null) {
+          this.emptyMap = false;
+          this.mapChanged(response);
+        } else {
+          this.emptyMap = true;
+        }
+    });
+    this.mapService.getMapIdFromServer();
+
     this.tokenSelectedSubscription = this.assetService.selectedTokenChanged.subscribe(
       (response: Asset) => {
         this.selectedTokenAsset = response;
@@ -73,8 +93,17 @@ export class MapComponent implements OnInit, OnDestroy {
     this.authSubscription.unsubscribe();
   }
 
+  private mapChanged(map: BattleMap): void {
+    console.log(`Map component, id changed to ${map.id}`);
+    this.gridHeight = map.gridHeight;
+    this.gridWidth = map.gridWidth;
+    this.mapImageId = map.backgroundId;
+  }
+
   @HostListener('mousedown', ['$event'])
   onMouseDown(event) {
+    if (this.emptyMap) return;
+
     const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
 
     const mouseX = event.pageX - rect.left;
@@ -85,8 +114,7 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.selectedTokenAsset) {
       this.tokenService.addToken(
         new Token('Test token',
-          this.selectedTokenAsset.id, 0,
-          mouseX, mouseY)
+          this.selectedTokenAsset.id, 0, mouseX, mouseY)
       );
     }
 
@@ -111,6 +139,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   @HostListener('mouseup', ['$event'])
   onMouseUp(event) {
+    if (this.emptyMap) return;
     // For now don't let players move tokens
     if (!this.isDm) return;
     if (!this.isDragging) return;
@@ -135,16 +164,16 @@ export class MapComponent implements OnInit, OnDestroy {
     this.updateScreenSize();
   }
 
-  public updateBackground(imageSource: string, width: number, height: number):void {
-    this.mapImageSource = imageSource;
+/*  public updateBackground(imageSource: string, width: number, height: number):void {
+    this.mapImageId = imageSource;
     this.backgroundWidth = width;
     this.backgroundHeight = height;
-  }
+  }*/
 
-  public updateGrid(width: number, height: number): void {
+/*  public updateGrid(width: number, height: number): void {
     this.gridWidth = width;
     this.gridHeight = height;
-  }
+  }*/
 
   @HostListener('window:resize', ['$event'])
   private onWindowResize(): void {
@@ -153,6 +182,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private updateScreenSize(): void {
-    (<HTMLDivElement>this.canvasDiv.nativeElement).style.height = (window.innerHeight - 100).toString() + "px";
+    (<HTMLDivElement>this.canvasDiv.nativeElement).style.height = (window.innerHeight - 80).toString() + "px";
   }
 }

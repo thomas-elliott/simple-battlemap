@@ -1,4 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-map-canvas',
@@ -6,11 +7,13 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
   styleUrls: ['./map-canvas.component.scss']
 })
 export class MapCanvasComponent implements OnInit {
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api`;
+
   @ViewChild('mapCanvas', {static: false})
   mapCanvas: ElementRef;
 
   public mapContext: CanvasRenderingContext2D;
-  @Input() mapImageSource: string;
+  @Input() mapImageSource: number;
 
   constructor() { }
 
@@ -19,10 +22,11 @@ export class MapCanvasComponent implements OnInit {
   private ngAfterViewInit(): void {
     this.mapContext = (<HTMLCanvasElement>this.mapCanvas.nativeElement).getContext('2d');
 
-    this.drawMap(this.mapImageSource);
+    this.drawMap(`${this.serverPath}/image/${this.mapImageSource}/image.png`);
   }
 
   private drawMap(src: string) {
+    console.log(`Drawing background from ${src}`);
     let background = new Image();
     background.src = src;
 

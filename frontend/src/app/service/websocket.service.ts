@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {Subject, Subscription} from "rxjs";
-import {Token} from "../model/token.model";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +8,8 @@ import {Token} from "../model/token.model";
 export class WebsocketService implements OnInit, OnDestroy {
   tokenSubscription: Subscription;
   tokenSubject = new Subject<void>();
+  mapSubscription: Subscription;
+  mapSubject = new Subject<void>();
 
   subscribed = false;
 
@@ -20,10 +21,15 @@ export class WebsocketService implements OnInit, OnDestroy {
     this.tokenSubject.next();
   }
 
+  notifyMapChanged(): void {
+    this.mapSubject.next();
+  }
+
   ngOnInit(): void { }
 
   ngOnDestroy() {
     this.tokenSubscription.unsubscribe();
+    this.mapSubscription.unsubscribe();
   }
 
   watchTopic() {
@@ -33,22 +39,18 @@ export class WebsocketService implements OnInit, OnDestroy {
         (message) => {
           this.notifyTokenChanged();
         });
+      this.mapSubscription = this.rxStompService.watch('/topic/maps').subscribe(
+        (message) => {
+          console.log(`Message from map subscription: ${message}`);
+          this.notifyMapChanged();
+        });
       this.subscribed = true;
     }
   }
 
-  subscribeTokenUpdates() {
-    console.log('Subscribing to token');
-    this.tokenSubscription = this.rxStompService.watch('/topic/tokens').subscribe(
-      (message) => {
-        console.log('Token');
-      }
-    );
-  }
-
-  onSendMessage() {
+/*  onSendMessage() {
     console.log('Send message');
     const message = `Message generated at ${new Date}`;
     this.rxStompService.publish({destination: '/app/queue/updates', body: message});
-  }
+  }*/
 }

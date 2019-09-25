@@ -42,6 +42,11 @@ public class BattleMap {
         this.gridHeight = gridHeight;
     }
 
+    public Long getBackgroundId() {
+        if (backgroundImage == null) return null;
+        return backgroundImage.getId();
+    }
+
     public void addToken(Token token) {
         tokens.put(token.getId(), token);
     }

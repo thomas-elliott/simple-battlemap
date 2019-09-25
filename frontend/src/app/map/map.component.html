@@ -1,17 +1,24 @@
 <div #canvasDiv id="canvas" style="position: relative; overflow: scroll; height: 100%;">
-  <app-map-canvas   [mapImageSource]="mapImageSource">
-  </app-map-canvas>
-  <app-grid-canvas
-                    [gridHeight]="gridHeight"
-                    [gridWidth]="gridWidth"
-                    [lineWidth]="lineWidth"
-                    [lineColour]="lineColour">
-  </app-grid-canvas>
-  <app-token-canvas #tokenCanvas
-                    [backgroundHeight]="backgroundHeight"
-                    [backgroundWidth]="backgroundWidth"
-                    [tokenHeight]="tokenHeight"
-                    [tokenWidth]="tokenWidth"
-                    [style.cursor]="(selectedTokenAsset) ? 'crosshair' : ''">
-  </app-token-canvas>
+  <div *ngIf="!emptyMap">
+    <app-map-canvas   [mapImageSource]="mapImageId">
+    </app-map-canvas>
+    <app-grid-canvas
+                      [gridHeight]="gridHeight"
+                      [gridWidth]="gridWidth"
+                      [lineWidth]="lineWidth"
+                      [lineColour]="lineColour">
+    </app-grid-canvas>
+    <app-token-canvas #tokenCanvas
+                      [backgroundHeight]="backgroundHeight"
+                      [backgroundWidth]="backgroundWidth"
+                      [tokenHeight]="tokenHeight"
+                      [tokenWidth]="tokenWidth"
+                      [style.cursor]="(selectedTokenAsset) ? 'crosshair' : ''">
+    </app-token-canvas>
+  </div>
+  <div *ngIf="emptyMap" style="text-align: center;">
+    <h1>No map loaded</h1>
+    <h1 *ngIf="isDm">Load a map from the toolbar</h1>
+    <h1 *ngIf="!isDm">Wait for the DM to load a map</h1>
+  </div>
 </div>
