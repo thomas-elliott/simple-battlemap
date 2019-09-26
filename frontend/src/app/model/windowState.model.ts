@@ -3,5 +3,7 @@ export enum WindowState {
   Login,
   AssetToken,
   AssetBackground,
-  AssetUpload
+  AssetUpload,
+  LoadMap,
+  SaveMap
 }

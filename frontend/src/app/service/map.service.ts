@@ -3,8 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {MapInfo} from "../model/mapInfo.model";
 import {Subject} from "rxjs";
-import {BattleMap} from "../model/map.model";
+import {BattleMap} from "../model/battleMap.model";
 import {Asset} from "../model/asset.model";
+import {MapListResponse} from "../model/mapListResponse.model";
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,15 @@ import {Asset} from "../model/asset.model";
 export class MapService {
   serverPath = `${environment.serverProtocol}://${environment.serverBase}/api`;
 
+  mapListChanged = new Subject<BattleMap[]>();
   mapChanged = new Subject<BattleMap>();
 
+  // Current map
   map: BattleMap;
   mapId: number;
+
+  // Optional maps to load
+  mapList: BattleMap[];
 
   constructor(private httpClient: HttpClient) {}
 
@@ -27,6 +33,10 @@ export class MapService {
     console.log(`Map changed. Map is:`);
     console.log(this.map);
     this.mapChanged.next(this.map);
+  }
+
+  public notifyMapListChanged() {
+    this.mapListChanged.next(this.mapList.slice());
   }
 
   public mapIdChanged(id: number) {
@@ -47,6 +57,18 @@ export class MapService {
         console.error('Change image error');
       }
     )
+  }
+
+  public getMapListFromServer() {
+    console.log('Getting map list');
+    this.httpClient.get(`${this.serverPath}/data/battleMaps`).subscribe(
+      (response: MapListResponse) => {
+        this.mapList = response._embedded.battleMaps;
+        this.notifyMapListChanged();
+      }, () => {
+        console.error('Error getting map list');
+      }
+    );
   }
 
   public getMapIdFromServer() {
@@ -78,10 +100,20 @@ export class MapService {
     console.log('save map');
     this.httpClient.post(`${this.serverPath}/map/save`, {})
       .subscribe(() => {
-        console.log('Finished saving map')
+        console.log('Finished saving map');
       }, () => {
         console.error('Error saving map');
       }
     );
+  }
+
+  loadMap(id: number) {
+    console.log('load map');
+    this.httpClient.post(`${this.serverPath}/map/load/${id}`, {})
+      .subscribe(() => {
+        console.log('Finished loading map');
+      }, () => {
+        console.error('Error loading map');
+      })
   }
 }

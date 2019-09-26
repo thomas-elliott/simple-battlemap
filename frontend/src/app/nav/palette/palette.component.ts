@@ -34,15 +34,15 @@ export class PaletteComponent implements OnInit, OnDestroy {
   }
 
   showNone(): void {
-    this.windowService.changeAssetWindow(WindowState.None);
+    this.windowService.changeWindow(WindowState.None);
   }
 
   showToken(): void {
-    this.windowService.changeAssetWindow(WindowState.AssetToken);
+    this.windowService.changeWindow(WindowState.AssetToken);
   }
 
   showBackground(): void {
-    this.windowService.changeAssetWindow(WindowState.AssetBackground);
+    this.windowService.changeWindow(WindowState.AssetBackground);
   }
 
   selectToken(asset: Asset): void {

@@ -18,6 +18,7 @@ import {myRxStompConfig} from "../rx-stomp.config";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthModule} from "./auth/auth.module";
 import {AuthInterceptor} from "./util/auth.interceptor";
+import {SettingsModule} from "./settings/settings.module";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {AuthInterceptor} from "./util/auth.interceptor";
     MatListModule,
     NavModule,
     BrowserAnimationsModule,
-    AuthModule
+    AuthModule,
+    SettingsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
