@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   }
 
   closeWindow(): void {
-    this.windowService.changeAssetWindow(WindowState.None);
+    this.windowService.changeWindow(WindowState.None);
   }
 
   register(): void {
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.sendLogin(this.username, this.password).then(
       (resolve) => {
-        this.windowService.changeAssetWindow(WindowState.None);
+        this.windowService.changeWindow(WindowState.None);
       },
       (reject) => {
         this.showError = true;

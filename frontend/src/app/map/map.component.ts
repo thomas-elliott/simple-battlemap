@@ -15,7 +15,7 @@ import {Token} from "../model/token.model";
 import {TokenCanvasComponent} from "./token-canvas/token-canvas.component";
 import {AuthService} from "../service/auth.service";
 import {MapService} from "../service/map.service";
-import {BattleMap} from "../model/map.model";
+import {BattleMap} from "../model/battleMap.model";
 import {WebsocketService} from "../service/websocket.service";
 
 @Component({

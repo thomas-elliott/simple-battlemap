@@ -1,8 +1,8 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {MapService} from "../../service/map.service";
 import {Subscription} from "rxjs";
-import {BattleMap} from "../../model/map.model";
+import {BattleMap} from "../../model/battleMap.model";
 
 @Component({
   selector: 'app-map-canvas',

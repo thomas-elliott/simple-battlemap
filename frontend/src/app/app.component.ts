@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.showPage = response;
       }
     );
-    this.windowService.changeAssetWindow(WindowState.Login);
+    this.windowService.changeWindow(WindowState.Login);
   }
 
   ngOnDestroy(): void {
@@ -44,6 +44,11 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.showPage === WindowState.AssetBackground ||
       this.showPage === WindowState.AssetToken ||
       this.showPage === WindowState.AssetUpload;
+  }
+
+  showSettingsWindow() {
+    return this.showPage === WindowState.LoadMap ||
+      this.showPage === WindowState.SaveMap
   }
 
   showLogin() {

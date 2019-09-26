@@ -4,7 +4,6 @@ import {WindowState} from "../../model/windowState.model";
 import {AuthService} from "../../service/auth.service";
 import {Subscription} from "rxjs";
 import {MapService} from "../../service/map.service";
-import {User} from "../../model/user.model";
 
 @Component({
   selector: 'app-toolbar',
@@ -26,7 +25,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.checkRole();
         this.authenticated = response;
         if (this.authenticated && this.windowService.assetWindow === WindowState.Login) {
-          this.windowService.changeAssetWindow(WindowState.None);
+          this.windowService.changeWindow(WindowState.None);
         }
       }
     );
@@ -50,10 +49,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   showLogin() {
-    this.windowService.changeAssetWindow(WindowState.Login);
+    this.windowService.changeWindow(WindowState.Login);
   }
 
   loadMap() {
+    this.windowService.changeWindow(WindowState.LoadMap);
+  }
+
+  newMap() {
 
   }
 

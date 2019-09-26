@@ -53,7 +53,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   closeWindow() {
-    this.windowService.changeAssetWindow(WindowState.None);
+    this.windowService.changeWindow(WindowState.None);
   }
 
   zoomOut() {
