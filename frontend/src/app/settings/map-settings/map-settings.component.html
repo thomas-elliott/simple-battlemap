@@ -1,0 +1,39 @@
+<mat-card-content *ngIf="map">
+  <h3>Map ID: {{map.id}}</h3>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Map Name"
+           [(ngModel)]="map.name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Grid Line Width"
+           [(ngModel)]="map.gridLineWidth">
+  </mat-form-field>
+  
+  <mat-form-field>
+    <input matInput
+           placeholder="Grid Width"
+           [(ngModel)]="map.gridWidth">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="Grid Height"
+           [(ngModel)]="map.gridHeight">
+  </mat-form-field>
+</mat-card-content>
+<mat-card-content *ngIf="!map">
+  <h3>Map does not appear to be loaded</h3>
+</mat-card-content>
+<mat-card-actions align="end">
+  <button mat-raised-button
+          color="primary"
+          matTooltip="Save settings"
+          (click)="clickSave()">
+    <mat-icon>done</mat-icon>
+    <span>Save</span>
+  </button>
+</mat-card-actions>

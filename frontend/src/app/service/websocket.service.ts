@@ -5,7 +5,7 @@ import {Subject, Subscription} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketService implements OnInit, OnDestroy {
+export class WebsocketService {
   tokenSubscription: Subscription;
   tokenSubject = new Subject<void>();
   mapSubscription: Subscription;
@@ -23,13 +23,6 @@ export class WebsocketService implements OnInit, OnDestroy {
 
   notifyMapChanged(): void {
     this.mapSubject.next();
-  }
-
-  ngOnInit(): void { }
-
-  ngOnDestroy() {
-    this.tokenSubscription.unsubscribe();
-    this.mapSubscription.unsubscribe();
   }
 
   watchTopic() {

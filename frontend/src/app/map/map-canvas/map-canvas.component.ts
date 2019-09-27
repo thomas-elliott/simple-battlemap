@@ -61,7 +61,9 @@ export class MapCanvasComponent implements OnInit, OnDestroy {
   private drawMap(src: string) {
     console.log(`Drawing background from ${src}`);
     let background = new Image();
-    background.src = src;
+    if (this.currentMap.backgroundId) {
+      background.src = src;
+    }
 
     let ctx = this.mapContext;
     background.onload = () => {

@@ -7,10 +7,14 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatChipsModule} from "@angular/material/chips";
+import { MapSettingsComponent } from './map-settings/map-settings.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
-  declarations: [SettingsComponent, MapLoadComponent],
+  declarations: [SettingsComponent, MapLoadComponent, MapSettingsComponent],
   exports: [
     SettingsComponent
   ],
@@ -20,7 +24,10 @@ import {MatChipsModule} from "@angular/material/chips";
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
   ]
 })
 export class SettingsModule { }

@@ -6,6 +6,7 @@ import {Subject} from "rxjs";
 import {BattleMap} from "../model/battleMap.model";
 import {Asset} from "../model/asset.model";
 import {MapListResponse} from "../model/mapListResponse.model";
+import {WebsocketService} from "./websocket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,12 @@ export class MapService {
   // Optional maps to load
   mapList: BattleMap[];
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,
+              private wsService: WebsocketService) {
+    this.wsService.mapSubject.subscribe(() => {
+      this.getMapIdFromServer();
+    });
+  }
 
   public mapLoaded(): boolean {
     return this.map !== null;
@@ -37,11 +43,6 @@ export class MapService {
 
   public notifyMapListChanged() {
     this.mapListChanged.next(this.mapList.slice());
-  }
-
-  public mapIdChanged(id: number) {
-    console.log(`Map ID changed: ${id}. Retrieving from server.`);
-    this.getMapFromServer(id);
   }
 
   public changeBackgroundImage(asset: Asset) {
@@ -75,9 +76,9 @@ export class MapService {
     console.log('load map info');
     this.httpClient.get(`${this.serverPath}/map/info`).subscribe(
       (response: MapInfo) => {
-        if (this.mapId !== response.mapId) {
-          this.mapId = response.mapId;
-          this.mapIdChanged(response.mapId);
+        this.mapId = response.mapId;
+        if (this.mapId) {
+          this.getMapFromServer(response.mapId);
         }
         console.log(`Loaded map information ${response.mapId}`);
       }, () => {
@@ -87,12 +88,12 @@ export class MapService {
   }
 
   private getMapFromServer(id: number) {
-    console.log('loading map from server');
+    console.log(`loading map ${id} from server`);
     return this.httpClient.get(`${this.serverPath}/data/battleMaps/${id}`).subscribe(
       (response: BattleMap) => {
         this.map = response;
-        this.notifyMapChanged();
         console.log(`Loaded map ${response.id}`);
+        this.notifyMapChanged();
     });
   }
 
@@ -107,7 +108,7 @@ export class MapService {
     );
   }
 
-  loadMap(id: number) {
+  public loadMap(id: number) {
     console.log('load map');
     this.httpClient.post(`${this.serverPath}/map/load/${id}`, {})
       .subscribe(() => {
@@ -115,5 +116,14 @@ export class MapService {
       }, () => {
         console.error('Error loading map');
       })
+  }
+
+  public saveMapSettings(map: BattleMap) {
+    this.httpClient.put(`${this.serverPath}/map/update`,
+      map).subscribe(() => {
+       console.log('Map settings updated');
+    }, () => {
+        console.error('Error saving map settings');
+    });
   }
 }

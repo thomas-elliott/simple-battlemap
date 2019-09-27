@@ -24,6 +24,8 @@ public class BattleMap {
     private Long id;
     private int gridHeight;
     private int gridWidth;
+    private int gridLineWidth;
+    private String name;
     @OneToMany(fetch = FetchType.EAGER)
     private Map<Long, Token> tokens;
     @OneToOne

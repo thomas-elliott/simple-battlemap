@@ -13,9 +13,6 @@
       </button>
     </div>
   </mat-card-header>
-  <mat-card-content>
-    <window-map-load *ngIf="showMapLoad()"></window-map-load>
-  </mat-card-content>
-  <mat-card-actions align="end">
-  </mat-card-actions>
+  <window-map-load *ngIf="showMapLoad()"></window-map-load>
+  <window-map-settings *ngIf="showMapSettings()"></window-map-settings>
 </mat-card>

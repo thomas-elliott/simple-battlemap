@@ -1,25 +1,59 @@
-import {Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {MapService} from "../../service/map.service";
+import {Subscription} from "rxjs";
+import {BattleMap} from "../../model/battleMap.model";
 
 @Component({
   selector: 'app-grid-canvas',
   templateUrl: './grid-canvas.component.html',
   styleUrls: ['./grid-canvas.component.scss']
 })
-export class GridCanvasComponent implements OnInit {
+export class GridCanvasComponent implements OnInit, OnDestroy {
   @ViewChild('gridCanvas', {static: false})
   gridCanvas: ElementRef;
+
+  private mapSubscription: Subscription;
 
   public gridContext: CanvasRenderingContext2D;
 
   // Grid settings
   @Input() lineColour: string;
-  @Input() lineWidth: number;
-  @Input() gridWidth: number;
-  @Input() gridHeight: number;
+  lineWidth: number;
+  gridWidth: number;
+  gridHeight: number;
+  @Input() backgroundWidth: number;
+  @Input() backgroundHeight: number;
 
-  constructor() { }
+  constructor(private mapService: MapService) { }
 
   ngOnInit() {
+    this.mapSubscription = this.mapService.mapChanged.subscribe(
+      (map: BattleMap) => {
+        this.loadSettingsFromMap(map);
+      }
+    );
+    this.loadSettingsFromMap(this.mapService.map);
+  }
+
+  ngOnDestroy(): void {
+    this.mapSubscription.unsubscribe();
+  }
+
+  private loadSettingsFromMap(map: BattleMap) {
+    if (map) {
+      this.lineWidth = map.gridLineWidth;
+      this.gridWidth = map.gridWidth;
+      this.gridHeight = map.gridHeight;
+    }
+    this.drawGrid(this.gridWidth, this.gridHeight);
   }
 
   private ngAfterViewInit(): void {
@@ -28,10 +62,16 @@ export class GridCanvasComponent implements OnInit {
   }
 
   private drawGrid(width, height) {
+    console.log(`Updating grid. ${width}x${height} line width ${this.lineWidth}`);
+
     const padding = 0;
 
-    this.gridContext.canvas.width = 1540;
-    this.gridContext.canvas.height = 2100;
+    this.gridContext.canvas.width = this.backgroundWidth;
+    this.gridContext.canvas.height = this.backgroundHeight;
+
+    this.gridContext.clearRect(0,0, this.backgroundWidth, this.backgroundHeight);
+
+    if (this.lineWidth == 0) return;
 
     const canvasHeight = this.gridContext.canvas.height - padding * 1.2;
     const canvasWidth = this.gridContext.canvas.width - padding * 1.2;

@@ -1,9 +1,8 @@
 <div #canvasDiv id="canvas" style="position: relative; overflow: scroll; height: 100%;">
   <div>
     <app-map-canvas></app-map-canvas>
-    <app-grid-canvas  [gridHeight]="gridHeight"
-                      [gridWidth]="gridWidth"
-                      [lineWidth]="lineWidth"
+    <app-grid-canvas  [backgroundHeight]="backgroundHeight"
+                      [backgroundWidth]="backgroundWidth"
                       [lineColour]="lineColour">
     </app-grid-canvas>
     <app-token-canvas #tokenCanvas

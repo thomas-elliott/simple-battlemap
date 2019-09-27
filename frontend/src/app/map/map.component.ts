@@ -27,7 +27,6 @@ export class MapComponent implements OnInit, OnDestroy {
   tokenSelectedSubscription: Subscription;
   mapSubscription: Subscription;
   authSubscription: Subscription;
-  mapWsSubscription: Subscription;
 
   selectedTokenAsset: Asset;
   selectedTokenId: number;
@@ -46,8 +45,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
   // Map settings
   mapImageId: number;
-  backgroundWidth = 1540;
-  backgroundHeight = 2100;
+  backgroundWidth = 1600;
+  backgroundHeight = 1600;
 
   // Grid settings
   lineColour = "black";
@@ -65,12 +64,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Map on init');
-
-    this.mapWsSubscription = this.wsService.mapSubject.subscribe(
-      () => {
-        console.log('Map changed');
-        this.mapService.getMapIdFromServer();
-    });
 
     this.mapSubscription = this.mapService.mapChanged.subscribe(
       (response: BattleMap) => {
@@ -103,6 +96,7 @@ export class MapComponent implements OnInit, OnDestroy {
     console.log(`Map component, id changed to ${map.id}`);
     this.gridHeight = map.gridHeight;
     this.gridWidth = map.gridWidth;
+    this.lineWidth = map.gridLineWidth;
     this.mapImageId = map.backgroundId;
   }
 
@@ -165,21 +159,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.tokenCanvas.moveToken(this.selectedTokenId, mouseX, mouseY);
   }
 
-
   private ngAfterViewInit(): void {
     this.updateScreenSize();
   }
-
-/*  public updateBackground(imageSource: string, width: number, height: number):void {
-    this.mapImageId = imageSource;
-    this.backgroundWidth = width;
-    this.backgroundHeight = height;
-  }*/
-
-/*  public updateGrid(width: number, height: number): void {
-    this.gridWidth = width;
-    this.gridHeight = height;
-  }*/
 
   @HostListener('window:resize', ['$event'])
   private onWindowResize(): void {

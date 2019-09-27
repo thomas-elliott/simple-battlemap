@@ -5,5 +5,6 @@ export enum WindowState {
   AssetBackground,
   AssetUpload,
   LoadMap,
-  SaveMap
+  SaveMap,
+  MapSettings
 }
