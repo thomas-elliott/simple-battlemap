@@ -43,4 +43,10 @@ export class TokenWindowComponent implements OnInit, OnDestroy {
     this.assetService.selectTokenAssets(
       this.tokenAssets.filter((asset: Asset) => asset.selected));
   }
+
+  deleteAsset() {
+    console.log('Deleting assets');
+    this.assetService.deleteTokenAssets(
+      this.tokenAssets.filter((asset: Asset) => asset.selected));
+  }
 }

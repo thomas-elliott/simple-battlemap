@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject, Subscription} from "rxjs";
 import {WindowService} from "../service/window.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DeleteDialogComponent} from "./delete-dialog/delete-dialog.component";
 import {WindowState} from "../model/windowState.model";
+import {TokenWindowComponent} from "./token-window/token-window.component";
 
 @Component({
   selector: 'window-assets',
@@ -12,6 +13,9 @@ import {WindowState} from "../model/windowState.model";
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   iconSize: number = 128;
+
+  @ViewChild('tokenWindow', {static: false})
+  tokenWindow: TokenWindowComponent;
 
   deleteSubject: Subject<void> = new Subject<void>();
   pickSubject: Subject<void> = new Subject<void>();
@@ -76,20 +80,20 @@ export class AssetsComponent implements OnInit, OnDestroy {
       });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
-      console.log("Closed: " + result);
+      this.tokenWindow.deleteAsset();
       this.deleteSubject.next();
     });
   }
 
   clickUpload() {
     if (this.showPage === WindowState.AssetUpload) {
-      if (this.uploadState === 'asset') {
+      if (this.uploadState === 'token') {
         this.showPage = WindowState.AssetToken;
       } else if (this.uploadState === 'background') {
         this.showPage = WindowState.AssetBackground;
       }
     } else if (this.showPage === WindowState.AssetToken) {
-      this.uploadState = 'asset';
+      this.uploadState = 'token';
       this.showPage = WindowState.AssetUpload;
     } else if (this.showPage == WindowState.AssetBackground) {
       this.uploadState = 'background';

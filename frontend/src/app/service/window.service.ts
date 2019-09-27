@@ -13,7 +13,6 @@ export class WindowService {
   constructor() { }
 
   notifyWindowChanged() {
-    console.log(`Window changing to ${this.assetWindow}`);
     return this.assetWindowChanged.next(this.assetWindow);
   }
 
