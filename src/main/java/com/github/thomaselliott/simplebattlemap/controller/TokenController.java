@@ -37,6 +37,7 @@ public class TokenController {
     public ResponseEntity addToken(@RequestBody TokenRequest tokenRequest) {
         if (tokenRequest != null && tokenRequest.getToken() != null) {
             Token token = tokenRequest.getToken();
+
             if (StringUtils.isEmpty(token.getName()) ||
                 token.getImageAsset() == null ||
                 (token.getX() == 0 && token.getY() == 0)) {

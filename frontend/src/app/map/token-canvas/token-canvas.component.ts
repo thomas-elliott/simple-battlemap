@@ -19,8 +19,8 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
   @Input() backgroundWidth: number;
   @Input() backgroundHeight: number;
 
-  @Input() tokenWidth: number;
-  @Input() tokenHeight: number;
+  @Input() gridWidth: number;
+  @Input() gridHeight: number;
 
   tokens = [];
 
@@ -30,6 +30,14 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
 
   constructor(private tokenService: TokenService,
               private wsService: WebsocketService) { }
+
+  tokenWidth(): number {
+    return this.backgroundWidth / this.gridWidth
+  }
+
+  tokenHeight(): number {
+    return this.backgroundHeight / this.gridHeight;
+  }
 
   ngOnInit(): void {
     this.tokenSubscription = this.tokenService.tokenChanged.subscribe(
@@ -86,9 +94,9 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
 
     for (let token of this.tokens) {
       if (x > token.x &&
-          x < token.x + this.tokenWidth &&
+          x < token.x + this.tokenWidth() &&
           y > token.y &&
-          y < token.y + this.tokenWidth) {
+          y < token.y + this.tokenWidth()) {
           return token.id;
       }
       //console.log(`Didn't match ${token.id}: ${token.x},${token.y}`);
@@ -103,7 +111,8 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
 
   private drawTokens() {
     // TODO: Debounce updating the canvas
-    console.log(`Drawing ${this.tokens.length} tokens`);
+    console.log(`Drawing ${this.tokens.length} tokens. Background: ${this.backgroundWidth}x${this.backgroundHeight},
+       grid: ${this.gridWidth}x${this.gridHeight}, token: ${this.tokenWidth().toString()}x${this.tokenHeight().toString()}`);
     this.tokenContext.clearRect(0,0, this.backgroundWidth, this.backgroundHeight);
 
     for (let token of this.tokens) {
@@ -115,14 +124,14 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
       if (this.tokenService.selectedTokenId === token.id) {
         console.log(`Drawing selection box ${token.id}`);
         ctx.beginPath();
-        ctx.rect(token.x, token.y, this.tokenWidth, this.tokenHeight);
+        ctx.rect(token.x, token.y, this.tokenWidth(), this.tokenHeight());
         ctx.strokeStyle = "rgb(110,153,174)";
         ctx.lineWidth = 5;
         ctx.stroke();
       }
 
       background.onload = () => {
-        ctx.drawImage(background, token.x, token.y, this.tokenWidth, this.tokenHeight);
+        ctx.drawImage(background, token.x, token.y, this.tokenWidth(), this.tokenHeight());
       };
 
       background.src = `${this.serverPath}image/${token.assetId}/thumbnail.png`;
