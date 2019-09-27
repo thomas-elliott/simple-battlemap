@@ -32,7 +32,9 @@ public class AssetController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteAsset(@PathVariable Long id) {}
+    public void deleteAsset(@PathVariable Long id) {
+        this.assetService.deleteAsset(id);
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity postAsset(@RequestParam String name,

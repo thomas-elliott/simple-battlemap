@@ -26,7 +26,8 @@ export class UploadWindowComponent implements OnInit {
   }
 
   upload(): void {
-    if (this.uploadState === 'token' || 'background') {
+    console.log(`Uploading ${this.uploadState} ${this.imageFile.name}`);
+    if (this.uploadState === 'token' || this.uploadState === 'background') {
       this.uploadService.uploadImages(this.imageFile.name,
         this.uploadState,
         this.imageFile,

@@ -13,16 +13,12 @@ export class AssetService {
   selectedTokenAssets: Asset[];
   selectedTokenChanged = new Subject<Asset>();
   selectedToken: Asset;
-/*  selectedBackgroundAssetChanged = new Subject<Asset>();
-  selectedBackgroundAsset: Asset;
-  selectedBackgroundChanged = new Subject<Asset>();
-  selectedBackground: Asset;*/
   backgroundAssetsChanged = new Subject<Asset[]>();
   backgroundAssets: Asset[];
   tokenAssetsChanged = new Subject<Asset[]>();
   tokenAssets: Asset[];
 
-  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -42,38 +38,18 @@ export class AssetService {
     return this.selectedTokenAssetsChanged.next(this.selectedTokenAssets.slice());
   }
 
-/*  notifySelectedBackgroundChanged() {
-    return this.selectedBackgroundChanged.next(this.selectedBackground);
-  }*/
-
-/*  notifySelectedBackgroundAssetsChanged() {
-    return this.selectedBackgroundAssetChanged.next(this.selectedBackgroundAsset);
-  }*/
-
   public selectTokenAssets(assets: Asset[]): void {
     this.selectedTokenAssets = assets;
     this.notifySelectedTokenAssetsChanged();
   }
-
-/*  public selectBackgroundAsset(asset: Asset): void {
-    if (asset === null) return;
-    this.selectedBackgroundAsset = asset;
-    this.notifySelectedBackgroundAssetsChanged();
-  }*/
 
   public selectToken(asset: Asset): void {
     this.selectedToken = asset;
     this.notifySelectedTokenChanged();
   }
 
-/*  public selectBackground(asset: Asset): void {
-    this.selectedBackground = asset;
-    this.notifySelectedBackgroundChanged();
-  }*/
-
   public getTokenAssetsFromServer(): void {
-    // http://localhost:8080/data/assets/search/findAllByType?type=TOKEN
-    this.httpClient.get(this.serverPath + 'data/assets/search/findAllByType?type=TOKEN')
+    this.httpClient.get(`${this.serverPath}/data/assets/search/findAllByType?type=TOKEN`)
       .subscribe(
         (response: AssetsResponse) => {
           this.tokenAssets = response._embedded.assets;
@@ -87,7 +63,7 @@ export class AssetService {
   }
 
   public getBackgroundAssetsFromServer(): void {
-    this.httpClient.get(this.serverPath + 'data/assets/search/findAllByType?type=BACKGROUND')
+    this.httpClient.get(`${this.serverPath}/data/assets/search/findAllByType?type=BACKGROUND`)
       .subscribe(
         (response: AssetsResponse) => {
           this.backgroundAssets = response._embedded.assets;
@@ -98,5 +74,15 @@ export class AssetService {
           console.log(error);
         }
       );
+  }
+
+  deleteTokenAssets(assets: Asset[]) {
+    for (let token of assets) {
+      console.log(`Deleting token assets ${token.id}`);
+      this.httpClient.delete(`${this.serverPath}/asset/${token.id}`).subscribe(
+        () => {
+          this.getTokenAssetsFromServer();
+        });
+    }
   }
 }

@@ -28,7 +28,8 @@
                       [pickEvent]="pickSubject.asObservable()"
                       [iconSize]="iconSize">
     </app-background-window>
-    <app-token-window *ngIf="showToken()"
+    <app-token-window #tokenWindow
+                      *ngIf="showToken()"
                       [pickEvent]="pickSubject.asObservable()"
                       [iconSize]="iconSize">
     </app-token-window>
