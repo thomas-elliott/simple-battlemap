@@ -1,5 +1,5 @@
 <div *ngFor="let map of mapList">
   <button mat-flat-button
           (click)="loadMap(map.id)">Load map</button>
-    Id: {{map.id}}, {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundId}}
+    Id: {{map.id}}, Name: {{map.name}} {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundId}}
 </div>

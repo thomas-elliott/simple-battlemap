@@ -36,9 +36,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     return this.showPage === WindowState.LoadMap;
   }
 
+  public showMapSettings(): boolean {
+    return this.showPage === WindowState.MapSettings;
+  }
+
   public windowTitle(): string {
     if (this.showPage === WindowState.LoadMap) return 'Load Map';
     if (this.showPage === WindowState.SaveMap) return 'Save Map';
+    if (this.showPage === WindowState.MapSettings) return 'Map Settings';
     return 'Settings';
   }
 }

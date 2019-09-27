@@ -62,23 +62,8 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
 
   private ngAfterViewInit(): void {
     this.tokenContext = (<HTMLCanvasElement>this.tokenCanvas.nativeElement).getContext('2d');
-    // Canvas size from background
     this.setCanvasSize(this.backgroundWidth, this.backgroundHeight);
-    // Token size from canvas size / grid
-//    this.addToken("TestToken", "assets/dev/1.png", 70, 70, this.tokenWidth, this.tokenHeight);
-//    this.moveToken("TestToken", 150, 150);
-//    this.removeToken(1);
   }
-
-/*  // Add Token
-  public addToken(name: string, image: string, x: number, y: number, width: number, height: number) {
-    this.tokenService.addToken(name, image, x, y, width, height);
-  }
-
-  // Remove Token
-  public removeToken(name: string) {
-    this.tokenService.removeToken(name);
-  }*/
 
   // Move Token
   public moveToken(tokenId: number, x: number, y: number) {
@@ -99,7 +84,6 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
           y < token.y + this.tokenWidth()) {
           return token.id;
       }
-      //console.log(`Didn't match ${token.id}: ${token.x},${token.y}`);
     }
     return null;
   }

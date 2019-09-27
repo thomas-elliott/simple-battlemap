@@ -5,15 +5,14 @@
   <span class="example-fill-remaining-space"></span>
 
   <span *ngIf="role === 'DM'">
-    <button mat-flat-button>
-      <mat-icon>settings_applications</mat-icon>
-      Settings</button>
+          <button mat-flat-button
+            (click)="showSettings()">
+            <mat-icon>settings_applications</mat-icon>
+            Settings</button>
         <button mat-flat-button
-            (click)="newMap()"
-            [disabled]="!authenticated">New map</button>
+            (click)="newMap()">New map</button>
         <button mat-flat-button
-            (click)="loadMap()"
-            [disabled]="!authenticated">Load map</button>
+            (click)="loadMap()">Load map</button>
 <!--    <button mat-raised-button
             (click)="saveMap()"
             [disabled]="!authenticated">Save</button>-->

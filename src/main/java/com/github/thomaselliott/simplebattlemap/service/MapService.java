@@ -2,6 +2,7 @@ package com.github.thomaselliott.simplebattlemap.service;
 
 import com.github.thomaselliott.simplebattlemap.model.Asset;
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
+import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.repository.AssetRepository;
 import com.github.thomaselliott.simplebattlemap.repository.MapRepository;
@@ -10,6 +11,7 @@ import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,6 @@ public class MapService {
         this.messagingTemplate = messagingTemplate;
         this.tokenRepository = tokenRepository;
         this.mapRepository = mapRepository;
-
-        // TODO: Temporary
-        battleMap = new BattleMap();
     }
 
     public Long getMapId() {
@@ -60,21 +59,25 @@ public class MapService {
     }
 
     @Transactional
+    public void newMap() {
+        this.battleMap = new BattleMap();
+    }
+
+    @Transactional
     public void saveMap() {
+        if (battleMap == null) return;
+
         tokenRepository.saveAll(battleMap.getTokens().values());
         mapRepository.save(battleMap);
     }
 
-    public Asset getBackgroundImage() {
-        return battleMap.getBackgroundImage();
-    }
-
+    @Transactional
     public List<Token> getTokens() {
+        if (battleMap == null) return new ArrayList<>();
+
         Map<Long, Token> tokens = battleMap.getTokens();
 
-        ArrayList<Token> tokenList = new ArrayList<>(tokens.values());
-
-        return tokenList;
+        return new ArrayList<>(tokens.values());
     }
 
     public void sendUpdates() {
@@ -83,6 +86,8 @@ public class MapService {
 
     @Transactional
     public void addToken(Token token) {
+        if (battleMap == null) return;
+
         if (token.getId() != null && battleMap.containsToken(token)) {
             log.info("Duplicate token: ({}) {}", token.getId(), token.getName());
             return;
@@ -96,6 +101,8 @@ public class MapService {
 
     @Transactional
     public void moveToken(Long id, int x, int y) {
+        if (battleMap == null) return;
+
         Optional<Token> oToken = tokenRepository.findById(id);
         if (oToken.isEmpty()) {
             log.error("Can't find token");
@@ -117,8 +124,10 @@ public class MapService {
     }
 
     public void updateToken(Token token) {
+        if (battleMap == null) return;
+
         if (!battleMap.containsToken(token)) {
-            log.info("Could not find token to remove: ({}) {}", token.getId(), token.getName());
+            log.info("Could not find token to update: ({}) {}", token.getId(), token.getName());
             return;
         }
 
@@ -127,6 +136,8 @@ public class MapService {
 
     @Transactional
     public void removeToken(Long id) {
+        if (battleMap == null) return;
+
         battleMap.removeToken(id);
 
         Optional<Token> oToken = tokenRepository.findById(id);
@@ -154,5 +165,25 @@ public class MapService {
         } else {
             return false;
         }
+    }
+
+    @Transactional
+    public void updateMap(BattleMapUpdateRequest map) {
+        Long id = map.getId();
+        if (battleMap == null || !battleMap.getId().equals(id)) {
+            throw new IllegalArgumentException("Map null or does not match");
+        }
+
+        // Update only the settings
+        if (!StringUtils.isEmpty(map.getName())) {
+            battleMap.setName(map.getName());
+        }
+
+        battleMap.setGridHeight(map.getGridHeight());
+        battleMap.setGridWidth(map.getGridWidth());
+        battleMap.setGridLineWidth(map.getGridLineWidth());
+
+        mapRepository.save(battleMap);
+        messagingTemplate.convertAndSend("/topic/maps", "Map info updated");
     }
 }
