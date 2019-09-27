@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,7 +24,7 @@ public class BattleMap {
     private Long id;
     private int gridHeight;
     private int gridWidth;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Map<Long, Token> tokens;
     @OneToOne
     @JoinColumn(name = "background_image",
@@ -48,6 +49,7 @@ public class BattleMap {
     }
 
     public void addToken(Token token) {
+        if (tokens == null) { tokens = new HashMap<>(); }
         tokens.put(token.getId(), token);
     }
 

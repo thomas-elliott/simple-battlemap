@@ -56,9 +56,6 @@ export class MapComponent implements OnInit, OnDestroy {
   gridWidth: number;
   gridHeight: number;
 
-  tokenWidth = this.backgroundWidth / this.gridWidth;
-  tokenHeight = this.backgroundHeight / this.gridHeight;
-
   constructor(private assetService: AssetService,
               private tokenService: TokenService,
               private mapService: MapService,
@@ -83,6 +80,7 @@ export class MapComponent implements OnInit, OnDestroy {
         } else {
           this.emptyMap = true;
         }
+        this.tokenService.getTokensFromServer();
     });
 
     this.tokenSelectedSubscription = this.assetService.selectedTokenChanged.subscribe(

@@ -9,6 +9,7 @@ import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class MapService {
         return battleMap.getId();
     }
 
+    @Transactional
     public boolean loadMap(Long id) {
         Optional<BattleMap> map = mapRepository.findById(id);
         if (map.isPresent()) {
@@ -57,6 +59,7 @@ public class MapService {
         }
     }
 
+    @Transactional
     public void saveMap() {
         tokenRepository.saveAll(battleMap.getTokens().values());
         mapRepository.save(battleMap);
@@ -78,17 +81,20 @@ public class MapService {
         messagingTemplate.convertAndSend("/topic/tokens", "Send manually");
     }
 
+    @Transactional
     public void addToken(Token token) {
         if (token.getId() != null && battleMap.containsToken(token)) {
             log.info("Duplicate token: ({}) {}", token.getId(), token.getName());
             return;
         }
 
-        battleMap.addToken(token);
         tokenRepository.save(token);
+        battleMap.addToken(token);
+        mapRepository.save(battleMap);
         messagingTemplate.convertAndSend("/topic/tokens", "Send after add");
     }
 
+    @Transactional
     public void moveToken(Long id, int x, int y) {
         Optional<Token> oToken = tokenRepository.findById(id);
         if (oToken.isEmpty()) {
@@ -119,6 +125,7 @@ public class MapService {
         battleMap.updateToken(token);
     }
 
+    @Transactional
     public void removeToken(Long id) {
         battleMap.removeToken(id);
 
@@ -133,6 +140,7 @@ public class MapService {
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
     }
 
+    @Transactional
     public boolean changeImageAsset(Long imageId) {
         if (battleMap == null) return false;
 
