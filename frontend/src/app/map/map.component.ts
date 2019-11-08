@@ -17,6 +17,7 @@ import {AuthService} from "../service/auth.service";
 import {MapService} from "../service/map.service";
 import {BattleMap} from "../model/battleMap.model";
 import {WebsocketService} from "../service/websocket.service";
+import {DragInfo} from "../model/dragInfo.model";
 
 @Component({
   selector: 'app-map',
@@ -30,7 +31,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   selectedTokenAsset: Asset;
   selectedTokenId: number;
-  isDragging: boolean;
+  dragInfo: DragInfo = new DragInfo();
 
   emptyMap = true;
 
@@ -107,7 +108,7 @@ export class MapComponent implements OnInit, OnDestroy {
     const mouseX = event.pageX - rect.left;
     const mouseY = event.pageY - rect.top;
     console.log (`Click down on ${mouseX}, ${mouseY}`);
-    this.isDragging = false;
+    this.dragInfo.isDragging = false;
 
     if (this.selectedTokenAsset) {
       this.tokenService.addToken(
@@ -121,8 +122,9 @@ export class MapComponent implements OnInit, OnDestroy {
     if (selectedTokenId !== null) {
       if (this.selectedTokenId === selectedTokenId) {
         // Start dragging TODO: change mouse pointer
-        this.isDragging = true;
-        console.log('Start dragging');
+        this.dragInfo.isDragging = true;
+        this.dragInfo.originalClickX = mouseX;
+        this.dragInfo.originalClickY = mouseY;
       } else {
         this.selectedTokenId = selectedTokenId;
         this.tokenCanvas.setSelectedToken(selectedTokenId);
@@ -140,10 +142,10 @@ export class MapComponent implements OnInit, OnDestroy {
     if (this.emptyMap) return;
     // For now don't let players move tokens
     if (!this.isDm) return;
-    if (!this.isDragging) return;
+    if (!this.dragInfo.isDragging) return;
 
     if (this.selectedTokenId == null) {
-      this.isDragging = false;
+      this.dragInfo.isDragging = false;
       return;
     }
 
@@ -152,9 +154,20 @@ export class MapComponent implements OnInit, OnDestroy {
     const mouseX = event.pageX - rect.left;
     const mouseY = event.pageY - rect.top;
     console.log(`Finished dragging at ${mouseX},${mouseY}`);
+    this.dragInfo.isDragging = false;
 
     // Move selected token to X, Y
     this.tokenCanvas.moveToken(this.selectedTokenId, mouseX, mouseY);
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event) {
+    if (!this.dragInfo.isDragging) return;
+
+    // TODO: Does this need to be set every update?
+    const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
+    this.dragInfo.mouseX = event.pageX - rect.left;
+    this.dragInfo.mouseY = event.pageY - rect.top;
   }
 
   private ngAfterViewInit(): void {
