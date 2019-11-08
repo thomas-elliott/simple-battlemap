@@ -63,8 +63,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('Map on init');
-
     this.mapSubscription = this.mapService.mapChanged.subscribe(
       (response: BattleMap) => {
         if (response !== null) {

@@ -67,6 +67,13 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
 
   // Move Token
   public moveToken(tokenId: number, x: number, y: number) {
+    if ((x - this.tokenWidth() / 2) > 0) {
+      x = x - this.tokenWidth() / 2;
+    }
+    if ((y - this.tokenHeight() / 2) > 0) {
+      y = y - this.tokenHeight() / 2;
+    }
+
     this.tokenService.moveToken(tokenId, x, y);
   }
 
