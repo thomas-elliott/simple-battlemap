@@ -104,26 +104,35 @@ export class MapService {
         console.log('Finished saving map');
       }, () => {
         console.error('Error saving map');
-      }
-    );
+    });
   }
 
-  public loadMap(id: number) {
+  public loadMap(id: number): void {
     console.log('load map');
     this.httpClient.post(`${this.serverPath}/map/load/${id}`, {})
       .subscribe(() => {
         console.log('Finished loading map');
       }, () => {
         console.error('Error loading map');
-      })
+    });
   }
 
-  public saveMapSettings(map: BattleMap) {
+  public saveMapSettings(map: BattleMap): void {
     this.httpClient.put(`${this.serverPath}/map/update`,
       map).subscribe(() => {
        console.log('Map settings updated');
     }, () => {
         console.error('Error saving map settings');
+    });
+  }
+
+  public deleteMap(id: number): void {
+    console.log('delete map');
+    this.httpClient.delete(`${this.serverPath}/map/delete/${id}`)
+      .subscribe(() => {
+        console.log('Finished deleting map');
+      }, () => {
+        console.error('Error deleting map');
     });
   }
 }

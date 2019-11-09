@@ -51,6 +51,12 @@ public class MapController {
         return successful;
     }
 
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    public boolean deleteMap(@PathVariable(name = "id") Long id) {
+        log.info("Attempting to delete map: {}", id);
+        return mapService.deleteMap(id);
+    }
+
     @RequestMapping(value = "/tokens", method = RequestMethod.GET)
     public List<Token> getTokens() {
         return mapService.getTokens();

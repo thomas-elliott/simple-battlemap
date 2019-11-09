@@ -186,4 +186,20 @@ public class MapService {
         mapRepository.save(battleMap);
         messagingTemplate.convertAndSend("/topic/maps", "Map info updated");
     }
+
+    @Transactional
+    public boolean deleteMap(Long id) {
+        Optional<BattleMap> map = mapRepository.findById(id);
+        if (map.isPresent()) {
+            if (battleMap == map.get()) {
+                log.error("Can't remove map {} which is already loaded", id);
+                return false;
+            }
+
+            mapRepository.delete(map.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
