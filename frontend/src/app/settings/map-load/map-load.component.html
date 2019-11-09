@@ -1,5 +1,16 @@
-<div *ngFor="let map of mapList">
-  <button mat-flat-button
-          (click)="loadMap(map.id)">Load map</button>
-    Id: {{map.id}}, Name: {{map.name}} {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundId}}
-</div>
+<mat-grid-list cols="3">
+
+  <mat-grid-tile *ngFor="let map of mapList">
+    <mat-grid-tile-header>
+      {{map.id}} - {{map.name}}
+    </mat-grid-tile-header>
+      <img src="{{serverPath}}image/{{map.backgroundId}}/thumbnail.png" alt="{{map.backgroundId}}">
+      {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundId}}
+    <mat-grid-tile-footer>
+      <button mat-raised-button
+              (click)="loadMap(map.id)">Load</button>
+      <button mat-raised-button color="warn" (click)="deleteMap(map.id)">Delete</button>
+    </mat-grid-tile-footer>
+  </mat-grid-tile>
+
+</mat-grid-list>

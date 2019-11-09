@@ -1,6 +1,14 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {TokenService} from "../../service/token.service";
-import {interval, Observable, Subscription} from "rxjs";
+import {interval, Subscription} from "rxjs";
 import {WebsocketService} from "../../service/websocket.service";
 import {environment} from "../../../environments/environment";
 import {DragInfo} from "../../model/dragInfo.model";
@@ -10,7 +18,7 @@ import {DragInfo} from "../../model/dragInfo.model";
   templateUrl: './token-canvas.component.html',
   styleUrls: ['./token-canvas.component.scss']
 })
-export class TokenCanvasComponent implements OnInit, OnDestroy {
+export class TokenCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tokenCanvas', {static: false})
   tokenCanvas: ElementRef;
   @ViewChild('markupCanvas', {static: false})
@@ -75,7 +83,7 @@ export class TokenCanvasComponent implements OnInit, OnDestroy {
     this.timerSubscription.unsubscribe();
   }
 
-  private ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.tokenContext = (<HTMLCanvasElement>this.tokenCanvas.nativeElement).getContext('2d');
     this.markupContext = (<HTMLCanvasElement>this.markupCanvas.nativeElement).getContext('2d');
     this.setCanvasSize(this.backgroundWidth, this.backgroundHeight);

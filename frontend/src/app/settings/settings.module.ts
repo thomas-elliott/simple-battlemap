@@ -11,6 +11,7 @@ import { MapSettingsComponent } from './map-settings/map-settings.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {FormsModule} from "@angular/forms";
     MatChipsModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatGridListModule
   ]
 })
 export class SettingsModule { }

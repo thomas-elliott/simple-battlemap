@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {BattleMap} from "../../model/battleMap.model";
 import {WindowService} from "../../service/window.service";
 import {WindowState} from "../../model/windowState.model";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'window-map-load',
@@ -13,6 +14,7 @@ import {WindowState} from "../../model/windowState.model";
 export class MapLoadComponent implements OnInit, OnDestroy {
   mapListSubscription: Subscription;
 
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
   mapList: BattleMap[];
 
   constructor(private mapService: MapService,
@@ -34,6 +36,11 @@ export class MapLoadComponent implements OnInit, OnDestroy {
 
   loadMap(id: number): void {
     this.mapService.loadMap(id);
+    this.windowService.changeWindow(WindowState.None);
+  }
+
+  deleteMap(id: number) {
+    this.mapService.deleteMap(id);
     this.windowService.changeWindow(WindowState.None);
   }
 }

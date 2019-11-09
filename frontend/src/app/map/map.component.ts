@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   HostListener,
@@ -24,7 +25,7 @@ import {DragInfo} from "../model/dragInfo.model";
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   tokenSelectedSubscription: Subscription;
   mapSubscription: Subscription;
   authSubscription: Subscription;
@@ -48,6 +49,8 @@ export class MapComponent implements OnInit, OnDestroy {
   mapImageId: number;
   backgroundWidth = 1600;
   backgroundHeight = 1600;
+
+  debounceTime = 100;
 
   // Grid settings
   lineColour = "black";
@@ -91,6 +94,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.authSubscription.unsubscribe();
   }
 
+  ngAfterViewInit(): void {
+    this.updateScreenSize();
+  }
+
   private mapChanged(map: BattleMap): void {
     console.log(`Map component, id changed to ${map.id}`);
     this.gridHeight = map.gridHeight;
@@ -121,8 +128,9 @@ export class MapComponent implements OnInit, OnDestroy {
     console.log (`Selected token ${selectedTokenId}`);
     if (selectedTokenId !== null) {
       if (this.selectedTokenId === selectedTokenId) {
-        // Start dragging TODO: change mouse pointer
+        // Start dragging
         this.dragInfo.isDragging = true;
+        this.dragInfo.dragStarted = event.timeStamp;
         this.dragInfo.originalClickX = mouseX;
         this.dragInfo.originalClickY = mouseY;
       } else {
@@ -143,6 +151,10 @@ export class MapComponent implements OnInit, OnDestroy {
     // For now don't let players move tokens
     if (!this.isDm) return;
     if (!this.dragInfo.isDragging) return;
+    if (event.timeStamp - this.dragInfo.dragStarted < this.debounceTime) {
+      this.dragInfo.isDragging = false;
+      return;
+    }
 
     if (this.selectedTokenId == null) {
       this.dragInfo.isDragging = false;
@@ -170,8 +182,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.dragInfo.mouseY = event.pageY - rect.top;
   }
 
-  private ngAfterViewInit(): void {
-    this.updateScreenSize();
+  @HostListener('contextmenu', ['$event'])
+  onRightClick(event) {
+    return false;
   }
 
   @HostListener('window:resize', ['$event'])
