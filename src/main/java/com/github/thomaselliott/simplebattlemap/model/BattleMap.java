@@ -3,6 +3,7 @@ package com.github.thomaselliott.simplebattlemap.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class BattleMap {
     private int gridWidth;
     private int gridLineWidth;
     private String name;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Map<Long, Token> tokens;
     @OneToOne
     @JoinColumn(name = "background_image",

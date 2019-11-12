@@ -117,6 +117,16 @@ export class MapService {
     });
   }
 
+  public newMap(assetId: number): void {
+    console.log('new map');
+    this.httpClient.post(`${this.serverPath}/map/new/${assetId}`, {})
+      .subscribe(() => {
+        console.log('Finished setting new map');
+      }, () => {
+        console.error('Error setting new map');
+    });
+  }
+
   public saveMapSettings(map: BattleMap): void {
     this.httpClient.put(`${this.serverPath}/map/update`,
       map).subscribe(() => {

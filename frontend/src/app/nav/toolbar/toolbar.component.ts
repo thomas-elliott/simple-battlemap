@@ -57,7 +57,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   newMap() {
-
+    this.windowService.changeWindow(WindowState.NewMap);
   }
 
   saveMap() {

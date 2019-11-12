@@ -1,0 +1,14 @@
+<mat-grid-list cols="3">
+
+  <mat-grid-tile *ngFor="let map of backgroundAssets">
+    <mat-grid-tile-header>
+      {{map.id}} - {{map.name}}
+    </mat-grid-tile-header>
+    <img src="{{serverPath}}image/{{map.id}}/thumbnail.png" alt="{{map.id}}">
+    <mat-grid-tile-footer>
+      <button mat-raised-button
+              (click)="pickMap(map.id)">Pick</button>
+    </mat-grid-tile-footer>
+  </mat-grid-tile>
+
+</mat-grid-list>
