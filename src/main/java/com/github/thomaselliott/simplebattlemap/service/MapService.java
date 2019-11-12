@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +60,14 @@ public class MapService {
     }
 
     @Transactional
-    public void newMap() {
+    public void newMap(Long backgroundImageId) {
+        Optional<Asset> image = assetRepository.findById(backgroundImageId);
+        if (!image.isPresent()) return;
+
         this.battleMap = new BattleMap();
+        battleMap.setBackgroundImage(image.get());
+        mapRepository.save(this.battleMap);
+        messagingTemplate.convertAndSend("/topic/maps", "Map loaded");
     }
 
     @Transactional
@@ -139,6 +146,7 @@ public class MapService {
         if (battleMap == null) return;
 
         battleMap.removeToken(id);
+        mapRepository.save(battleMap);
 
         Optional<Token> oToken = tokenRepository.findById(id);
         if (oToken.isEmpty()) {

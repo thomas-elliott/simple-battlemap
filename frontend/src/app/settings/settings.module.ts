@@ -12,10 +12,11 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatGridListModule} from "@angular/material/grid-list";
+import { MapNewComponent } from './map-new/map-new.component';
 
 
 @NgModule({
-  declarations: [SettingsComponent, MapLoadComponent, MapSettingsComponent],
+  declarations: [SettingsComponent, MapLoadComponent, MapSettingsComponent, MapNewComponent],
   exports: [
     SettingsComponent
   ],

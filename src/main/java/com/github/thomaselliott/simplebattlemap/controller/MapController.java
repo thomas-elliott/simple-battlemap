@@ -38,6 +38,13 @@ public class MapController {
         return mapInfoResponse;
     }
 
+    @RequestMapping(value = "/new/{id}", method = RequestMethod.POST)
+    public boolean postNewMap(@PathVariable(name = "id") Long id) {
+        log.info("Creating new map");
+        this.mapService.newMap(id);
+        return true;
+    }
+
     @RequestMapping(value = "/image/{id}", method = RequestMethod.PUT)
     public void putUpdateImage(@PathVariable(name = "id") Long imageId) {
         boolean successful = mapService.changeImageAsset(imageId);

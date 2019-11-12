@@ -49,7 +49,8 @@ export class AppComponent implements OnInit, OnDestroy {
   showSettingsWindow() {
     return this.showPage === WindowState.LoadMap ||
       this.showPage === WindowState.SaveMap ||
-      this.showPage === WindowState.MapSettings
+      this.showPage === WindowState.MapSettings ||
+      this.showPage === WindowState.NewMap
   }
 
   showLogin() {
