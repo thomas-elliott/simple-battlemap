@@ -1,6 +1,5 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
-import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
 import com.github.thomaselliott.simplebattlemap.model.Token;
