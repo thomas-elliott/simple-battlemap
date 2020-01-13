@@ -1,5 +1,7 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -27,12 +29,14 @@ public class Asset {
     @Enumerated(EnumType.STRING)
     private AssetType type;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image",
                 referencedColumnName = "image_id",
                 foreignKey = @ForeignKey(name = "fk_image"))
     private ImageFile image;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thumbnail",
                 referencedColumnName = "image_id",

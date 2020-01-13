@@ -1,7 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.hibernate.annotations.Type;
 

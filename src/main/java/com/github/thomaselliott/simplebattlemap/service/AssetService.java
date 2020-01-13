@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,8 +47,10 @@ public class AssetService {
     }
 
     @Transactional
-    public byte[] getImage(Long assetId) {
-        Asset asset = this.assetRepository.getOne(assetId);
+    public byte[] getImage(String assetId) {
+        Long lId = Long.valueOf(assetId);
+
+        Asset asset = this.assetRepository.getOne(lId);
         if (asset != null) {
             return asset.getImage().getData();
         } else {
@@ -94,7 +95,8 @@ public class AssetService {
         return imageRepository.save(image);
     }
 
-    public void deleteAsset(Long id) {
-        this.assetRepository.deleteById(id);
+    public void deleteAsset(String id) {
+        Long lId = Long.valueOf(id);
+        this.assetRepository.deleteById(lId);
     }
 }
