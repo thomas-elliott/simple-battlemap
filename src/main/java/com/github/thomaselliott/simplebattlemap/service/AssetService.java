@@ -3,6 +3,7 @@ package com.github.thomaselliott.simplebattlemap.service;
 import com.github.thomaselliott.simplebattlemap.model.Asset;
 import com.github.thomaselliott.simplebattlemap.model.AssetType;
 import com.github.thomaselliott.simplebattlemap.model.ImageFile;
+import com.github.thomaselliott.simplebattlemap.model.ImageFileType;
 import com.github.thomaselliott.simplebattlemap.repository.AssetRepository;
 import com.github.thomaselliott.simplebattlemap.repository.ImageRepository;
 
@@ -22,13 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssetService {
     private AssetRepository assetRepository;
-    private ImageRepository imageRepository;
+    private ImageStoreService imageStoreService;
 
     @Autowired
     public AssetService(AssetRepository assetRepository,
-                        ImageRepository imageRepository) {
+                        ImageStoreService imageStoreService) {
         this.assetRepository = assetRepository;
-        this.imageRepository = imageRepository;
+        this.imageStoreService = imageStoreService;
     }
 
     @Transactional
@@ -86,13 +87,13 @@ public class AssetService {
         image.setContentType(file.getContentType());
 
         try {
-            image.setData(file.getBytes());
+            imageStoreService.saveImage(file.getBytes(), ImageFileType.fromString(file.getContentType()));
         } catch (IOException e) {
             log.error("Error converting file {}", file.getName(), e);
             return null;
         }
 
-        return imageRepository.save(image);
+        return image;
     }
 
     public void deleteAsset(String id) {

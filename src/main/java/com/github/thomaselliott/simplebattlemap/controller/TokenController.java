@@ -28,7 +28,7 @@ public class TokenController {
         this.mapService = mapService;
     }
 
-    @RequestMapping(value = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Token> getTokens() {
         return mapService.getTokens();
     }
