@@ -62,7 +62,7 @@ export class MapService {
 
   public getMapListFromServer() {
     console.log('Getting map list');
-    this.httpClient.get(`${this.serverPath}/data/battleMaps`).subscribe(
+    this.httpClient.get(`${this.serverPath}/map/`).subscribe(
       (response: MapListResponse) => {
         this.mapList = response._embedded.battleMaps;
         this.notifyMapListChanged();
@@ -89,7 +89,7 @@ export class MapService {
 
   private getMapFromServer(id: number) {
     console.log(`loading map ${id} from server`);
-    return this.httpClient.get(`${this.serverPath}/data/battleMaps/${id}`).subscribe(
+    return this.httpClient.get(`${this.serverPath}/map/${id}`).subscribe(
       (response: BattleMap) => {
         this.map = response;
         console.log(`Loaded map ${response.id}`);

@@ -6,6 +6,7 @@ import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/map")
-public class MapController {
+public class MapController implements MapApi {
     private MapService mapService;
 
     @Autowired
@@ -37,24 +37,10 @@ public class MapController {
         return mapInfoResponse;
     }
 
-    @RequestMapping(value = "/new/{id}", method = RequestMethod.POST)
-    public boolean postNewMap(@PathVariable(name = "id") Long id) {
-        log.info("Creating new map");
-        this.mapService.newMap(id);
-        return true;
-    }
-
     @RequestMapping(value = "/image/{id}", method = RequestMethod.PUT)
     public void putUpdateImage(@PathVariable(name = "id") Long imageId) {
         boolean successful = mapService.changeImageAsset(imageId);
         log.info("Changing image id for map. Success={}", successful);
-    }
-
-    @RequestMapping(value = "/load/{id}", method = RequestMethod.POST)
-    public boolean postLoadMap(@PathVariable(name = "id") Long id) {
-        log.info("Attempting to load map: {}", id);
-        boolean successful = mapService.loadMap(id);
-        return successful;
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
@@ -68,15 +54,36 @@ public class MapController {
         return mapService.getTokens();
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public void postSaveMap() {
-        log.info("Attempting to save map");
-        mapService.saveMap();
-    }
-
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public void postUpdateMap(@RequestBody BattleMapUpdateRequest map) {
         log.info("Updating map");
         mapService.updateMap(map);
+    }
+
+    // New methods
+
+    @Override
+    public ResponseEntity<String> getMapList() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Boolean> loadMap(@PathVariable(name = "id") Long id) {
+        log.info("Attempting to load map: {}", id);
+        boolean successful = mapService.loadMap(id);
+        return ResponseEntity.ok(successful);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> newMap(@PathVariable(name = "id") Long id) {
+        log.info("Creating new map");
+        this.mapService.newMap(id);
+        return ResponseEntity.ok(true);
+    }
+
+    @Override
+    public void saveMap() {
+        log.info("Attempting to save map");
+        mapService.saveMap();
     }
 }
