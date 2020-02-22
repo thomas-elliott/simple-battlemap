@@ -39,7 +39,7 @@ public class AssetController implements AssetApi {
     }
 
     @Override
-    public ResponseEntity<byte[]> getImage(String id) {
+    public ResponseEntity<byte[]> getImage(Long id) {
         byte[] image = assetService.getImage(id);
 
         if (image != null && image.length > 0) {

@@ -43,7 +43,7 @@ public interface AssetApi {
             produces = MediaType.IMAGE_PNG_VALUE,
             method = RequestMethod.GET)
     ResponseEntity<byte[]> getImage(
-            @ApiParam(value = "Id of image") @PathVariable("id") String id
+            @ApiParam(value = "Id of image") @PathVariable("id") Long id
     );
 
     @ApiOperation(value = "Delete image",

@@ -1,11 +1,14 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,8 +66,18 @@ public class MapController implements MapApi {
     // New methods
 
     @Override
-    public ResponseEntity<String> getMapList() {
-        return null;
+    public Page<BattleMap> getMapList(Pageable pageable) {
+        return mapService.listMaps(pageable);
+    }
+
+    @Override
+    public ResponseEntity<BattleMap> getMap(Long id) {
+        BattleMap map = mapService.getMap(id);
+        if (map != null) {
+            return ResponseEntity.ok(map);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

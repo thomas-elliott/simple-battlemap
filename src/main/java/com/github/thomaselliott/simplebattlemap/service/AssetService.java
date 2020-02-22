@@ -48,11 +48,8 @@ public class AssetService {
         return assetRepository.findAllByName(name, pageable);
     }
 
-    @Transactional
-    public byte[] getImage(String assetId) {
-        Long lId = Long.valueOf(assetId);
-
-        Optional<Asset> asset = this.assetRepository.findById(lId);
+    public byte[] getImage(Long assetId) {
+        Optional<Asset> asset = this.assetRepository.findById(assetId);
         return asset.map(value -> value.getImage().getData()).orElse(null);
     }
 
