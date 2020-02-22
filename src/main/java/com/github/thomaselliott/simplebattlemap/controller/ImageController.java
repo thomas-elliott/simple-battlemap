@@ -16,7 +16,18 @@ public class ImageController implements ImageApi {
     }
 
     @Override
-    public ResponseEntity<byte[]> getImage(String id) {
+    public ResponseEntity<byte[]> getThumbnail(Long id) {
+        byte[] image = assetService.getThumbnail(id);
+
+        if (image != null && image.length > 0) {
+            return ResponseEntity.ok(image);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getImage(Long id) {
         byte[] image = assetService.getImage(id);
 
         if (image != null && image.length > 0) {

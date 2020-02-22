@@ -8,6 +8,8 @@ import com.github.thomaselliott.simplebattlemap.repository.AssetRepository;
 import com.github.thomaselliott.simplebattlemap.repository.MapRepository;
 import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +46,16 @@ public class MapService {
     public Long getMapId() {
         if (battleMap == null) return null;
         return battleMap.getId();
+    }
+
+    public Page<BattleMap> listMaps(Pageable pageable) {
+        Page<BattleMap> maps = mapRepository.findAll(pageable);
+        return maps;
+    }
+
+    public BattleMap getMap(Long id) {
+        Optional<BattleMap> map = mapRepository.findById(id);
+        return map.orElse(null);
     }
 
     @Transactional

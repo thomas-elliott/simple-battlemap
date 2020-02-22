@@ -64,7 +64,7 @@ export class MapService {
     console.log('Getting map list');
     this.httpClient.get(`${this.serverPath}/map/`).subscribe(
       (response: MapListResponse) => {
-        this.mapList = response._embedded.battleMaps;
+        this.mapList = response.content;
         this.notifyMapListChanged();
       }, () => {
         console.error('Error getting map list');

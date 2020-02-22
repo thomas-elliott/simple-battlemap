@@ -15,8 +15,14 @@ import io.swagger.annotations.ApiParam;
         produces = { "application/json" })
 public interface ImageApi {
     @ApiOperation(value = "Get thumbnail",
-            nickname = "thumbnail")
+            nickname = "getThumbnail")
     @RequestMapping(value = "/{id}/thumbnail.png",
             method = RequestMethod.GET)
-    ResponseEntity<byte[]> getImage(@ApiParam(value = "Image ID") @PathVariable("id") String id);
+    ResponseEntity<byte[]> getThumbnail(@ApiParam(value = "Image ID") @PathVariable("id") Long id);
+
+    @ApiOperation(value = "Get image",
+            nickname = "getImage")
+    @RequestMapping(value = "/{id}/image.png",
+            method = RequestMethod.GET)
+    ResponseEntity<byte[]> getImage(@ApiParam(value = "Image ID") @PathVariable("id") Long id);
 }
