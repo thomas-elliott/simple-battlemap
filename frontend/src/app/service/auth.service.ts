@@ -14,7 +14,7 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class AuthService {
-  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api/`;
+  serverPath = `${environment.serverProtocol}://${environment.serverBase}/api`;
   authenticationChanged = new Subject<boolean>();
 
   authorised = false;
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   checkAuthentication() {
-    this.httpClient.get(`${this.serverPath}user`).subscribe(
+    this.httpClient.get(`${this.serverPath}/account/user`).subscribe(
       (response: User) => {
         this.role = response;
         if (this.authorised !== response.authenticated) {
@@ -67,7 +67,7 @@ export class AuthService {
       .set('password', password);
 
     return new Promise((resolve, reject) => {
-      this.httpClient.post(this.serverPath + 'login',
+      this.httpClient.post(`${this.serverPath}/login`,
         params.toString(),
         {headers: headers, responseType: "json"})
         .toPromise()

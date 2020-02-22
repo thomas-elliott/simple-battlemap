@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,22 +52,14 @@ public class AssetService {
     public byte[] getImage(String assetId) {
         Long lId = Long.valueOf(assetId);
 
-        Asset asset = this.assetRepository.getOne(lId);
-        if (asset != null) {
-            return asset.getImage().getData();
-        } else {
-            return null;
-        }
+        Optional<Asset> asset = this.assetRepository.findById(lId);
+        return asset.map(value -> value.getImage().getData()).orElse(null);
     }
 
     @Transactional
     public byte[] getThumbnail(Long assetId) {
-        Asset asset = this.assetRepository.getOne(assetId);
-        if (asset != null) {
-            return asset.getThumbnail().getData();
-        } else {
-            return null;
-        }
+        Optional<Asset> asset = this.assetRepository.findById(assetId);
+        return asset.map(value -> value.getThumbnail().getData()).orElse(null);
     }
 
     @Transactional

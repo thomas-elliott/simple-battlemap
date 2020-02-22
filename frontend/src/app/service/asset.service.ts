@@ -49,10 +49,10 @@ export class AssetService {
   }
 
   public getTokenAssetsFromServer(): void {
-    this.httpClient.get(`${this.serverPath}/data/assets/search/findAllByType?type=TOKEN`)
+    this.httpClient.get(`${this.serverPath}/asset/TOKEN`)
       .subscribe(
         (response: AssetsResponse) => {
-          this.tokenAssets = response._embedded.assets;
+          this.tokenAssets = response.content;
           this.notifyTokenAssetChanged();
         },
         (error: HttpErrorResponse) => {
@@ -63,10 +63,10 @@ export class AssetService {
   }
 
   public getBackgroundAssetsFromServer(): void {
-    this.httpClient.get(`${this.serverPath}/data/assets/search/findAllByType?type=BACKGROUND`)
+    this.httpClient.get(`${this.serverPath}/asset/BACKGROUND`)
       .subscribe(
         (response: AssetsResponse) => {
-          this.backgroundAssets = response._embedded.assets;
+          this.backgroundAssets = response.content;
           this.notifyBackgroundAssetsChanged();
         },
         (error: HttpErrorResponse) => {
