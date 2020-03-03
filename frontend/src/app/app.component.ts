@@ -3,6 +3,8 @@ import {Subscription} from "rxjs";
 import {WindowService} from "./service/window.service";
 import {WindowState} from "./model/windowState.model";
 import {AuthService} from "./service/auth.service";
+import {SessionService} from "./service/session.service";
+import {SessionInfo} from "./model/sessionInfo.model";
 
 @Component({
   selector: 'app-root',
@@ -13,13 +15,23 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Simple Battlemap';
 
   assetWindowSubscription: Subscription;
+  sessionSubscription: Subscription;
 
+  sessionInfo: SessionInfo;
   showPage = WindowState.None;
 
   constructor(private windowService: WindowService,
+              private sessionService: SessionService,
               private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.sessionSubscription = this.sessionService.sessionChanged.subscribe(
+      (response: SessionInfo) => {
+        this.sessionInfo = response;
+      }
+    );
+    this.sessionService.getSession();
+
     this.assetWindowSubscription = this.windowService.assetWindowChanged.subscribe(
       (response) => {
         this.showPage = response;

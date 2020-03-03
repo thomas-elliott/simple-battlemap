@@ -27,52 +27,17 @@ public class BattleMap {
     private int gridWidth;
     private int gridLineWidth;
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Map<Long, Token> tokens;
     @OneToOne
     @JoinColumn(name = "background_image",
             referencedColumnName = "asset_id",
             foreignKey = @ForeignKey(name = "fk_background_image"))
     private Asset backgroundImage;
 
-    public BattleMap() {
-        tokens = new HashMap<>();
-    }
+    public BattleMap() {}
 
     public BattleMap(Asset backgroundImage, int gridWidth, int gridHeight) {
-        tokens = new HashMap<>();
         this.backgroundImage = backgroundImage;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-    }
-
-    public Long getBackgroundId() {
-        if (backgroundImage == null) return null;
-        return backgroundImage.getId();
-    }
-
-    public void addToken(Token token) {
-        if (tokens == null) { tokens = new HashMap<>(); }
-        tokens.put(token.getId(), token);
-    }
-
-    public void updateToken(Token token) {
-        tokens.put(token.getId(), token);
-    }
-
-    public void removeToken(Long id) {
-        if (id != null) {
-            tokens.remove(id);
-        }
-    }
-
-    public void moveToken(Long id, int x, int y) {
-        Token token = tokens.get(id);
-        token.setX(x);
-        token.setY(y);
-    }
-
-    public boolean containsToken(Token token) {
-        return tokens.containsKey(token.getId());
     }
 }

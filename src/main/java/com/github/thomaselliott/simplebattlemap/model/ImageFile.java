@@ -22,7 +22,10 @@ public class ImageFile {
     @Column(name = "image_id")
     private Long id;
     private String fileName;
+    private String extension;
     private String contentType;
+    private Integer width;
+    private Integer height;
     private byte[] data;
 
     @Lob
