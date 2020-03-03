@@ -36,8 +36,8 @@ export class MapService {
   }
 
   public notifyMapChanged() {
-    console.log(`Map changed. Map is:`);
-    console.log(this.map);
+    console.debug(`Map changed. Map is:`);
+    console.debug(this.map);
     this.mapChanged.next(this.map);
   }
 
@@ -47,11 +47,11 @@ export class MapService {
 
   public changeBackgroundImage(asset: Asset) {
     if (asset == null) return;
-    console.log(`changing background image to ${asset.id}`);
+    console.debug(`changing background image to ${asset.id}`);
     this.httpClient.put(`${this.serverPath}/map/image/${asset.id}`,
       {}).subscribe(
       () => {
-        console.log('Change image response');
+        console.debug('Change image response');
         this.notifyMapChanged();
       },
       () => {
@@ -61,7 +61,7 @@ export class MapService {
   }
 
   public getMapListFromServer() {
-    console.log('Getting map list');
+    console.debug('Getting map list');
     this.httpClient.get(`${this.serverPath}/map/`).subscribe(
       (response: MapListResponse) => {
         this.mapList = response.content;
@@ -73,14 +73,14 @@ export class MapService {
   }
 
   public getMapIdFromServer() {
-    console.log('load map info');
+    console.debug('load map info');
     this.httpClient.get(`${this.serverPath}/map/info`).subscribe(
       (response: MapInfo) => {
         this.mapId = response.mapId;
         if (this.mapId) {
           this.getMapFromServer(response.mapId);
         }
-        console.log(`Loaded map information ${response.mapId}`);
+        console.debug(`Loaded map information ${response.mapId}`);
       }, () => {
         console.error('Error getting map info');
       }
@@ -88,40 +88,40 @@ export class MapService {
   }
 
   private getMapFromServer(id: number) {
-    console.log(`loading map ${id} from server`);
+    console.debug(`loading map ${id} from server`);
     return this.httpClient.get(`${this.serverPath}/map/${id}`).subscribe(
       (response: BattleMap) => {
         this.map = response;
-        console.log(`Loaded map ${response.id}`);
+        console.debug(`Loaded map ${response.id}`);
         this.notifyMapChanged();
     });
   }
 
   public saveMap(): void {
-    console.log('save map');
+    console.debug('save map');
     this.httpClient.post(`${this.serverPath}/map/save`, {})
       .subscribe(() => {
-        console.log('Finished saving map');
+        console.debug('Finished saving map');
       }, () => {
         console.error('Error saving map');
     });
   }
 
   public loadMap(id: number): void {
-    console.log('load map');
+    console.debug('load map');
     this.httpClient.post(`${this.serverPath}/map/load/${id}`, {})
       .subscribe(() => {
-        console.log('Finished loading map');
+        console.debug('Finished loading map');
       }, () => {
         console.error('Error loading map');
     });
   }
 
   public newMap(assetId: number): void {
-    console.log('new map');
+    console.debug('new map');
     this.httpClient.post(`${this.serverPath}/map/new/${assetId}`, {})
       .subscribe(() => {
-        console.log('Finished setting new map');
+        console.debug('Finished setting new map');
       }, () => {
         console.error('Error setting new map');
     });
@@ -130,17 +130,17 @@ export class MapService {
   public saveMapSettings(map: BattleMap): void {
     this.httpClient.put(`${this.serverPath}/map/update`,
       map).subscribe(() => {
-       console.log('Map settings updated');
+       console.debug('Map settings updated');
     }, () => {
         console.error('Error saving map settings');
     });
   }
 
   public deleteMap(id: number): void {
-    console.log('delete map');
+    console.debug('delete map');
     this.httpClient.delete(`${this.serverPath}/map/delete/${id}`)
       .subscribe(() => {
-        console.log('Finished deleting map');
+        console.debug('Finished deleting map');
       }, () => {
         console.error('Error deleting map');
     });

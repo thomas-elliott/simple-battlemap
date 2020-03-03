@@ -28,7 +28,7 @@ public class AssetController implements AssetApi {
     }
 
     @Override
-    public Page<Asset> getImagesOfType(String type, Pageable pageable) {
+    public Page<Asset> getImagesOfType(String type, Pageable pageable) throws BadRequestException {
         AssetType assetType = AssetType.fromString(type);
 
         if (assetType == null) {
@@ -39,14 +39,8 @@ public class AssetController implements AssetApi {
     }
 
     @Override
-    public ResponseEntity<byte[]> getImage(Long id) {
-        byte[] image = assetService.getImage(id);
-
-        if (image != null && image.length > 0) {
-            return ResponseEntity.ok(image);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> getImage(Long id) {
+        return null;
     }
 
     @Override

@@ -37,8 +37,6 @@ export class MapCanvasComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    this.mapService.getMapIdFromServer();
   }
 
   ngOnDestroy(): void {

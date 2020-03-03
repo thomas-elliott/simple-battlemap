@@ -1,6 +1,7 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.Asset;
+import com.github.thomaselliott.simplebattlemap.model.exception.BadRequestException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +36,13 @@ public interface AssetApi {
     Page<Asset> getImagesOfType(
             @ApiParam(value = "Type of image") @PathVariable("type") String type,
             @ApiParam(value = "Paging controls") Pageable pageable
-    );
+    ) throws BadRequestException;
 
     @ApiOperation(value = "Get image url",
             nickname = "getImage")
     @RequestMapping(value = "/{id}",
-            produces = MediaType.IMAGE_PNG_VALUE,
             method = RequestMethod.GET)
-    ResponseEntity<byte[]> getImage(
+    ResponseEntity<String> getImage(
             @ApiParam(value = "Id of image") @PathVariable("id") Long id
     );
 

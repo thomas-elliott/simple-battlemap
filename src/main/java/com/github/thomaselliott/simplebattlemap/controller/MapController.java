@@ -30,20 +30,10 @@ public class MapController implements MapApi {
         this.mapService = mapService;
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public MapInfoResponse getMapInfo() {
-        log.info("Request for map info");
-
-        MapInfoResponse mapInfoResponse = new MapInfoResponse();
-        mapInfoResponse.setMapId(mapService.getMapId());
-
-        return mapInfoResponse;
-    }
-
     @RequestMapping(value = "/image/{id}", method = RequestMethod.PUT)
     public void putUpdateImage(@PathVariable(name = "id") Long imageId) {
-        boolean successful = mapService.changeImageAsset(imageId);
-        log.info("Changing image id for map. Success={}", successful);
+        //boolean successful = mapService.changeImageAsset(imageId);
+        //log.info("Changing image id for map. Success={}", successful);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
@@ -54,13 +44,15 @@ public class MapController implements MapApi {
 
     @RequestMapping(value = "/tokens", method = RequestMethod.GET)
     public List<Token> getTokens() {
-        return mapService.getTokens();
+        // TODO: Fix
+        //return mapService.getTokens();
+        return null;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public void postUpdateMap(@RequestBody BattleMapUpdateRequest map) {
         log.info("Updating map");
-        mapService.updateMap(map);
+        //mapService.updateMap(map);
     }
 
     // New methods
@@ -83,20 +75,20 @@ public class MapController implements MapApi {
     @Override
     public ResponseEntity<Boolean> loadMap(@PathVariable(name = "id") Long id) {
         log.info("Attempting to load map: {}", id);
-        boolean successful = mapService.loadMap(id);
+        boolean successful = true; //mapService.loadMap(id);
         return ResponseEntity.ok(successful);
     }
 
     @Override
     public ResponseEntity<Boolean> newMap(@PathVariable(name = "id") Long id) {
         log.info("Creating new map");
-        this.mapService.newMap(id);
+        //this.mapService.newMap(id);
         return ResponseEntity.ok(true);
     }
 
     @Override
     public void saveMap() {
         log.info("Attempting to save map");
-        mapService.saveMap();
+        //mapService.saveMap();
     }
 }
