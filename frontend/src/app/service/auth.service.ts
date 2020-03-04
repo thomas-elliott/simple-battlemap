@@ -9,6 +9,7 @@ import {
 import {Subject} from "rxjs";
 import {User} from "../model/user.model";
 import {environment} from "../../environments/environment";
+import {SessionInfo} from "../model/sessionInfo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,9 @@ export class AuthService {
 
   authorised = false;
   role: User;
+
+  private sessionInfo: SessionInfo = null;
+  sessionChanged = new Subject<SessionInfo>();
 
   constructor(private httpClient: HttpClient) { }
 
@@ -42,6 +46,10 @@ export class AuthService {
 
   public isDm(): boolean {
     return this.hasAuthority('ROLE_DM');
+  }
+
+  public currentSession() {
+    return this.sessionInfo == null ? 'None' : this.sessionInfo.id;
   }
 
   checkAuthentication() {
@@ -87,4 +95,59 @@ export class AuthService {
           }
         )});
     }
+
+  updateSession(info): void {
+    console.debug(`Updating info:`);
+    console.debug(info);
+    if (this.sessionInfo != info) {
+      console.debug(`Sending an info notification`);
+      this.sessionInfo = info;
+      this.sessionChanged.next(this.sessionInfo)
+    }
+  }
+
+  hasSession(): boolean {
+    return !(this.sessionInfo === null);
+  }
+
+  // Get current sessions
+  getSessionList(): void {
+    console.debug('Getting session list');
+    this.httpClient.get(`${this.serverPath}/session/all`).subscribe(
+      (response: SessionInfo[]) => {
+        console.debug(response);
+      }, () => {
+        console.error('Error getting session list');
+      }
+    );
+  }
+
+  // Get current session
+  getSession(): void {
+    console.debug('Getting current session');
+    this.httpClient.get(`${this.serverPath}/session/`).subscribe(
+      (response: SessionInfo) => {
+        console.debug(response);
+        this.updateSession(response);
+      }, () => {
+        console.error('Error getting current session');
+      }
+    );
+  }
+
+  newSession(): void {
+    console.debug('Create new session');
+    this.httpClient.post(`${this.serverPath}/session/`, {}).subscribe(
+      (response: SessionInfo) => {
+        console.debug(response);
+        this.updateSession(response);
+      }, () => {
+        console.error('Error creating new session');
+      }
+    );
+  }
+
+  loadSession(): void {
+
+  }
 }

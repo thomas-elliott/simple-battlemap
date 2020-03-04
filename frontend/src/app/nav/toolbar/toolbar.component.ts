@@ -67,4 +67,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   showSettings() {
     this.windowService.changeWindow(WindowState.MapSettings);
   }
+
+  getSession() {
+    return this.authService.currentSession();
+  }
+
+  newSession() {
+    this.authService.newSession();
+  }
 }
