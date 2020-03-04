@@ -1,15 +1,13 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -26,6 +24,8 @@ public class Session {
     private BattleMap map;
     @Transient
     private Map<Long, Token> tokens;
+    @Transient
+    private List<Player> players;
 
     public Session() {
         tokens = new HashMap<>();
