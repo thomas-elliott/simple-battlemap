@@ -1,5 +1,8 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.Player;
+import com.github.thomaselliott.simplebattlemap.model.exception.ApiException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,5 +38,5 @@ public interface AccountApi {
                   nickname = "user")
     @RequestMapping(value = "/user",
                     method = RequestMethod.GET)
-    ResponseEntity<Principal> user(Principal user);
+    ResponseEntity<Player> user(Principal user) throws ApiException;
 }
