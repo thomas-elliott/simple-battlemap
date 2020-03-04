@@ -30,22 +30,14 @@ export class AuthService {
     return this.authenticationChanged.next(this.authorised);
   }
 
-  private hasAuthority(authority: string): boolean {
-    if (!this.role) return false;
-    for (let auth of this.role.authorities) {
-      if (auth.authority === authority) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public isPlayer(): boolean {
-    return this.hasAuthority('ROLE_PLAYER');
+    if (this.role == null) return false;
+    return !this.role.dm;
   }
 
   public isDm(): boolean {
-    return this.hasAuthority('ROLE_DM');
+    if (this.role == null) return false;
+    return this.role.dm;
   }
 
   public currentSession() {
@@ -56,12 +48,11 @@ export class AuthService {
     this.httpClient.get(`${this.serverPath}/account/user`).subscribe(
       (response: User) => {
         this.role = response;
-        if (this.authorised !== response.authenticated) {
-          this.authorised = response.authenticated;
-        }
+        this.authorised = true;
         this.notifyAuthenticationChanged();
       }, (error: HttpErrorResponse) => {
-        console.error('Error', error);
+        console.error('Error checking authentication', error);
+        this.authorised = false;
     }
     );
   }
