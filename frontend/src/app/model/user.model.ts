@@ -1,5 +1,5 @@
 export class User {
-  authorities: [
+/*  authorities: [
     {
       authority: string;
     }
@@ -21,5 +21,8 @@ export class User {
     credentialsNonExpired: true;
     enabled: true;
   };
+  name: string;*/
   name: string;
+  dm: boolean;
+  session: number;
 }

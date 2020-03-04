@@ -1,7 +1,9 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.Player;
+import com.github.thomaselliott.simplebattlemap.model.RegistrationRequest;
 import com.github.thomaselliott.simplebattlemap.model.exception.ApiException;
+import com.github.thomaselliott.simplebattlemap.model.exception.RegistrationException;
 import com.github.thomaselliott.simplebattlemap.service.AccountService;
 
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,9 @@ public class AccountController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<String> register() {
-        return null;
+    public ResponseEntity<Player> register(RegistrationRequest request) throws RegistrationException {
+        Player player = accountService.registerPlayer(request);
+        return ResponseEntity.ok(player);
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.Player;
+import com.github.thomaselliott.simplebattlemap.model.RegistrationRequest;
 import com.github.thomaselliott.simplebattlemap.model.exception.ApiException;
+import com.github.thomaselliott.simplebattlemap.model.exception.RegistrationException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -26,7 +29,7 @@ public interface AccountApi {
                   nickname = "register")
     @RequestMapping(value = "/register",
                     method = RequestMethod.POST)
-    ResponseEntity<String> register();
+    ResponseEntity<Player> register(@RequestBody RegistrationRequest request) throws RegistrationException;
 
     @ApiOperation(value = "Log out from application",
                   nickname = "logout")
