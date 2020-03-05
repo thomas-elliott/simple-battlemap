@@ -10,6 +10,7 @@ import {Subject} from "rxjs";
 import {User} from "../model/user.model";
 import {environment} from "../../environments/environment";
 import {SessionInfo} from "../model/sessionInfo.model";
+import {RegistrationRequest} from "../model/registrationRequest.model";
 
 @Injectable({
   providedIn: 'root'
@@ -84,8 +85,17 @@ export class AuthService {
             this.notifyAuthenticationChanged();
             reject('Failed auth');
           }
-        )});
-    }
+    )});
+  }
+
+  registerAccount(info: RegistrationRequest): void {
+    this.httpClient.post(`${this.serverPath}/account/register`, info).subscribe(
+      (response: User) => {
+        console.log(`Returned user info from response`);
+        console.log(response);
+      }
+    )
+  }
 
   updateSession(info): void {
     console.debug(`Updating info:`);

@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .addFilterBefore(new ApiOriginFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
+                .antMatchers("/account/register").permitAll()
                 .antMatchers("/ws/**").permitAll() // TODO: Authenticate WS
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/webjars/**").permitAll()

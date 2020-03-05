@@ -1,6 +1,7 @@
 <app-palette *ngIf="isDm()"></app-palette>
 <app-toolbar></app-toolbar>
 <window-login *ngIf="showLogin()"></window-login>
+<window-register *ngIf="showRegister()"></window-register>
 <window-assets *ngIf="showAssetWindow()"></window-assets>
 <window-settings *ngIf="showSettingsWindow()"></window-settings>
 <app-map [isDm]="isDm()"></app-map>
