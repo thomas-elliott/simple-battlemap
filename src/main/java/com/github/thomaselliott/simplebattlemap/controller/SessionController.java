@@ -27,8 +27,8 @@ public class SessionController implements SessionApi {
     }
 
     @Override
-    public ResponseEntity<Session> getCurrentSession() {
-        return ResponseEntity.ok(sessionService.getCurrentSession());
+    public ResponseEntity<SessionInfo> getCurrentSession() {
+        return ResponseEntity.ok(SessionInfo.fromSession(sessionService.getCurrentSession()));
     }
 
     @Override
@@ -42,8 +42,13 @@ public class SessionController implements SessionApi {
     }
 
     @Override
-    public ResponseEntity<Session> newSession() {
+    public ResponseEntity<SessionInfo> loadSession(Long id) {
+        return ResponseEntity.ok(SessionInfo.fromSession(sessionService.loadSession(id)));
+    }
+
+    @Override
+    public ResponseEntity<SessionInfo> newSession() {
         Session session = sessionService.newSession();
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(SessionInfo.fromSession(session));
     }
 }

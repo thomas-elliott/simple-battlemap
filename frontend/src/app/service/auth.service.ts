@@ -24,11 +24,25 @@ export class AuthService {
 
   private sessionInfo: SessionInfo = null;
   sessionChanged = new Subject<SessionInfo>();
+  private sessionList: SessionInfo[] = [];
+  sessionListChanged = new Subject<SessionInfo[]>();
 
   constructor(private httpClient: HttpClient) { }
 
   notifyAuthenticationChanged() {
     return this.authenticationChanged.next(this.authorised);
+  }
+
+  notifySessionListChanged() {
+    return this.sessionListChanged.next(this.sessionList.slice());
+  }
+
+  updateSession(info): void {
+    if (this.sessionInfo != info) {
+      console.debug(`Sending a session info notification`);
+      this.sessionInfo = info;
+      this.sessionChanged.next(this.sessionInfo)
+    }
   }
 
   public isPlayer(): boolean {
@@ -42,7 +56,7 @@ export class AuthService {
   }
 
   public currentSession() {
-    return this.sessionInfo == null ? 'None' : this.sessionInfo.id;
+    return this.sessionInfo == null ? 'None' : this.sessionInfo.sessionId;
   }
 
   checkAuthentication() {
@@ -54,8 +68,7 @@ export class AuthService {
       }, (error: HttpErrorResponse) => {
         console.error('Error checking authentication', error);
         this.authorised = false;
-    }
-    );
+    });
   }
 
   sendLogin(username: string, password: string) {
@@ -97,16 +110,6 @@ export class AuthService {
     )
   }
 
-  updateSession(info): void {
-    console.debug(`Updating info:`);
-    console.debug(info);
-    if (this.sessionInfo != info) {
-      console.debug(`Sending an info notification`);
-      this.sessionInfo = info;
-      this.sessionChanged.next(this.sessionInfo)
-    }
-  }
-
   hasSession(): boolean {
     return !(this.sessionInfo === null);
   }
@@ -117,6 +120,8 @@ export class AuthService {
     this.httpClient.get(`${this.serverPath}/session/all`).subscribe(
       (response: SessionInfo[]) => {
         console.debug(response);
+        this.sessionList = response;
+        this.notifySessionListChanged();
       }, () => {
         console.error('Error getting session list');
       }
@@ -128,6 +133,7 @@ export class AuthService {
     console.debug('Getting current session');
     this.httpClient.get(`${this.serverPath}/session/`).subscribe(
       (response: SessionInfo) => {
+        console.debug('Session info:');
         console.debug(response);
         this.updateSession(response);
       }, () => {
@@ -148,8 +154,15 @@ export class AuthService {
     );
   }
 
-  loadSession(): void {
-
+  loadSession(sessionId: number): void {
+    this.httpClient.post(`${this.serverPath}/session/${sessionId}`, {}).subscribe(
+      (response: SessionInfo) => {
+        console.debug('Session loaded');
+        this.updateSession(response);
+      }, () => {
+        console.error('Error loading session');
+      }
+    )
   }
 
   logout() {

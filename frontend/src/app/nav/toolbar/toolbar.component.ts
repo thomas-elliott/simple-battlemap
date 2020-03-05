@@ -4,6 +4,7 @@ import {WindowState} from "../../model/windowState.model";
 import {AuthService} from "../../service/auth.service";
 import {Subscription} from "rxjs";
 import {MapService} from "../../service/map.service";
+import {SessionInfo} from "../../model/sessionInfo.model";
 
 @Component({
   selector: 'app-toolbar',
@@ -14,6 +15,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   authenticationSubscription: Subscription;
   authenticated: boolean;
   role: string;
+  sessionListSubscription: Subscription;
+  sessionList: SessionInfo[];
 
   constructor(private windowService: WindowService,
               private authService: AuthService,
@@ -30,8 +33,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.sessionListSubscription = this.authService.sessionListChanged.subscribe(
+      (response: SessionInfo[]) => {
+        console.debug('Session list updated');
+        this.sessionList = response;
+      }
+    );
+
     // Check auth at beginning
     this.authService.checkAuthentication();
+    this.authService.getSessionList();
   }
 
   ngOnDestroy(): void {
@@ -78,5 +89,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+  }
+
+  loadSession(sessionId: number) {
+    this.authService.loadSession(sessionId);
   }
 }
