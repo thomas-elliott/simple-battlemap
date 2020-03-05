@@ -18,6 +18,10 @@
   <mat-menu #sessionMenu="matMenu">
     <span mat-menu-item disabled>Session: {{getSession()}}</span>
     <button mat-menu-item (click)="newSession()">New Session</button>
+    <span mat-menu-item disabled>Sessions:</span>
+    <button *ngFor="let session of sessionList" mat-menu-item (click)="loadSession(session.sessionId)">
+      {{session.sessionId}}
+    </button>
   </mat-menu>
 
   <button mat-raised-button [mat-menu-trigger-for]="sessionMenu">

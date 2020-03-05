@@ -1,5 +1,5 @@
 export class SessionInfo {
-  id: number;
+  sessionId: number;
   mapLoaded: boolean;
-  map: number;
+  mapId: number;
 }

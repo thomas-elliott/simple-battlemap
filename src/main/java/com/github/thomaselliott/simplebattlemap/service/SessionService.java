@@ -37,8 +37,9 @@ public class SessionService {
         return this.currentSession;
     }
 
-    public void loadSession(Long sessionId) {
+    public Session loadSession(Long sessionId) {
         this.currentSession = sessionRepository.findById(sessionId).orElse(null);
+        return this.currentSession;
     }
 
     public Session getSession(Long sessionId) {
