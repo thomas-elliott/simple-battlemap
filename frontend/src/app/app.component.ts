@@ -66,4 +66,8 @@ export class AppComponent implements OnInit, OnDestroy {
   showLogin() {
     return this.showPage === WindowState.Login;
   }
+
+  showRegister() {
+    return this.showPage === WindowState.Register;
+  }
 }

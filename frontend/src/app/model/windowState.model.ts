@@ -1,6 +1,7 @@
 export enum WindowState {
   None,
   Login,
+  Register,
   AssetToken,
   AssetBackground,
   AssetUpload,
