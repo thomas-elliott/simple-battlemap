@@ -31,7 +31,7 @@ public interface AssetApi {
 
     @ApiOperation(value = "Get a list of all images of a type",
             nickname = "getImagesType")
-    @RequestMapping(value = "/{type}",
+    @RequestMapping(value = "/type/{type}",
             method = RequestMethod.GET)
     Page<Asset> getImagesOfType(
             @ApiParam(value = "Type of image") @PathVariable("type") String type,

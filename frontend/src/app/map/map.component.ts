@@ -103,7 +103,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.gridHeight = map.gridHeight;
     this.gridWidth = map.gridWidth;
     this.lineWidth = map.gridLineWidth;
-    this.mapImageId = map.backgroundId;
+    this.mapImageId = map.backgroundImage.id;
   }
 
   @HostListener('mousedown', ['$event'])

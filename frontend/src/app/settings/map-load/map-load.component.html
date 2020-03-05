@@ -4,8 +4,8 @@
     <mat-grid-tile-header>
       {{map.id}} - {{map.name}}
     </mat-grid-tile-header>
-      <img src="{{serverPath}}image/{{map.backgroundId}}/thumbnail.png" alt="{{map.backgroundId}}">
-      {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundId}}
+      <img src="{{serverPath}}image/{{map.backgroundImage.id}}/thumbnail.png" alt="{{map.name}}">
+      {{map.gridWidth}}x{{map.gridHeight}}, Background: {{map.backgroundImage.name}}
     <mat-grid-tile-footer>
       <button mat-raised-button
               (click)="loadMap(map.id)">Load</button>
