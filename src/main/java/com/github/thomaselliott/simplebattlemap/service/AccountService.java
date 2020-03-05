@@ -9,6 +9,7 @@ import com.github.thomaselliott.simplebattlemap.repository.PlayerRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class AccountService implements UserDetailsService {
         }
 
         Player player = request.toPlayer();
+        player.setPassword(encryptPassword(request.getPassword()));
         return playerRepository.save(player);
     }
 
@@ -48,5 +50,10 @@ public class AccountService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Could not find username");
         }
+    }
+
+    private String encryptPassword(String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+        return encoder.encode(password);
     }
 }
