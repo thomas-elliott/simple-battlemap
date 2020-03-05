@@ -49,7 +49,7 @@ export class AssetService {
   }
 
   public getTokenAssetsFromServer(): void {
-    this.httpClient.get(`${this.serverPath}/asset/TOKEN`)
+    this.httpClient.get(`${this.serverPath}/asset/type/TOKEN`)
       .subscribe(
         (response: AssetsResponse) => {
           this.tokenAssets = response.content;
@@ -63,7 +63,7 @@ export class AssetService {
   }
 
   public getBackgroundAssetsFromServer(): void {
-    this.httpClient.get(`${this.serverPath}/asset/BACKGROUND`)
+    this.httpClient.get(`${this.serverPath}/asset/type/BACKGROUND`)
       .subscribe(
         (response: AssetsResponse) => {
           this.backgroundAssets = response.content;
