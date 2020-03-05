@@ -151,4 +151,8 @@ export class AuthService {
   loadSession(): void {
 
   }
+
+  logout() {
+    this.httpClient.post(`${this.serverPath}/account/logout`, {});
+  }
 }

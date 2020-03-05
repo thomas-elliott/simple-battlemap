@@ -28,4 +28,7 @@
   <button mat-raised-button
           (click)="showLogin()"
           [disabled]="authenticated">Login</button>
+  <button mat-raised-button
+          (click)="logout()"
+          [disabled]="!authenticated">Logout</button>
 </mat-toolbar>

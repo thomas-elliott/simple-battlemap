@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -25,17 +28,17 @@ public interface AccountApi {
                     method = RequestMethod.POST)
     ResponseEntity<String> login();
 
+    @ApiOperation(value = "Log out from application",
+            nickname = "logout")
+    @RequestMapping(value = "/logout",
+            method = RequestMethod.POST)
+    ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response);
+
     @ApiOperation(value = "Register a new user",
                   nickname = "register")
     @RequestMapping(value = "/register",
                     method = RequestMethod.POST)
     ResponseEntity<Player> register(@RequestBody RegistrationRequest request) throws RegistrationException;
-
-    @ApiOperation(value = "Log out from application",
-                  nickname = "logout")
-    @RequestMapping(value = "/logout",
-                    method = RequestMethod.POST)
-    ResponseEntity<String> logout();
 
     @ApiOperation(value = "Get user details",
                   nickname = "user")

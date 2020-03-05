@@ -75,4 +75,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   newSession() {
     this.authService.newSession();
   }
+
+  logout() {
+    this.authService.logout();
+  }
 }
