@@ -1,13 +1,20 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import lombok.ToString;
+
+@ToString
 public class PlayerDetails implements UserDetails {
     private String username;
+    @ToString.Exclude
+    @JsonIgnore
     private String password;
     private boolean expired;
     private boolean locked;

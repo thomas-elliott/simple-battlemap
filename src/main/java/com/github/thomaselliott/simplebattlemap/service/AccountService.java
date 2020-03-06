@@ -26,18 +26,26 @@ public class AccountService implements UserDetailsService {
     }
 
     public Optional<Player> getPlayer(String username) {
-        return playerRepository.findByUsername(username);
+        long startTime = System.currentTimeMillis();
+        Optional<Player> player = playerRepository.findByUsername(username);
+        log.debug("getPlayer: Loading player {} from database. Exists: {}. Took {}ms.",
+                username, player.isPresent(), System.currentTimeMillis() - startTime);
+        return player;
     }
 
     public Player registerPlayer(RegistrationRequest request) throws RegistrationException {
         // Lookup existing user
+        long startTime = System.currentTimeMillis();
         if (playerRepository.existsByUsername(request.getUsername())) {
             throw new RegistrationException("That username already exists");
         }
 
         Player player = request.toPlayer();
         player.setPassword(encryptPassword(request.getPassword()));
-        return playerRepository.save(player);
+        Player savedPlayer = playerRepository.save(player);
+        log.debug("registerPlayer: Saving player {} to database. Took {}ms.",
+                player.getUsername(), System.currentTimeMillis() - startTime);
+        return savedPlayer;
     }
 
     @Override

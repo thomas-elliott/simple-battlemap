@@ -24,7 +24,7 @@
     </button>
   </mat-menu>
 
-  <button mat-raised-button [mat-menu-trigger-for]="sessionMenu">
+  <button mat-raised-button [mat-menu-trigger-for]="sessionMenu" (click)="refreshSession()">
     Session<mat-icon>arrow_drop_down</mat-icon>
   </button>
 

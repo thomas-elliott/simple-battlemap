@@ -1,8 +1,9 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class Session {
     @Transient
     private Map<Long, Token> tokens;
     @Transient
-    private List<Player> players;
+    private Set<String> players = new HashSet<>();
 
     public Session() {
         tokens = new HashMap<>();
@@ -56,4 +57,11 @@ public class Session {
         return tokens.containsKey(token.getId());
     }
 
+    public void addPlayer(String player) {
+        players.add(player);
+    }
+
+    public void removePlayer(String player) {
+        players.remove(player);
+    }
 }
