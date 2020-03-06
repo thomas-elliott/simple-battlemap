@@ -3,13 +3,17 @@ package com.github.thomaselliott.simplebattlemap.controller;
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
+import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
+import com.github.thomaselliott.simplebattlemap.model.Session;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
+import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,16 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class MapController implements MapApi {
     private MapService mapService;
+    private SessionService sessionService;
 
     @Autowired
-    public MapController(MapService mapService) {
+    public MapController(MapService mapService,
+                         SessionService sessionService) {
         this.mapService = mapService;
-    }
-
-    @RequestMapping(value = "/image/{id}", method = RequestMethod.PUT)
-    public void putUpdateImage(@PathVariable(name = "id") Long imageId) {
-        //boolean successful = mapService.changeImageAsset(imageId);
-        //log.info("Changing image id for map. Success={}", successful);
+        this.sessionService = sessionService;
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
@@ -63,19 +64,28 @@ public class MapController implements MapApi {
     }
 
     @Override
-    public ResponseEntity<BattleMap> getMap(Long id) {
-        BattleMap map = mapService.getMap(id);
-        if (map != null) {
-            return ResponseEntity.ok(map);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<BattleMap> getMapInfo(PlayerDetails player) {
+        Session session = sessionService.getPlayerSession(player.getUsername());
+
+        if (session != null) {
+            BattleMap map = session.getMap();
+            if (map != null) {
+                return ResponseEntity.ok(map);
+            }
         }
+
+        return ResponseEntity.notFound().build();
     }
 
     @Override
-    public ResponseEntity<Boolean> loadMap(@PathVariable(name = "id") Long id) {
-        log.info("Attempting to load map: {}", id);
-        boolean successful = true; //mapService.loadMap(id);
+    public ResponseEntity<Boolean> loadMap(Long mapId, PlayerDetails player) {
+        log.info("Attempting to load map: {}", mapId);
+        BattleMap map = mapService.loadMap(mapId);
+
+        boolean successful = false;
+        if (map != null) {
+            successful = sessionService.setMap(player.getUsername(), map);
+        }
         return ResponseEntity.ok(successful);
     }
 

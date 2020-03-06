@@ -27,7 +27,7 @@ export class MapService {
   constructor(private httpClient: HttpClient,
               private wsService: WebsocketService) {
     this.wsService.mapSubject.subscribe(() => {
-      this.getMapIdFromServer();
+      this.getMapFromServer();
     });
   }
 
@@ -72,24 +72,9 @@ export class MapService {
     );
   }
 
-  public getMapIdFromServer() {
-    console.debug('load map info');
-    this.httpClient.get(`${this.serverPath}/map/info`).subscribe(
-      (response: MapInfo) => {
-        this.mapId = response.mapId;
-        if (this.mapId) {
-          this.getMapFromServer(response.mapId);
-        }
-        console.debug(`Loaded map information ${response.mapId}`);
-      }, () => {
-        console.error('Error getting map info');
-      }
-    );
-  }
-
-  private getMapFromServer(id: number) {
-    console.debug(`loading map ${id} from server`);
-    return this.httpClient.get(`${this.serverPath}/map/${id}`).subscribe(
+  private getMapFromServer() {
+    console.debug(`loading map from server`);
+    return this.httpClient.get(`${this.serverPath}/map/info`).subscribe(
       (response: BattleMap) => {
         this.map = response;
         console.debug(`Loaded map ${response.id}`);

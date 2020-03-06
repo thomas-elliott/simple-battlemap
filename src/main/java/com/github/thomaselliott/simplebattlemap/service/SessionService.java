@@ -1,5 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.service;
 
+import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.Session;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 import com.github.thomaselliott.simplebattlemap.repository.SessionRepository;
@@ -62,6 +63,17 @@ public class SessionService {
         return session;
     }
 
+    public boolean setMap(String player, BattleMap map) {
+        Session session = getPlayerSession(player);
+        if (session != null) {
+            session.setMap(map);
+            sendUpdates();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Nullable
     public Session getSession(Long sessionId) {
         return currentSessions.get(sessionId);
@@ -77,6 +89,10 @@ public class SessionService {
         return new ArrayList<>(currentSessions.values());
     }
 
+    public void sendUpdates() {
+        messagingTemplate.convertAndSend("/topic/maps", "Send manually");
+    }
+
 /*    public List<Token> getTokens(String player) throws NoSessionException {
         Session currentSession = getPlayerSession(player);
         if (currentSession == null) throw new NoSessionException("No session found");
@@ -84,10 +100,6 @@ public class SessionService {
         Map<Long, Token> tokens = currentSession.getTokens();
 
         return new ArrayList<>(tokens.values());
-    }
-
-    public void sendUpdates() {
-        messagingTemplate.convertAndSend("/topic/tokens", "Send manually");
     }
 
     public void addToken(Token token) throws NoSessionException {
