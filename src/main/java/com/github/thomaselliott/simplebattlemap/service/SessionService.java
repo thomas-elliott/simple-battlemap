@@ -1,16 +1,16 @@
 package com.github.thomaselliott.simplebattlemap.service;
 
 import com.github.thomaselliott.simplebattlemap.model.Session;
-import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 import com.github.thomaselliott.simplebattlemap.repository.SessionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,45 +22,63 @@ public class SessionService {
     private SessionRepository sessionRepository;
     private SimpMessagingTemplate messagingTemplate;
 
-    private Session currentSession;
+    // Solely in-memory stores for session
+    // TODO: Maybe abstract so it can be redis, database etc. for distributed/persistent
+    private Map<Long, Session> currentSessions = new HashMap<>();
+    private Map<String, Session> playerSessions = new HashMap<>();
 
     @Autowired
     public SessionService(SessionRepository sessionRepository,
                           SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
         this.sessionRepository = sessionRepository;
+
+        // Load all sessions
+        long startTime = System.currentTimeMillis();
+        List<Session> sessions = this.sessionRepository.findAll();
+        sessions.forEach(s -> currentSessions.put(s.getId(), s));
+        log.debug("Loaded sessions from database. {} sessions, took {}ms",
+                sessions.size(), System.currentTimeMillis() - startTime);
     }
 
     public Session newSession() {
-        this.currentSession = new Session();
-        sessionRepository.save(this.currentSession);
-        return this.currentSession;
+        long startTime = System.currentTimeMillis();
+
+        Session newSession = sessionRepository.save(new Session());
+        currentSessions.put(newSession.getId(), newSession);
+        log.debug("Created new session in database, took {}ms",
+                System.currentTimeMillis() - startTime);
+        return newSession;
     }
 
-    public Session loadSession(Long sessionId) {
-        this.currentSession = sessionRepository.findById(sessionId).orElse(null);
-        return this.currentSession;
+    public Session joinSession(Long sessionId, String player) throws NoSessionException {
+        Session session = getSession(sessionId);
+        if (session == null) throw new NoSessionException("Attempted to join invalid session");
+
+        log.debug("Adding player {} to session {}", player, sessionId);
+        session.addPlayer(player);
+        playerSessions.put(player, session);
+
+        return session;
     }
 
+    @Nullable
     public Session getSession(Long sessionId) {
-        return sessionRepository.findById(sessionId).orElse(null);
+        return currentSessions.get(sessionId);
     }
 
-    public void saveSession() throws NoSessionException {
-        if (currentSession == null) throw new NoSessionException("No session found");
-
-        sessionRepository.save(currentSession);
+    @Nullable
+    public Session getPlayerSession(String player) {
+        log.debug("Retrieving session for player {}", player);
+        return playerSessions.get(player);
     }
 
     public List<Session> getAllSessions() {
-        return sessionRepository.findAll();
+        return new ArrayList<>(currentSessions.values());
     }
 
-    public Session getCurrentSession() {
-        return currentSession;
-    }
-
-    public List<Token> getTokens() throws NoSessionException {
+/*    public List<Token> getTokens(String player) throws NoSessionException {
+        Session currentSession = getPlayerSession(player);
         if (currentSession == null) throw new NoSessionException("No session found");
 
         Map<Long, Token> tokens = currentSession.getTokens();
@@ -109,5 +127,5 @@ public class SessionService {
         currentSession.removeToken(id);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
-    }
+    }*/
 }

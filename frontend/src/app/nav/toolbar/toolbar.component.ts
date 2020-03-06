@@ -94,4 +94,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   loadSession(sessionId: number) {
     this.authService.loadSession(sessionId);
   }
+
+  // TODO: WS to update?
+  refreshSession() {
+    this.authService.getSessionList();
+  }
 }

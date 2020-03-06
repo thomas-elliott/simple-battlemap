@@ -3,7 +3,6 @@ package com.github.thomaselliott.simplebattlemap.controller;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.TokenRequest;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
-import com.github.thomaselliott.simplebattlemap.service.MapService;
 import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,8 @@ public class TokenController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Token> getTokens() throws NoSessionException {
-        return sessionService.getTokens();
+        //return sessionService.getTokens();
+        return null;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -47,7 +47,7 @@ public class TokenController {
                 return ResponseEntity.badRequest().body(null);
             }
 
-            sessionService.addToken(token);
+            //sessionService.addToken(token);
             return ResponseEntity.ok(null);
         } else {
             log.warn("Tried to add null token");
@@ -58,15 +58,15 @@ public class TokenController {
     @RequestMapping(value = "/move", method = RequestMethod.PUT)
     public void moveToken(@RequestBody Token token) throws NoSessionException {
         if (token != null && token.getId() != null) {
-            sessionService.moveToken(token.getId(), token.getX(), token.getY());
+            //sessionService.moveToken(token.getId(), token.getX(), token.getY());
         } else {
             log.warn("Tried to move null token");
         }
-        sessionService.sendUpdates();
+        //sessionService.sendUpdates();
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
     public void removeToken(@PathVariable Long id) throws NoSessionException {
-        sessionService.removeToken(id);
+        //sessionService.removeToken(id);
     }
 }
