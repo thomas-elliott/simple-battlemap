@@ -67,7 +67,7 @@ export class TokenService {
           this.notifyTokenChanged();
         },
         (error: HttpErrorResponse) => {
-          console.error("Error:");
+          console.error("Error getting tokens:");
           console.log(error);
         }
       );

@@ -30,17 +30,10 @@ public interface SessionApi {
 
     @ApiOperation(value = "Get current session",
             nickname = "getCurrentSession")
-    @RequestMapping(value = "/",
+    @RequestMapping(value = "",
             method = RequestMethod.GET)
     ResponseEntity<SessionInfo> getCurrentSession(
             @AuthenticationPrincipal PlayerDetails player);
-
-    @ApiOperation(value = "Get session",
-            nickname = "getSession")
-    @RequestMapping(value = "/{sessionId}",
-            method = RequestMethod.GET)
-    ResponseEntity<Session> getSession(
-            @ApiParam @PathVariable Long sessionId);
 
     @ApiOperation(value = "Update session",
             nickname = "putSession")
@@ -61,7 +54,7 @@ public interface SessionApi {
 
     @ApiOperation(value = "Create new session",
             nickname = "postSession")
-    @RequestMapping(value = "/",
+    @RequestMapping(value = "",
             method = RequestMethod.POST)
     ResponseEntity<SessionInfo> newSession();
 }

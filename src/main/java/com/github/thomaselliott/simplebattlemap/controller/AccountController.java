@@ -59,15 +59,4 @@ public class AccountController implements AccountApi {
         Player player = accountService.registerPlayer(request);
         return ResponseEntity.ok(player);
     }
-
-    @Override
-    public ResponseEntity<Player> user(Principal user) throws NotAuthenticatedException {
-        if (user == null) throw new NotAuthenticatedException("No authentication details found");
-
-        Optional<Player> oPlayer = accountService.getPlayer(user.getName());
-
-        if (oPlayer.isEmpty()) throw new NotAuthenticatedException("Player not found");
-
-        return ResponseEntity.ok(oPlayer.get());
-    }
 }

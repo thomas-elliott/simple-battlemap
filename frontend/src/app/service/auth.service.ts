@@ -11,6 +11,7 @@ import {User} from "../model/user.model";
 import {environment} from "../../environments/environment";
 import {SessionInfo} from "../model/sessionInfo.model";
 import {RegistrationRequest} from "../model/registrationRequest.model";
+import {MapService} from "./map.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +21,15 @@ export class AuthService {
   authenticationChanged = new Subject<boolean>();
 
   authorised = false;
-  role: User;
+  private role: User;
 
   private sessionInfo: SessionInfo = null;
   sessionChanged = new Subject<SessionInfo>();
   private sessionList: SessionInfo[] = [];
   sessionListChanged = new Subject<SessionInfo[]>();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+              private mapService: MapService) { }
 
   notifyAuthenticationChanged() {
     return this.authenticationChanged.next(this.authorised);
@@ -37,38 +39,51 @@ export class AuthService {
     return this.sessionListChanged.next(this.sessionList.slice());
   }
 
-  updateSession(info): void {
+  updateSession(info: SessionInfo): void {
     if (this.sessionInfo != info) {
       console.debug(`Sending a session info notification`);
       this.sessionInfo = info;
-      this.sessionChanged.next(this.sessionInfo)
+      this.sessionChanged.next(this.sessionInfo);
+      this.mapService.checkMapUpdate(this.sessionInfo.mapId);
     }
   }
 
+  updateAuthentication(role: User) {
+    if (!this.roleEqual(this.role, role)) {
+      console.debug('Updating authentication ', this.role, role);
+      this.role = role;
+      this.authorised = true;
+      this.notifyAuthenticationChanged();
+    } else {
+      console.debug(`Won't update authentication`);
+    }
+  }
+
+  roleEqual(one: User, two: User) {
+    if (one == null && two == null) return true;
+    if (one == null || two == null) return false;
+
+    if (one.username !== two.username) return false;
+
+    return true;
+  }
+
   public isPlayer(): boolean {
-    if (this.role == null) return false;
-    return !this.role.dm;
+    if (this.role != null && this.role.authorities != null) {
+      return (this.role.authorities.some(authority => authority.authority === 'PLAYER'));
+    }
+    return false;
   }
 
   public isDm(): boolean {
-    if (this.role == null) return false;
-    return this.role.dm;
+    if (this.role != null && this.role.authorities != null) {
+      return (this.role.authorities.some(authority => authority.authority === 'DM'));
+    }
+    return false;
   }
 
   public currentSession() {
     return this.sessionInfo == null ? 'None' : this.sessionInfo.sessionId;
-  }
-
-  checkAuthentication() {
-    this.httpClient.get(`${this.serverPath}/account/user`).subscribe(
-      (response: User) => {
-        this.role = response;
-        this.authorised = true;
-        this.notifyAuthenticationChanged();
-      }, (error: HttpErrorResponse) => {
-        console.error('Error checking authentication', error);
-        this.authorised = false;
-    });
   }
 
   sendLogin(username: string, password: string) {
@@ -87,7 +102,7 @@ export class AuthService {
         .then(
           (response: HttpResponse<any>) => {
             this.authorised = true;
-            this.checkAuthentication();
+            this.getSession();
             resolve('Authenticated');
           },
           (error: HttpErrorResponse) => {
@@ -119,7 +134,6 @@ export class AuthService {
     console.debug('Getting session list');
     this.httpClient.get(`${this.serverPath}/session/all`).subscribe(
       (response: SessionInfo[]) => {
-        console.debug(response);
         this.sessionList = response;
         this.notifySessionListChanged();
       }, () => {
@@ -131,10 +145,11 @@ export class AuthService {
   // Get current session
   getSession(): void {
     console.debug('Getting current session');
-    this.httpClient.get(`${this.serverPath}/session/`).subscribe(
+    this.httpClient.get(`${this.serverPath}/session`).subscribe(
       (response: SessionInfo) => {
         console.debug('Session info:');
         console.debug(response);
+        this.updateAuthentication(response.player);
         this.updateSession(response);
       }, () => {
         console.error('Error getting current session');
@@ -144,7 +159,7 @@ export class AuthService {
 
   newSession(): void {
     console.debug('Create new session');
-    this.httpClient.post(`${this.serverPath}/session/`, {}).subscribe(
+    this.httpClient.post(`${this.serverPath}/session`, {}).subscribe(
       (response: SessionInfo) => {
         console.debug(response);
         this.updateSession(response);

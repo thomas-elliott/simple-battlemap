@@ -39,10 +39,4 @@ public interface AccountApi {
     @RequestMapping(value = "/register",
                     method = RequestMethod.POST)
     ResponseEntity<Player> register(@RequestBody RegistrationRequest request) throws RegistrationException;
-
-    @ApiOperation(value = "Get user details",
-                  nickname = "user")
-    @RequestMapping(value = "/user",
-                    method = RequestMethod.GET)
-    ResponseEntity<Player> user(Principal user) throws ApiException;
 }
