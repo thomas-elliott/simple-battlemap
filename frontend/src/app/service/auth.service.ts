@@ -119,8 +119,7 @@ export class AuthService {
   registerAccount(info: RegistrationRequest): void {
     this.httpClient.post(`${this.serverPath}/account/register`, info).subscribe(
       (response: User) => {
-        console.log(`Returned user info from response`);
-        console.log(response);
+        console.debug(`Returned user info from response`, response);
       }
     )
   }
@@ -147,8 +146,7 @@ export class AuthService {
     console.debug('Getting current session');
     this.httpClient.get(`${this.serverPath}/session`).subscribe(
       (response: SessionInfo) => {
-        console.debug('Session info:');
-        console.debug(response);
+        console.debug('Session info: ', response);
         this.updateAuthentication(response.player);
         this.updateSession(response);
       }, () => {

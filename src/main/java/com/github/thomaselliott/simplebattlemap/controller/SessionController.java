@@ -33,16 +33,17 @@ public class SessionController implements SessionApi {
 
     @Override
     public ResponseEntity<SessionInfo> getCurrentSession(PlayerDetails player) {
+        SessionInfo session;
         try {
-            SessionInfo session = SessionInfo.fromSession(
+            session = SessionInfo.fromSession(
                     sessionService.getPlayerSession(player.getUsername()));
-            session.setPlayer(player);
-
-            return ResponseEntity.ok(session);
         } catch (NoSessionException e) {
             log.info("Couldn't find session for player: {}", player.getUsername());
-            return ResponseEntity.notFound().build();
+            session = new SessionInfo();
         }
+
+        session.setPlayer(player);
+        return ResponseEntity.ok(session);
     }
 
     @Override
