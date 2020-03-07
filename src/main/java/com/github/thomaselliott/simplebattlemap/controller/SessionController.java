@@ -30,8 +30,12 @@ public class SessionController implements SessionApi {
 
     @Override
     public ResponseEntity<SessionInfo> getCurrentSession(PlayerDetails player) {
-        return ResponseEntity.ok(SessionInfo.fromSession(
-                sessionService.getPlayerSession(player.getUsername())));
+        try {
+            return ResponseEntity.ok(SessionInfo.fromSession(
+                    sessionService.getPlayerSession(player.getUsername())));
+        } catch (NoSessionException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override

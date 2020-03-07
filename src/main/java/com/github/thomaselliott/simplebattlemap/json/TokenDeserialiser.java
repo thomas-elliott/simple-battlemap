@@ -19,8 +19,6 @@ public class TokenDeserialiser extends StdDeserializer<Token> {
     private TokenRepository tokenRepository;
     @Autowired
     private AssetRepository assetRepository;
-    @Autowired
-    private PlayerRepository playerRepository;
 
     public TokenDeserialiser() {
         this(null);
@@ -61,11 +59,6 @@ public class TokenDeserialiser extends StdDeserializer<Token> {
         if (node.has("imageAsset")) {
             Long id = node.get("imageAsset").asLong();
             token.setImageAsset(assetRepository.findById(id).orElse(null));
-        }
-
-        if (node.has("player")) {
-            Long id = node.get("player").asLong();
-            token.setPlayer(playerRepository.findById(id).orElse(null));
         }
 
         return token;

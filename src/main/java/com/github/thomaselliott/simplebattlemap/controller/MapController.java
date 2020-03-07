@@ -6,6 +6,7 @@ import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
 import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
 import com.github.thomaselliott.simplebattlemap.model.Session;
 import com.github.thomaselliott.simplebattlemap.model.Token;
+import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
@@ -64,27 +65,25 @@ public class MapController implements MapApi {
     }
 
     @Override
-    public ResponseEntity<BattleMap> getMapInfo(PlayerDetails player) {
+    public ResponseEntity<BattleMap> getMapInfo(PlayerDetails player) throws NoSessionException {
         Session session = sessionService.getPlayerSession(player.getUsername());
 
-        if (session != null) {
-            BattleMap map = session.getMap();
-            if (map != null) {
-                return ResponseEntity.ok(map);
-            }
+        BattleMap map = session.getMap();
+        if (map != null) {
+            return ResponseEntity.ok(map);
         }
 
         return ResponseEntity.notFound().build();
     }
 
     @Override
-    public ResponseEntity<Boolean> loadMap(Long mapId, PlayerDetails player) {
+    public ResponseEntity<Boolean> loadMap(Long mapId, PlayerDetails player) throws NoSessionException {
         log.info("Attempting to load map: {}", mapId);
         BattleMap map = mapService.loadMap(mapId);
 
         boolean successful = false;
         if (map != null) {
-            successful = sessionService.setMap(player.getUsername(), map);
+            sessionService.setMap(player.getUsername(), map);
         }
         return ResponseEntity.ok(successful);
     }

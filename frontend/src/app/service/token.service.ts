@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Token} from "../model/token.model";
 import {Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {TokensResponse} from "../model/tokensResponse.model";
 import {environment} from "../../environments/environment";
 import {MapService} from "./map.service";
 
@@ -56,7 +55,9 @@ export class TokenService {
       return;
     }
 
-    this.httpClient.get(`${this.serverPath}/map/tokens`)
+    console.debug(`getting tokens from server`);
+
+    this.httpClient.get(`${this.serverPath}/${this.tokenPath}`)
       .subscribe(
         (response: Token[]) => {
           this.tokens = response;
@@ -73,18 +74,20 @@ export class TokenService {
   }
 
   private sendAddTokenToServer(token: Token) {
-    this.httpClient.post(`${this.serverPath}/${this.tokenPath}/add`,
+    console.debug(`add token to server`);
+
+    this.httpClient.post(`${this.serverPath}/${this.tokenPath}`,
       {token},
       {})
       .subscribe(() => { console.log("Sent add token to server"); },
         (error: HttpErrorResponse) => {
-          console.error("Error:");
+          console.error("Error adding token:");
           console.log(error);
       });
   }
 
   private sendMoveTokenToServer(token: Token) {
-    this.httpClient.put(`${this.serverPath}/${this.tokenPath}/move`,
+    this.httpClient.put(`${this.serverPath}/${this.tokenPath}`,
       {token},
       {})
       .subscribe( () => {
@@ -96,7 +99,7 @@ export class TokenService {
   }
 
   private sendRemoveTokenToServer(token: Token) {
-    this.httpClient.delete(`${this.serverPath}/${this.tokenPath}/remove/${token.id}`,
+    this.httpClient.delete(`${this.serverPath}/${this.tokenPath}/${token.id}`,
       {})
       .subscribe((response) => {
           console.log("Response from remove response", response);
