@@ -36,14 +36,20 @@ export class MapService {
   }
 
   public notifyMapChanged() {
-    console.debug(`Map changed. Map is:`);
-    console.debug(this.map);
+    console.debug('Map changed. Map is: ', this.map);
     this.mapChanged.next(this.map);
   }
 
   public notifyMapListChanged() {
     this.mapListChanged.next(this.mapList.slice());
   }
+
+  public checkMapUpdate(mapId: number) {
+    if (mapId != null && this.mapId !== mapId) {
+      this.getMapFromServer();
+    }
+  }
+
 
   public changeBackgroundImage(asset: Asset) {
     if (asset == null) return;

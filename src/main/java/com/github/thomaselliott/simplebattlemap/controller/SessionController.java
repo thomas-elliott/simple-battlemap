@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class SessionController implements SessionApi {
     private SessionService sessionService;
@@ -31,33 +34,37 @@ public class SessionController implements SessionApi {
     @Override
     public ResponseEntity<SessionInfo> getCurrentSession(PlayerDetails player) {
         try {
-            return ResponseEntity.ok(SessionInfo.fromSession(
-                    sessionService.getPlayerSession(player.getUsername())));
+            SessionInfo session = SessionInfo.fromSession(
+                    sessionService.getPlayerSession(player.getUsername()));
+            session.setPlayer(player);
+
+            return ResponseEntity.ok(session);
         } catch (NoSessionException e) {
+            log.info("Couldn't find session for player: {}", player.getUsername());
             return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public ResponseEntity<Session> getSession(Long sessionId) {
-        return ResponseEntity.ok(sessionService.getSession(sessionId));
-    }
-
-    @Override
     public ResponseEntity<Session> putSession(Long sessionId, Session session) {
+        // TODO: Implement
         return null;
     }
 
     @Override
     public ResponseEntity<SessionInfo> joinSession(Long sessionId, PlayerDetails player)
         throws NoSessionException {
+        SessionInfo session = SessionInfo.fromSession(
+                sessionService.joinSession(sessionId, player.getUsername()));
+        session.setPlayer(player);
 
-        return ResponseEntity.ok(
-                SessionInfo.fromSession(sessionService.joinSession(sessionId, player.getUsername())));
+        return ResponseEntity.ok(session);
     }
 
     @Override
     public ResponseEntity<SessionInfo> newSession() {
+        // TODO: Checking player
+
         Session session = sessionService.newSession();
         return ResponseEntity.ok(SessionInfo.fromSession(session));
     }

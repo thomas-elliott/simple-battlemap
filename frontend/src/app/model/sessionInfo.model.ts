@@ -1,5 +1,7 @@
+import {User} from "./user.model";
+
 export class SessionInfo {
   sessionId: number;
-  mapLoaded: boolean;
+  player: User;
   mapId: number;
 }

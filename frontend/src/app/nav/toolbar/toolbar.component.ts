@@ -41,7 +41,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     );
 
     // Check auth at beginning
-    this.authService.checkAuthentication();
+    this.authService.getSession();
     this.authService.getSessionList();
   }
 

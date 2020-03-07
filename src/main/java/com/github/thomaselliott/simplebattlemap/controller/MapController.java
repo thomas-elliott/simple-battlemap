@@ -44,13 +44,6 @@ public class MapController implements MapApi {
         return mapService.deleteMap(id);
     }
 
-    @RequestMapping(value = "/tokens", method = RequestMethod.GET)
-    public List<Token> getTokens() {
-        // TODO: Fix
-        //return mapService.getTokens();
-        return null;
-    }
-
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public void postUpdateMap(@RequestBody BattleMapUpdateRequest map) {
         log.info("Updating map");
