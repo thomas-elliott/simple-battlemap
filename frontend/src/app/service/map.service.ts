@@ -83,6 +83,7 @@ export class MapService {
     return this.httpClient.get(`${this.serverPath}/map/info`).subscribe(
       (response: BattleMap) => {
         this.map = response;
+        this.mapId = response.id;
         console.debug(`Loaded map ${response.id}`);
         this.notifyMapChanged();
     });

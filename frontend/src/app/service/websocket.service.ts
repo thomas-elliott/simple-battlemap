@@ -17,15 +17,17 @@ export class WebsocketService {
     this.watchTopic();
   }
 
-  notifyTokenChanged(): void {
+  private notifyTokenChanged(): void {
+    console.debug('Notifying token change');
     this.tokenSubject.next();
   }
 
-  notifyMapChanged(): void {
+  private notifyMapChanged(): void {
+    console.debug('Notifying map change');
     this.mapSubject.next();
   }
 
-  watchTopic() {
+  private watchTopic() {
     if (!this.subscribed) {
       console.log('Connect to ws');
       this.tokenSubscription = this.rxStompService.watch('/topic/tokens').subscribe(
