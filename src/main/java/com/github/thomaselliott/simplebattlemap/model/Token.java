@@ -28,13 +28,6 @@ public class Token {
     @Column(name = "token_id")
     private Long id;
     private String name;
-    @ManyToOne
-    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    @JoinColumn(name = "player",
-            referencedColumnName = "player_id",
-            foreignKey = @ForeignKey(name = "fk_player"))
-    private Player player;
     @OneToOne
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)

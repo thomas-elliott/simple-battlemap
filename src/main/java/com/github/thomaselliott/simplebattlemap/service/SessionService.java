@@ -2,10 +2,12 @@ package com.github.thomaselliott.simplebattlemap.service;
 
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.Session;
+import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 import com.github.thomaselliott.simplebattlemap.repository.SessionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -63,15 +65,11 @@ public class SessionService {
         return session;
     }
 
-    public boolean setMap(String player, BattleMap map) {
+    public void setMap(String player, BattleMap map) throws NoSessionException {
         Session session = getPlayerSession(player);
-        if (session != null) {
-            session.setMap(map);
-            sendUpdates();
-            return true;
-        } else {
-            return false;
-        }
+
+        session.setMap(map);
+        sendUpdates();
     }
 
     @Nullable
@@ -79,10 +77,12 @@ public class SessionService {
         return currentSessions.get(sessionId);
     }
 
-    @Nullable
-    public Session getPlayerSession(String player) {
+    @NonNull
+    public Session getPlayerSession(String player) throws NoSessionException {
         log.debug("Retrieving session for player {}", player);
-        return playerSessions.get(player);
+        Session currentSession = playerSessions.get(player);
+        if (currentSession == null) throw new NoSessionException("No session found");
+        return currentSession;
     }
 
     public List<Session> getAllSessions() {
@@ -93,17 +93,16 @@ public class SessionService {
         messagingTemplate.convertAndSend("/topic/maps", "Send manually");
     }
 
-/*    public List<Token> getTokens(String player) throws NoSessionException {
+   public List<Token> getTokens(String player) throws NoSessionException {
         Session currentSession = getPlayerSession(player);
-        if (currentSession == null) throw new NoSessionException("No session found");
 
         Map<Long, Token> tokens = currentSession.getTokens();
 
         return new ArrayList<>(tokens.values());
     }
 
-    public void addToken(Token token) throws NoSessionException {
-        if (currentSession == null) throw new NoSessionException("No session found");
+    public void addToken(Token token, String player) throws NoSessionException {
+        Session currentSession = getPlayerSession(player);
 
         if (token.getId() != null && currentSession.containsToken(token)) {
             log.info("Duplicate token: ({}) {}", token.getId(), token.getName());
@@ -114,16 +113,16 @@ public class SessionService {
         messagingTemplate.convertAndSend("/topic/tokens", "Send after add");
     }
 
-    public void moveToken(Long id, int x, int y) throws NoSessionException {
-        if (currentSession == null) throw new NoSessionException("No session found");
+    public void moveToken(Long id, int x, int y, String player) throws NoSessionException {
+        Session currentSession = getPlayerSession(player);
 
         currentSession.moveToken(id, x, y);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after move");
     }
 
-    public void updateToken(Token token) throws NoSessionException {
-        if (currentSession == null) throw new NoSessionException("No session found");
+    public void updateToken(Token token, String player) throws NoSessionException {
+        Session currentSession = getPlayerSession(player);
 
         if (!currentSession.containsToken(token)) {
             log.info("Could not find token to update: ({}) {}", token.getId(), token.getName());
@@ -133,11 +132,11 @@ public class SessionService {
         currentSession.updateToken(token);
     }
 
-    public void removeToken(Long id) throws NoSessionException {
-        if (currentSession == null) throw new NoSessionException("No session found");
+    public void removeToken(Long id, String player) throws NoSessionException {
+        Session currentSession = getPlayerSession(player);
 
         currentSession.removeToken(id);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
-    }*/
+    }
 }

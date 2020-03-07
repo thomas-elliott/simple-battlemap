@@ -2,6 +2,7 @@ package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
+import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface MapApi {
     @ApiOperation(value = "Get map info", nickname = "getMapInfo")
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     ResponseEntity<BattleMap> getMapInfo(
-            @AuthenticationPrincipal PlayerDetails player);
+            @AuthenticationPrincipal PlayerDetails player) throws NoSessionException;
 
     @ApiOperation(value = "Load map",
             nickname = "loadMap")
@@ -38,7 +39,7 @@ public interface MapApi {
             method = RequestMethod.POST)
     ResponseEntity<Boolean> loadMap(
             @ApiParam(value = "Map id") @PathVariable(value = "id") Long id,
-            @AuthenticationPrincipal PlayerDetails player);
+            @AuthenticationPrincipal PlayerDetails player) throws NoSessionException;
 
     @ApiOperation(value = "New map",
             nickname = "newMap")

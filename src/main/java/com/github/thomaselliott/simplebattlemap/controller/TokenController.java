@@ -1,5 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.TokenRequest;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
@@ -7,6 +8,7 @@ import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/token")
-public class TokenController {
+public class TokenController implements TokenApi {
     private SessionService sessionService;
 
     @Autowired
@@ -29,14 +30,14 @@ public class TokenController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Token> getTokens() throws NoSessionException {
-        //return sessionService.getTokens();
-        return null;
+    public ResponseEntity<List<Token>> getTokens(PlayerDetails player)
+            throws NoSessionException {
+        List<Token> tokens = sessionService.getTokens(player.getUsername());
+        return ResponseEntity.ok(tokens);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity addToken(@RequestBody TokenRequest tokenRequest) throws NoSessionException {
+    public ResponseEntity<Boolean> addToken(TokenRequest tokenRequest, PlayerDetails player)
+            throws NoSessionException {
         if (tokenRequest != null && tokenRequest.getToken() != null) {
             Token token = tokenRequest.getToken();
 
@@ -47,7 +48,7 @@ public class TokenController {
                 return ResponseEntity.badRequest().body(null);
             }
 
-            //sessionService.addToken(token);
+            sessionService.addToken(token, player.getUsername());
             return ResponseEntity.ok(null);
         } else {
             log.warn("Tried to add null token");
@@ -55,18 +56,20 @@ public class TokenController {
         }
     }
 
-    @RequestMapping(value = "/move", method = RequestMethod.PUT)
-    public void moveToken(@RequestBody Token token) throws NoSessionException {
+    public ResponseEntity<Boolean> updateToken(Token token, PlayerDetails player)
+            throws NoSessionException {
         if (token != null && token.getId() != null) {
-            //sessionService.moveToken(token.getId(), token.getX(), token.getY());
+            sessionService.moveToken(token.getId(), token.getX(), token.getY(), player.getUsername());
         } else {
             log.warn("Tried to move null token");
         }
-        //sessionService.sendUpdates();
+        sessionService.sendUpdates();
+        return ResponseEntity.ok(false);
     }
 
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
-    public void removeToken(@PathVariable Long id) throws NoSessionException {
-        //sessionService.removeToken(id);
+    public ResponseEntity<Boolean> addToken(Long tokenId, PlayerDetails player)
+            throws NoSessionException {
+        sessionService.removeToken(tokenId, player.getUsername());
+        return ResponseEntity.ok(false);
     }
 }
