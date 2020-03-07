@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.thomaselliott.simplebattlemap.json.TokenDeserialiser;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +39,8 @@ public class Token {
     private int x;
     private int y;
 
+    private static AtomicLong idCounter = new AtomicLong();
+
     public Token() {}
     public Token(Long id) {
         this.id = id;
@@ -59,5 +62,10 @@ public class Token {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public static Long createID()
+    {
+        return idCounter.getAndIncrement();
     }
 }

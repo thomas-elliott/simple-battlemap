@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,7 @@ public class SessionService {
     // TODO: Maybe abstract so it can be redis, database etc. for distributed/persistent
     private Map<Long, Session> currentSessions = new HashMap<>();
     private Map<String, Session> playerSessions = new HashMap<>();
+    private Map<Long, Token> currentTokens = new HashMap<>();
 
     @Autowired
     public SessionService(SessionRepository sessionRepository,
@@ -93,7 +95,7 @@ public class SessionService {
         messagingTemplate.convertAndSend("/topic/maps", "Send manually");
     }
 
-   public List<Token> getTokens(String player) throws NoSessionException {
+    public List<Token> getTokens(String player) throws NoSessionException {
         Session currentSession = getPlayerSession(player);
 
         Map<Long, Token> tokens = currentSession.getTokens();
@@ -109,8 +111,21 @@ public class SessionService {
             return;
         }
 
+        if (token.getId() == null) {
+            token.setId(Token.createID());
+        }
+
+        currentTokens.put(token.getId(), token);
         currentSession.addToken(token);
         messagingTemplate.convertAndSend("/topic/tokens", "Send after add");
+    }
+
+    public Token getToken(Long id) {
+        Token token = currentTokens.get(id);
+        if (token == null) {
+            token = new Token();
+        }
+        return token;
     }
 
     public void moveToken(Long id, int x, int y, String player) throws NoSessionException {
@@ -136,6 +151,7 @@ public class SessionService {
         Session currentSession = getPlayerSession(player);
 
         currentSession.removeToken(id);
+        currentTokens.remove(id);
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
     }

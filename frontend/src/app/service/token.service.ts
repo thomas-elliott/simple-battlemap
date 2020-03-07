@@ -23,7 +23,7 @@ export class TokenService {
     this.getTokensFromServer();
   }
 
-  notifyTokenChanged() {
+  public notifyTokenChanged() {
     return this.tokenChanged.next(this.tokens);
   }
 
