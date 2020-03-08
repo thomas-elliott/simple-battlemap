@@ -37,8 +37,6 @@ export class MapCanvasComponent implements OnInit, OnDestroy {
         }
       }
     });
-
-    this.mapService.getMapIdFromServer();
   }
 
   ngOnDestroy(): void {
@@ -47,21 +45,21 @@ export class MapCanvasComponent implements OnInit, OnDestroy {
 
   private mapChanged(): void {
     console.log('Map changed in canvas');
-    this.drawMap(`${this.serverPath}/image/${this.currentMap.backgroundId}/image.png`);
+    this.drawMap(`${this.serverPath}/image/${this.currentMap.backgroundImage.id}/image.png`);
   }
 
   private ngAfterViewInit(): void {
     this.mapContext = (<HTMLCanvasElement>this.mapCanvas.nativeElement).getContext('2d');
 
     if (this.currentMap != null) {
-      this.drawMap(`${this.serverPath}/image/${this.currentMap.backgroundId}/image.png`);
+      this.drawMap(`${this.serverPath}/image/${this.currentMap.backgroundImage.id}/image.png`);
     }
   }
 
   private drawMap(src: string) {
     console.log(`Drawing background from ${src}`);
     let background = new Image();
-    if (this.currentMap.backgroundId) {
+    if (this.currentMap.backgroundImage.id) {
       background.src = src;
     }
 

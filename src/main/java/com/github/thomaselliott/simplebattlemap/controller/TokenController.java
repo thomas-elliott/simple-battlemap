@@ -1,11 +1,14 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.TokenRequest;
-import com.github.thomaselliott.simplebattlemap.service.MapService;
+import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
+import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,33 +22,33 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/token")
-public class TokenController {
-    private MapService mapService;
+public class TokenController implements TokenApi {
+    private SessionService sessionService;
 
     @Autowired
-    public TokenController(MapService mapService) {
-        this.mapService = mapService;
+    public TokenController(SessionService sessionService) {
+        this.sessionService = sessionService;
     }
 
-    @RequestMapping(value = "")
-    public List<Token> getTokens() {
-        return mapService.getTokens();
+    public ResponseEntity<List<Token>> getTokens(PlayerDetails player)
+            throws NoSessionException {
+        List<Token> tokens = sessionService.getTokens(player.getUsername());
+        return ResponseEntity.ok(tokens);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity addToken(@RequestBody TokenRequest tokenRequest) {
+    public ResponseEntity<Boolean> addToken(TokenRequest tokenRequest, PlayerDetails player)
+            throws NoSessionException {
         if (tokenRequest != null && tokenRequest.getToken() != null) {
             Token token = tokenRequest.getToken();
 
             if (StringUtils.isEmpty(token.getName()) ||
                 token.getImageAsset() == null ||
                 (token.getX() == 0 && token.getY() == 0)) {
-                log.info("Incomplete token info");
+                log.info("Incomplete token info: {}", token);
                 return ResponseEntity.badRequest().body(null);
             }
 
-            mapService.addToken(token);
+            sessionService.addToken(token, player.getUsername());
             return ResponseEntity.ok(null);
         } else {
             log.warn("Tried to add null token");
@@ -53,18 +56,20 @@ public class TokenController {
         }
     }
 
-    @RequestMapping(value = "/move", method = RequestMethod.PUT)
-    public void moveToken(@RequestBody Token token) {
+    public ResponseEntity<Boolean> updateToken(Token token, PlayerDetails player)
+            throws NoSessionException {
         if (token != null && token.getId() != null) {
-            mapService.moveToken(token.getId(), token.getX(), token.getY());
+            sessionService.moveToken(token.getId(), token.getX(), token.getY(), player.getUsername());
         } else {
             log.warn("Tried to move null token");
         }
-        mapService.sendUpdates();
+        sessionService.sendUpdates();
+        return ResponseEntity.ok(false);
     }
 
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
-    public void removeToken(@PathVariable Long id) {
-        mapService.removeToken(id);
+    public ResponseEntity<Boolean> deleteToken(Long tokenId, PlayerDetails player)
+            throws NoSessionException {
+        sessionService.removeToken(tokenId, player.getUsername());
+        return ResponseEntity.ok(false);
     }
 }

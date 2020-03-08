@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.thomaselliott.simplebattlemap.json.TokenDeserialiser;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,13 +29,6 @@ public class Token {
     @Column(name = "token_id")
     private Long id;
     private String name;
-    @ManyToOne
-    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-    @JsonIdentityReference(alwaysAsId=true)
-    @JoinColumn(name = "player",
-            referencedColumnName = "player_id",
-            foreignKey = @ForeignKey(name = "fk_player"))
-    private Player player;
     @OneToOne
     @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
     @JsonIdentityReference(alwaysAsId=true)
@@ -45,6 +38,8 @@ public class Token {
     private Asset imageAsset;
     private int x;
     private int y;
+
+    private static AtomicLong idCounter = new AtomicLong();
 
     public Token() {}
     public Token(Long id) {
@@ -67,5 +62,10 @@ public class Token {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public static Long createID()
+    {
+        return idCounter.getAndIncrement();
     }
 }

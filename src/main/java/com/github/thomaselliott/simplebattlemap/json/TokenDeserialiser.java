@@ -7,8 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.repository.AssetRepository;
-import com.github.thomaselliott.simplebattlemap.repository.PlayerRepository;
-import com.github.thomaselliott.simplebattlemap.repository.TokenRepository;
+import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,11 +15,10 @@ import java.io.IOException;
 
 public class TokenDeserialiser extends StdDeserializer<Token> {
     @Autowired
-    private TokenRepository tokenRepository;
-    @Autowired
     private AssetRepository assetRepository;
+
     @Autowired
-    private PlayerRepository playerRepository;
+    private SessionService sessionService;
 
     public TokenDeserialiser() {
         this(null);
@@ -43,7 +41,7 @@ public class TokenDeserialiser extends StdDeserializer<Token> {
 
         if (node.has("id")) {
             Long id = node.get("id").asLong();
-            token = tokenRepository.findById(id).orElse(new Token(id));
+            token = sessionService.getToken(id);
         }
 
         if (node.has("name")) {
@@ -61,11 +59,6 @@ public class TokenDeserialiser extends StdDeserializer<Token> {
         if (node.has("imageAsset")) {
             Long id = node.get("imageAsset").asLong();
             token.setImageAsset(assetRepository.findById(id).orElse(null));
-        }
-
-        if (node.has("player")) {
-            Long id = node.get("player").asLong();
-            token.setPlayer(playerRepository.findById(id).orElse(null));
         }
 
         return token;

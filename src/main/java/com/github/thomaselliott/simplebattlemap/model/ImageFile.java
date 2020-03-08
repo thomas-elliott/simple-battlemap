@@ -1,7 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.hibernate.annotations.Type;
 
@@ -23,7 +22,10 @@ public class ImageFile {
     @Column(name = "image_id")
     private Long id;
     private String fileName;
+    private String extension;
     private String contentType;
+    private Integer width;
+    private Integer height;
     private byte[] data;
 
     @Lob

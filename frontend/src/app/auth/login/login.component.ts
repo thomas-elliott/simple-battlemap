@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   register(): void {
-
+    this.windowService.changeWindow(WindowState.Register);
   }
 
   login() {

@@ -12,7 +12,7 @@ import {TokenWindowComponent} from "./token-window/token-window.component";
   styleUrls: ['./assets.component.scss']
 })
 export class AssetsComponent implements OnInit, OnDestroy {
-  iconSize: number = 128;
+  iconSize: number = 64;
 
   @ViewChild('tokenWindow', {static: false})
   tokenWindow: TokenWindowComponent;
