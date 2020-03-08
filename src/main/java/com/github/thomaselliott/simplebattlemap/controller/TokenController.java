@@ -44,7 +44,7 @@ public class TokenController implements TokenApi {
             if (StringUtils.isEmpty(token.getName()) ||
                 token.getImageAsset() == null ||
                 (token.getX() == 0 && token.getY() == 0)) {
-                log.info("Incomplete token info");
+                log.info("Incomplete token info: {}", token);
                 return ResponseEntity.badRequest().body(null);
             }
 
@@ -67,7 +67,7 @@ public class TokenController implements TokenApi {
         return ResponseEntity.ok(false);
     }
 
-    public ResponseEntity<Boolean> addToken(Long tokenId, PlayerDetails player)
+    public ResponseEntity<Boolean> deleteToken(Long tokenId, PlayerDetails player)
             throws NoSessionException {
         sessionService.removeToken(tokenId, player.getUsername());
         return ResponseEntity.ok(false);

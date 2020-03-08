@@ -110,10 +110,23 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   onMouseDown(event) {
     if (this.emptyMap) return;
 
+    if (event.button === 0) {
+      // left click
+
+    } else if (event.button === 1) {
+      // middle click
+    } else if (event.button === 2) {
+      this.dragInfo.isDragging = false;
+      this.selectedTokenId = null;
+      this.selectedTokenAsset = null;
+      this.tokenCanvas.setSelectedToken(null);
+      return;
+    }
+
     const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
 
-    const mouseX = event.pageX - rect.left;
-    const mouseY = event.pageY - rect.top;
+    const mouseX = event.layerX;
+    const mouseY = event.layerY;
     console.log (`Click down on ${mouseX}, ${mouseY}`);
     this.dragInfo.isDragging = false;
 
@@ -163,8 +176,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
 
-    const mouseX = event.pageX - rect.left;
-    const mouseY = event.pageY - rect.top;
+    const mouseX = event.layerX;
+    const mouseY = event.layerY;
     console.log(`Finished dragging at ${mouseX},${mouseY}`);
     this.dragInfo.isDragging = false;
 
@@ -178,8 +191,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // TODO: Does this need to be set every update?
     const rect = (<HTMLDivElement>this.canvasDiv.nativeElement).getBoundingClientRect();
-    this.dragInfo.mouseX = event.pageX - rect.left;
-    this.dragInfo.mouseY = event.pageY - rect.top;
+    this.dragInfo.mouseX = event.layerX;
+    this.dragInfo.mouseY = event.layerY;
   }
 
   @HostListener('contextmenu', ['$event'])

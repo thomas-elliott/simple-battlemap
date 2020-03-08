@@ -51,7 +51,7 @@ public interface TokenApi {
             nickname = "deleteToken")
     @RequestMapping(value = "/{tokenId}",
             method = RequestMethod.DELETE)
-    ResponseEntity<Boolean> addToken(
+    ResponseEntity<Boolean> deleteToken(
             @PathVariable Long tokenId,
             @AuthenticationPrincipal PlayerDetails player
     ) throws NoSessionException;
