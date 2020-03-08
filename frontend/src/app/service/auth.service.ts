@@ -179,6 +179,14 @@ export class AuthService {
   }
 
   logout() {
-    this.httpClient.post(`${this.serverPath}/account/logout`, {});
+    console.debug('logging out');
+    this.httpClient.post(`${this.serverPath}/account/logout`, {}).subscribe(
+      () => {
+        console.debug('logged out');
+        this.getSession();
+      }, (error) => {
+        console.error('Error logging out', error);
+      }
+    );
   }
 }
