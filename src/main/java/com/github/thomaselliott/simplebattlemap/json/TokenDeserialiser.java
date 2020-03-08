@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-import lombok.extern.slf4j.Slf4j;
-
 public class TokenDeserialiser extends StdDeserializer<Token> {
     @Autowired
     private AssetRepository assetRepository;
