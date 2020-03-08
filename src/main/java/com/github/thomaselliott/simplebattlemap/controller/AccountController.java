@@ -51,7 +51,7 @@ public class AccountController implements AccountApi {
 
         log.info ("Logout successful");
 
-        return ResponseEntity.ok("logout");
+        return ResponseEntity.ok("{ \"logout\": true }");
     }
 
     @Override
