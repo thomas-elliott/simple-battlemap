@@ -4,9 +4,9 @@ export class BattleMap {
   gridHeight: number;
   gridWidth: number;
   gridLineWidth: number;
-  backgroundId: number;
-  _links: {
-    backgroundMap: string;
-    tokens: string;
-  }
+  backgroundImage: {
+    id: number;
+    name: string;
+    type: string;
+  };
 }

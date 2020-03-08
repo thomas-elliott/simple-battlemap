@@ -8,9 +8,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -25,10 +24,17 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // TODO: Actual security
         http.csrf().disable()
                 .addFilterBefore(new ApiOriginFilter(), BasicAuthenticationFilter.class)
             .authorizeRequests()
+                .antMatchers("/account/*").permitAll()
+                .antMatchers("/actuator/*").permitAll()
                 .antMatchers("/ws/**").permitAll() // TODO: Authenticate WS
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v2/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -37,9 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
             .httpBasic()
-                .and()
-            .logout()
-                .permitAll()
             .and()
                 .exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
                     if (request.getMethod().equals("OPTIONS")) {
@@ -59,23 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("PLAYER")
-                .build()
-        );
-        manager.createUser(User.withDefaultPasswordEncoder()
-                .username("dm")
-                .password("password")
-                .roles("DM")
-                .build()
-        );
-
-        return manager;
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

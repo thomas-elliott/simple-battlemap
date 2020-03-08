@@ -3,17 +3,11 @@ package com.github.thomaselliott.simplebattlemap.controller;
 import com.github.thomaselliott.simplebattlemap.service.AssetService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
-@RequestMapping(value = "/image")
-public class ImageController {
+public class ImageController implements ImageApi {
     private AssetService assetService;
 
     @Autowired
@@ -21,13 +15,25 @@ public class ImageController {
         this.assetService = assetService;
     }
 
-    @RequestMapping(value = "/{id}/image.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] getImage(@PathVariable Long id) {
-        return this.assetService.getImage(id);
+    @Override
+    public ResponseEntity<byte[]> getThumbnail(Long id) {
+        byte[] image = assetService.getThumbnail(id);
+
+        if (image != null && image.length > 0) {
+            return ResponseEntity.ok(image);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @RequestMapping(value = "/{id}/thumbnail.png", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] getThumbnail(@PathVariable Long id) {
-        return this.assetService.getThumbnail(id);
+    @Override
+    public ResponseEntity<byte[]> getImage(Long id) {
+        byte[] image = assetService.getImage(id);
+
+        if (image != null && image.length > 0) {
+            return ResponseEntity.ok(image);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

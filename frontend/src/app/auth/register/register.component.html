@@ -1,0 +1,65 @@
+<mat-card class="modal">
+  <mat-card-header class="mat-card-title">
+    <div>
+      Register for an account
+    </div>
+  </mat-card-header>
+  <mat-card-content align="center">
+    <mat-error *ngIf="showError">
+      <strong>Login was not successful. Please try again or check your username/password.</strong>
+    </mat-error>
+    <div>
+      <mat-form-field>
+        <input [(ngModel)]="regData.name"
+               matInput
+               placeholder="Name"
+               type="text"
+               required>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input [(ngModel)]="regData.email"
+               matInput
+               placeholder="Email"
+               type="email">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input [(ngModel)]="regData.username"
+               matInput
+               placeholder="Username"
+               type="text"
+               required>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input [(ngModel)]="regData.password"
+               matInput
+               placeholder="Password"
+               type="password"
+               required>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-button
+            color="warn"
+            (click)="closeWindow()">
+      Cancel
+    </button>
+    <button mat-raised-button
+            color="secondary"
+            (click)="login()">
+      Login
+    </button>
+    <button mat-raised-button
+            color="primary"
+            [disabled]="registerDisabled()"
+            (click)="register()">
+      Register
+    </button>
+  </mat-card-actions>
+</mat-card>

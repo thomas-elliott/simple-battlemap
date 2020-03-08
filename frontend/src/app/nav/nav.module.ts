@@ -10,21 +10,23 @@ import {MatListModule} from '@angular/material/list';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
   declarations: [PaletteComponent, ToolbarComponent],
-  imports: [
-    CommonModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatCardModule,
-    MatTooltipModule
-  ],
+    imports: [
+        CommonModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        MatCardModule,
+        MatTooltipModule,
+        MatMenuModule
+    ],
   exports: [
     PaletteComponent,
     ToolbarComponent

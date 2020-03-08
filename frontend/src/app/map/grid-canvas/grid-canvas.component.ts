@@ -40,7 +40,6 @@ export class GridCanvasComponent implements OnInit, OnDestroy {
         this.loadSettingsFromMap(map);
       }
     );
-    this.loadSettingsFromMap(this.mapService.map);
   }
 
   ngOnDestroy(): void {

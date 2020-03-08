@@ -4,21 +4,35 @@
   <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
 
-  <span *ngIf="role === 'DM'">
-          <button mat-flat-button
-            (click)="showSettings()">
-            <mat-icon>settings_applications</mat-icon>
-            Settings</button>
-        <button mat-flat-button
-            (click)="newMap()">New map</button>
-        <button mat-flat-button
-            (click)="loadMap()">Load map</button>
-<!--    <button mat-raised-button
-            (click)="saveMap()"
-            [disabled]="!authenticated">Save</button>-->
-  </span>
+  <mat-menu #mapMenu="matMenu">
+    <button mat-menu-item (click)="newMap()">New map</button>
+    <button mat-menu-item (click)="saveMap()">Save map</button>
+    <button mat-menu-item (click)="loadMap()">Load map</button>
+    <button mat-menu-item (click)="showSettings()">Settings</button>
+  </mat-menu>
+
+  <button mat-raised-button [mat-menu-trigger-for]="mapMenu" [disabled]="role !== 'DM'">
+    Map<mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
+  <mat-menu #sessionMenu="matMenu">
+    <span mat-menu-item disabled>Session: {{getSession()}}</span>
+    <button mat-menu-item (click)="newSession()">New Session</button>
+    <span mat-menu-item disabled>Sessions:</span>
+    <button *ngFor="let session of sessionList" mat-menu-item (click)="loadSession(session.sessionId)">
+      {{session.sessionId}}
+    </button>
+  </mat-menu>
+
+  <button mat-raised-button [mat-menu-trigger-for]="sessionMenu" (click)="refreshSession()">
+    Session<mat-icon>arrow_drop_down</mat-icon>
+  </button>
+
   <span>&nbsp;&nbsp;Role: {{role}}&nbsp;&nbsp;</span>
   <button mat-raised-button
           (click)="showLogin()"
           [disabled]="authenticated">Login</button>
+  <button mat-raised-button
+          (click)="logout()"
+          [disabled]="!authenticated">Logout</button>
 </mat-toolbar>
