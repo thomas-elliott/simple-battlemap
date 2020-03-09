@@ -18,3 +18,6 @@ Add database url/credentials to application.properties.
 * Angular 6
 * Java 11
 * Spring Boot 2
+
+## Credits
+* Readme image is using assets from [2 Minute Tabletop](https://www.2minutetabletop.com/)
