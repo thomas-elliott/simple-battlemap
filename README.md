@@ -3,6 +3,8 @@ A simple self-hosted battle map for playing online tabletop games. Created as so
 
 Created with the aim of having simple controls, with low impact on the PCs of the players.
 
+![DM View](/docs/dm_screen.png)
+
 ## Getting started
 Not yet ready for running as an end user.
 
