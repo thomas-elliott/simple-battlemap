@@ -39,10 +39,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   isDm: boolean;
 
-  @ViewChild('canvasDiv', {static: false})
+  @ViewChild('canvasDiv')
   canvasDiv: ElementRef;
 
-  @ViewChild('tokenCanvas', {static: false})
+  @ViewChild('tokenCanvas')
   tokenCanvas: TokenCanvasComponent;
 
   // Map settings

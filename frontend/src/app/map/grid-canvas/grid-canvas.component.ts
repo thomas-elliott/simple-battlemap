@@ -17,7 +17,7 @@ import {BattleMap} from "../../model/battleMap.model";
   styleUrls: ['./grid-canvas.component.scss']
 })
 export class GridCanvasComponent implements OnInit, OnDestroy {
-  @ViewChild('gridCanvas', {static: false})
+  @ViewChild('gridCanvas')
   gridCanvas: ElementRef;
 
   private mapSubscription: Subscription;

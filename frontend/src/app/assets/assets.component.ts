@@ -14,7 +14,7 @@ import {TokenWindowComponent} from "./token-window/token-window.component";
 export class AssetsComponent implements OnInit, OnDestroy {
   iconSize: number = 64;
 
-  @ViewChild('tokenWindow', {static: false})
+  @ViewChild('tokenWindow')
   tokenWindow: TokenWindowComponent;
 
   deleteSubject: Subject<void> = new Subject<void>();
