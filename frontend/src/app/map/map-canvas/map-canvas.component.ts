@@ -1,5 +1,4 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {environment} from "../../../environments/environment";
 import {MapService} from "../../service/map.service";
 import {Subscription} from "rxjs";
 import {BattleMap} from "../../model/battleMap.model";
@@ -14,7 +13,7 @@ export class MapCanvasComponent implements OnInit, OnDestroy {
 
   currentMap: BattleMap;
 
-  @ViewChild('mapCanvas', {static: false})
+  @ViewChild('mapCanvas')
   mapCanvas: ElementRef;
 
   public mapContext: CanvasRenderingContext2D;

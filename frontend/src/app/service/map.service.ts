@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {MapInfo} from "../model/mapInfo.model";
 import {Subject} from "rxjs";
 import {BattleMap} from "../model/battleMap.model";
 import {Asset} from "../model/asset.model";

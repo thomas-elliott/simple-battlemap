@@ -19,9 +19,9 @@ import {DragInfo} from "../../model/dragInfo.model";
   styleUrls: ['./token-canvas.component.scss']
 })
 export class TokenCanvasComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('tokenCanvas', {static: false})
+  @ViewChild('tokenCanvas')
   tokenCanvas: ElementRef;
-  @ViewChild('markupCanvas', {static: false})
+  @ViewChild('markupCanvas')
   markupCanvas: ElementRef;
 
   tokenSubscription: Subscription;

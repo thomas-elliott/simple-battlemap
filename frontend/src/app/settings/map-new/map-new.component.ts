@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {Observable, Subscription} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {Subscription} from "rxjs";
 import {Asset} from "../../model/asset.model";
 import {AssetService} from "../../service/asset.service";
 import {MapService} from "../../service/map.service";
