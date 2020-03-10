@@ -1,5 +1,6 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
+import com.github.thomaselliott.simplebattlemap.model.Asset;
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
 import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.MapInfoResponse;
@@ -7,6 +8,7 @@ import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
 import com.github.thomaselliott.simplebattlemap.model.Session;
 import com.github.thomaselliott.simplebattlemap.model.Token;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
+import com.github.thomaselliott.simplebattlemap.service.AssetService;
 import com.github.thomaselliott.simplebattlemap.service.MapService;
 import com.github.thomaselliott.simplebattlemap.service.SessionService;
 
@@ -30,27 +32,16 @@ import lombok.extern.slf4j.Slf4j;
 public class MapController implements MapApi {
     private MapService mapService;
     private SessionService sessionService;
+    private AssetService assetService;
 
     @Autowired
     public MapController(MapService mapService,
-                         SessionService sessionService) {
+                         SessionService sessionService,
+                         AssetService assetService) {
         this.mapService = mapService;
         this.sessionService = sessionService;
+        this.assetService = assetService;
     }
-
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public boolean deleteMap(@PathVariable(name = "id") Long id) {
-        log.info("Attempting to delete map: {}", id);
-        return mapService.deleteMap(id);
-    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public void postUpdateMap(@RequestBody BattleMapUpdateRequest map) {
-        log.info("Updating map");
-        //mapService.updateMap(map);
-    }
-
-    // New methods
 
     @Override
     public Page<BattleMap> getMapList(Pageable pageable) {
@@ -70,6 +61,18 @@ public class MapController implements MapApi {
     }
 
     @Override
+    public ResponseEntity<BattleMap> putMapInfo(PlayerDetails player, BattleMapUpdateRequest mapUpdateRequest)
+            throws NoSessionException {
+        Session session = sessionService.getPlayerSession(player.getUsername());
+
+        BattleMap map = session.getMap();
+
+        if (map == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(mapService.updateMap(map, mapUpdateRequest));
+    }
+
+    @Override
     public ResponseEntity<Boolean> loadMap(Long mapId, PlayerDetails player) throws NoSessionException {
         log.info("Attempting to load map: {}", mapId);
         BattleMap map = mapService.loadMap(mapId);
@@ -82,15 +85,26 @@ public class MapController implements MapApi {
     }
 
     @Override
-    public ResponseEntity<Boolean> newMap(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Boolean> newMap(Long mapId) {
         log.info("Creating new map");
-        //this.mapService.newMap(id);
+        Asset map = assetService.getAsset(mapId);
+
+        if (map == null) return ResponseEntity.notFound().build();
+        this.mapService.newMap(map);
         return ResponseEntity.ok(true);
     }
 
     @Override
-    public void saveMap() {
+    public void saveMap(PlayerDetails player) throws NoSessionException {
         log.info("Attempting to save map");
-        //mapService.saveMap();
+        BattleMap map = sessionService.getMap(player.getUsername());
+
+        mapService.saveMap(map);
+    }
+
+    @Override
+    public void deleteMap(Long mapId) {
+        log.info("Attempting to delete map: {}", mapId);
+        mapService.deleteMap(mapId);
     }
 }

@@ -155,4 +155,9 @@ public class SessionService {
 
         messagingTemplate.convertAndSend("/topic/tokens", "Send after remove");
     }
+
+    public BattleMap getMap(String username) throws NoSessionException {
+        Session session = getPlayerSession(username);
+        return session.getMap();
+    }
 }

@@ -1,6 +1,7 @@
 package com.github.thomaselliott.simplebattlemap.controller;
 
 import com.github.thomaselliott.simplebattlemap.model.BattleMap;
+import com.github.thomaselliott.simplebattlemap.model.BattleMapUpdateRequest;
 import com.github.thomaselliott.simplebattlemap.model.PlayerDetails;
 import com.github.thomaselliott.simplebattlemap.model.exception.NoSessionException;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,24 +35,38 @@ public interface MapApi {
     ResponseEntity<BattleMap> getMapInfo(
             @AuthenticationPrincipal PlayerDetails player) throws NoSessionException;
 
+    @ApiOperation(value = "Update map info", nickname = "putMapInfo")
+    @RequestMapping(value = "/info", method = RequestMethod.PUT)
+    ResponseEntity<BattleMap> putMapInfo(
+            @AuthenticationPrincipal PlayerDetails player,
+            @RequestBody BattleMapUpdateRequest mapUpdateRequest) throws NoSessionException;
+
     @ApiOperation(value = "Load map",
             nickname = "loadMap")
-    @RequestMapping(value = "/load/{id}",
+    @RequestMapping(value = "/load/{mapId}",
             method = RequestMethod.POST)
     ResponseEntity<Boolean> loadMap(
-            @ApiParam(value = "Map id") @PathVariable(value = "id") Long id,
+            @ApiParam(value = "Map id") @PathVariable(value = "mapId") Long mapId,
             @AuthenticationPrincipal PlayerDetails player) throws NoSessionException;
 
     @ApiOperation(value = "New map",
             nickname = "newMap")
-    @RequestMapping(value = "/new/{id}",
+    @RequestMapping(value = "/new/{mapId}",
             method = RequestMethod.POST)
     ResponseEntity<Boolean> newMap(
-            @ApiParam(value = "Map id") @PathVariable(value = "id") Long id);
+            @ApiParam(value = "Map id") @PathVariable(value = "mapId") Long mapId);
 
     @ApiOperation(value = "Save map",
             nickname = "saveMap")
     @RequestMapping(value = "/save",
             method = RequestMethod.POST)
-    void saveMap();
+    void saveMap(@AuthenticationPrincipal PlayerDetails player) throws NoSessionException;
+
+    @ApiOperation(value = "Delete map",
+            nickname = "deleteMap")
+    @RequestMapping(value = "/{mapId}",
+            method = RequestMethod.DELETE)
+    void deleteMap(
+            @ApiParam(value = "Map id") @PathVariable(value = "mapId") Long mapId) throws NoSessionException;
+
 }

@@ -55,7 +55,7 @@ public class MapService {
     }
 
     @Transactional
-    public void updateMap(BattleMap battleMap, BattleMapUpdateRequest mapUpdate) {
+    public BattleMap updateMap(BattleMap battleMap, BattleMapUpdateRequest mapUpdate) {
         Long id = mapUpdate.getId();
         if (battleMap == null || !battleMap.getId().equals(id)) {
             throw new IllegalArgumentException("Map null or does not match");
@@ -70,7 +70,7 @@ public class MapService {
         battleMap.setGridWidth(mapUpdate.getGridWidth());
         battleMap.setGridLineWidth(mapUpdate.getGridLineWidth());
 
-        mapRepository.save(battleMap);
+        return mapRepository.save(battleMap);
     }
 
     @Transactional
