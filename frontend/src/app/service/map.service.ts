@@ -120,7 +120,7 @@ export class MapService {
   }
 
   public saveMapSettings(map: BattleMap): void {
-    this.httpClient.put(`${this.serverPath}/map/update`,
+    this.httpClient.put(`${this.serverPath}/map/info`,
       map).subscribe(() => {
        console.debug('Map settings updated');
     }, () => {
@@ -130,7 +130,7 @@ export class MapService {
 
   public deleteMap(id: number): void {
     console.debug('delete map');
-    this.httpClient.delete(`${this.serverPath}/map/delete/${id}`)
+    this.httpClient.delete(`${this.serverPath}/map/${id}`)
       .subscribe(() => {
         console.debug('Finished deleting map');
       }, () => {

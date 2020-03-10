@@ -90,4 +90,9 @@ public class AssetService {
         Long lId = Long.valueOf(id);
         this.assetRepository.deleteById(lId);
     }
+
+    public Asset getAsset(Long mapId) {
+        Optional<Asset> asset = this.assetRepository.findById(mapId);
+        return asset.orElse(null);
+    }
 }
